@@ -6,6 +6,9 @@ using TMPro;
 
 public class ServerConnectionManager : MonoBehaviour
 {
+    public static ServerConnectionManager Instance;
+
+
     private NetworkRunner _runner;
 
     [Header("UI Reference")]
@@ -15,6 +18,21 @@ public class ServerConnectionManager : MonoBehaviour
     public TextMeshProUGUI errorText; // ErroeText 오타 수정
     public TextMeshProUGUI statusText; 
     public GameObject retryButton;
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        // 2. 이게 유일하다면? 내가 대장!
+        Instance = this;
+
+        // 3. [핵심] 씬이 바뀌어도 나랑 내 몸에 붙은 NetworkRunner는 삭제하지 마라!
+        DontDestroyOnLoad(gameObject);
+    }
 
     async void Start()
     {
@@ -45,31 +63,32 @@ public class ServerConnectionManager : MonoBehaviour
         }
 
         try
-        {
-            // 2. Fusion 서버 접속 시도 (MainScene 인덱스가 1번이라고 가정)
-            var result = await _runner.StartGame(new StartGameArgs()
-            {
-                GameMode = GameMode.AutoHostOrClient,
-                SessionName = "LobbyScene",
-                Scene = SceneRef.FromIndex(1), 
-                SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
-            });
+{
+    UpdateStatus("서버 접속 및 로비 진입 시도 중...");
 
-            // 3. 결과 판정
-            if (result.Ok)
-            {
-                UpdateStatus("접속 성공! 입장합니다.");
-            }
-            else
-            {
-                string errorMessage = GetFriendlyErrorMessage(result.ShutdownReason);
-                ShowError(errorMessage);
-            }
-        }
-        catch (System.Exception e)
+    // 1. 방을 만드는 게 아니라 '로비'에 접속합니다.
+    var result = await _runner.JoinSessionLobby(SessionLobby.ClientServer);
+
+    if (result.Ok)
+    {
+        UpdateStatus("로비 접속 성공!");
+        
+        // 2. 중요: 로비 리스트를 그려줄 LobbyManager에게 "너도 서버 소식을 들어라"고 등록해줍니다.
+        if (LobbyManager.Instance != null)
         {
-            ShowError($"치명적 오류: {e.Message}");
+            _runner.AddCallbacks(LobbyManager.Instance);
         }
+        SceneManager.LoadScene(1);
+    }
+    else
+    {
+        ShowError($"로비 접속 실패: {result.ShutdownReason}");
+    }
+}
+catch (System.Exception e)
+{
+    ShowError($"오류 발생: {e.Message}");
+}
     }
     public void OnRetryButtonClick()
     {

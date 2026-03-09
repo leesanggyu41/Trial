@@ -3786,6 +3786,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1257771059}
   m_CullTransparentMesh: 1
+--- !u!1 &1391512371
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1391512373}
+  - component: {fileID: 1391512372}
+  m_Layer: 0
+  m_Name: LobbyManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1391512372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391512371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f0ff0b5e0d23b14ea1e3e84d5063259, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LobbyManager
+  roomItemPrefab: {fileID: 6522297690870908275, guid: 4161472d6822f534290af26c40b7147e, type: 3}
+  contentTransform: {fileID: 96612322}
+--- !u!4 &1391512373
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391512371}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.89331, y: -0, z: 6.59772}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1435968843
 GameObject:
   m_ObjectHideFlags: 0
@@ -4101,6 +4147,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1483015077}
   m_CullTransparentMesh: 1
+--- !u!1 &1516187208
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1516187210}
+  - component: {fileID: 1516187209}
+  m_Layer: 0
+  m_Name: RoomPasswordManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1516187209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1516187208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0269d76d029f054aa29fa58e888c340, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomPassword
+  passwordToggle: {fileID: 534734323}
+  passwordInput: {fileID: 1435968845}
+  inputFieldBackground: {fileID: 1435968846}
+  inputText: {fileID: 279161745}
+  enabledColor: {r: 1, g: 1, b: 1, a: 1}
+  disabledColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  fadeDuration: 0.3
+--- !u!4 &1516187210
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1516187208}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 793.682, y: 0, z: 3203.4575}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1563387836
 GameObject:
   m_ObjectHideFlags: 0
@@ -4916,7 +5013,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1888947879}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2022309817}
+        m_TargetAssemblyTypeName: RoomCreateManager, Assembly-CSharp
+        m_MethodName: OnClickCreateRoom
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1888947879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4970,7 +5079,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2021454022
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5139,7 +5248,7 @@ GameObject:
   - component: {fileID: 2022309818}
   - component: {fileID: 2022309817}
   m_Layer: 0
-  m_Name: LobbyManager
+  m_Name: RoomMakeManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5157,11 +5266,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 040ef72dd95674d49ba1eae79cd44b46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyManager
-  RoomNameField: {fileID: 0}
-  passwordField: {fileID: 0}
-  RoomName: 
-  Roompassword: 
-  CreateRoom: {fileID: 0}
+  roomNameInput: {fileID: 1666670342}
+  passwordToggle: {fileID: 534734323}
+  passwordInput: {fileID: 1435968845}
 --- !u!4 &2022309818
 Transform:
   m_ObjectHideFlags: 0
@@ -5186,3 +5293,5 @@ SceneRoots:
   - {fileID: 138494255}
   - {fileID: 636591732}
   - {fileID: 2022309818}
+  - {fileID: 1516187210}
+  - {fileID: 1391512373}
