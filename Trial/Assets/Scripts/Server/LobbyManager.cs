@@ -2,11 +2,12 @@ using UnityEngine;
 using Fusion;
 using System;
 using UnityEngine.UI;
+using TMPro;
 
 public class LobbyManager : MonoBehaviour
 {
-    public InputField RoomNameField;
-    public  InputField passwordField;
+    public TMP_InputField RoomNameField;
+    public TMP_InputField passwordField;
     public String RoomName;
     public String Roompassword;
     public GameObject CreateRoom;
