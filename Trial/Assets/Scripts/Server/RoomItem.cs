@@ -33,8 +33,27 @@ public class RoomItem : MonoBehaviour
 
     // 버튼 클릭 시 호출 (Unity Button 이벤트에 연결)
     public void OnClickJoin()
+{
+    // 비밀번호 정보 추출
+    bool isPasswordProtected = false;
+    string correctPassword = "";
+
+    if (_session.Properties.TryGetValue("IsPassword", out var isPassProp))
+        isPasswordProtected = (int)isPassProp == 1;
+
+    if (isPasswordProtected && _session.Properties.TryGetValue("PwData", out var pwProp))
+        correctPassword = (string)pwProp;
+
+    // 분기 처리
+    if (isPasswordProtected)
     {
-        Debug.Log($"{_session.Name} 방 입장을 시도합니다.");
-        // 여기에 이후 입장 로직(비밀번호 체크 등)을 연결합니다.
+        // 비밀번호 팝업을 띄움
+        PasswordPopupManager.Instance.OpenPasswordPanel(_session, correctPassword);
     }
+    else
+    {
+        // 바로 입장 (매니저 호출)
+        ServerConnectionManager.Instance.JoinSession(_session);
+    }
+}
 }

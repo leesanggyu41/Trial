@@ -15,9 +15,6 @@ public class RoomCreateManager : MonoBehaviour
     public Toggle passwordToggle;
     public TMP_InputField passwordInput;
 
-    private void Start()
-    {
-    }
 
     public async void OnClickCreateRoom()
     {

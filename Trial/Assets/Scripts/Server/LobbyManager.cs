@@ -3,6 +3,8 @@ using Fusion;
 using System.Collections.Generic;
 using Fusion.Sockets;
 using System;
+using System.Linq;
+using TMPro;
 
 public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -11,8 +13,14 @@ public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
     [Header("UI 설정")]
     public GameObject roomItemPrefab;
     public Transform contentTransform;
+    [Header("페이지 설정")]
+    public TMP_Text page;
+    public int itemsPerPage = 8;
+    private int currentPage = 0;
+    private List<SessionInfo> allSessions = new List<SessionInfo>();
 
     private NetworkRunner _runner;
+    
 
     private void Awake() => Instance = this;
 
@@ -64,16 +72,63 @@ private void Start()
     {
         Debug.Log($"방 목록 갱신됨: {sessionList.Count}개");
 
+        // 1. 보이는 방만 필터링해서 저장
+        allSessions = sessionList.Where(s => s.IsVisible).ToList();
+        
+        // 2. 현재 페이지에 맞게 UI 갱신
+        RefreshPage();
+    }
+
+    public void RefreshPage()
+    {
+        // 기존 아이템 싹 지우기
         foreach (Transform child in contentTransform) Destroy(child.gameObject);
 
-        foreach (SessionInfo session in sessionList)
-        {
-            if (!session.IsVisible) continue;
+        // 현재 페이지에 보여줄 시작 인덱스와 끝 인덱스 계산
+        int startIndex = currentPage * itemsPerPage;
+        int endIndex = Mathf.Min(startIndex + itemsPerPage, allSessions.Count);
 
-            GameObject go = Instantiate(roomItemPrefab, contentTransform);
-            RoomItem item = go.GetComponent<RoomItem>();
-            if (item != null) item.Setup(session);
+        // 8개만 생성
+        for (int i = startIndex; i < endIndex; i++)
+        {
+            CreateRoomItem(allSessions[i]);
         }
+    }
+
+    private void CreateRoomItem(SessionInfo session)
+    {
+        GameObject go = Instantiate(roomItemPrefab, contentTransform);
+        
+        // UI 정렬 및 크기 고정 (중요)
+        RectTransform rt = go.GetComponent<RectTransform>();
+        rt.localScale = Vector3.one;
+        rt.anchoredPosition3D = Vector3.zero;
+
+        RoomItem item = go.GetComponent<RoomItem>();
+        if (item != null) item.Setup(session);
+    }
+
+    public void OnClickNextPage()
+    {
+        if ((currentPage + 1) * itemsPerPage < allSessions.Count)
+        {
+            currentPage++;
+            RefreshPage();
+        }
+    }
+
+    public void OnClickPrevPage()
+    {
+        if (currentPage > 0)
+        {
+            currentPage--;
+            RefreshPage();
+        }
+    }
+
+    private void Update()
+    {
+        page.text = (currentPage+1).ToString() + "/" + allSessions.Count.ToString();
     }
 
     public void OnObjectExitAOI(NetworkRunner runner, NetworkObject obj, PlayerRef player)

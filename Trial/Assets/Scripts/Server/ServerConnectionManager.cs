@@ -124,4 +124,44 @@ catch (System.Exception e)
         if (retryButton != null) retryButton.SetActive(true); 
         Debug.LogError(msg);
     }
+
+
+    public async void JoinSession(SessionInfo session)
+{
+    Debug.Log($"{session.Name} 방으로 입장을 시작합니다.");
+
+    // 1. 현재 로비에 접속된 러너(나 자신 혹은 변수)를 종료
+    if (_runner != null)
+    {
+        await _runner.Shutdown();
+        // Shutdown 후 기존 오브젝트를 파괴하거나 재사용할 수 있지만, 
+        // 깨끗한 상태를 위해 새로 만드는 방식을 추천합니다.
+        Destroy(_runner.gameObject);
+        _runner = null;
+    }
+
+    // 2. 새로운 게임용 러너 생성
+    GameObject go = new GameObject("GameRunner");
+    _runner = go.AddComponent<NetworkRunner>();
+    DontDestroyOnLoad(go); // 게임 씬에서도 살아있어야 함
+
+    // 3. 게임 모드로 시작 (Client)
+    var result = await _runner.StartGame(new StartGameArgs()
+    {
+        GameMode = GameMode.Client,
+        SessionName = session.Name,
+        Scene = SceneRef.FromIndex(2), // 실제 게임 씬 인덱스
+        SceneManager = go.AddComponent<NetworkSceneManagerDefault>()
+    });
+
+    if (result.Ok)
+    {
+        Debug.Log("방 입장 성공!");
+    }
+    else
+    {
+        Debug.LogError($"방 입장 실패: {result.ShutdownReason}");
+        // 실패 시 다시 로비로 돌아오는 처리가 필요할 수 있습니다.
+    }
+}
 }
