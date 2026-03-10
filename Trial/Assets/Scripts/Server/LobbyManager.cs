@@ -81,6 +81,7 @@ private void Start()
 
     public void RefreshPage()
     {
+        if (contentTransform == null) return;
         // 기존 아이템 싹 지우기
         foreach (Transform child in contentTransform) Destroy(child.gameObject);
 

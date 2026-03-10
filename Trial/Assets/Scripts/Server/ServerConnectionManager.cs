@@ -164,4 +164,15 @@ catch (System.Exception e)
         // 실패 시 다시 로비로 돌아오는 처리가 필요할 수 있습니다.
     }
 }
+public async void LeaveRoom()
+{
+    if (_runner != null && _runner.IsRunning)
+    {
+        await _runner.Shutdown();
+        _runner = null;
+    }
+
+    // Shutdown 완료 후 로비로 이동
+    SceneManager.LoadScene(1);
+}
 }

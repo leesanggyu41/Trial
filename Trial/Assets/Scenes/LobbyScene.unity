@@ -6480,6 +6480,8 @@ MonoBehaviour:
   roomNameInput: {fileID: 1666670342}
   passwordToggle: {fileID: 534734323}
   passwordInput: {fileID: 1435968845}
+  playerPrefab:
+    RawGuidValue: eafeb81f66f312a46bbdb2f888262866
 --- !u!4 &2022309818
 Transform:
   m_ObjectHideFlags: 0

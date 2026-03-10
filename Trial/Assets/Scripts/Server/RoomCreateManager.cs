@@ -15,6 +15,9 @@ public class RoomCreateManager : MonoBehaviour
     public Toggle passwordToggle;
     public TMP_InputField passwordInput;
 
+    [Header("Spawn 설정")]
+    public NetworkPrefabRef playerPrefab;
+
 
     public async void OnClickCreateRoom()
     {
@@ -27,7 +30,11 @@ public class RoomCreateManager : MonoBehaviour
 
         // [수정 포인트 2] 매번 새로운 Runner를 동적으로 생성 (가장 안전)
         GameObject runnerObj = new GameObject("Fusion_Runner");
+        DontDestroyOnLoad(runnerObj);
         _currentRunner = runnerObj.AddComponent<NetworkRunner>();
+
+        SpawnManager spawnManager = runnerObj.AddComponent<SpawnManager>();
+        spawnManager.playerPrefab = playerPrefab;
 
         // 방 이름 설정
         string roomName = roomNameInput.text;
