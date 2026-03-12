@@ -148,7 +148,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45491be0e9f254245bcf6a6760f4a12d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NicknameManager
-  NicknameInput: {fileID: 173604524}
 --- !u!4 &29234834
 Transform:
   m_ObjectHideFlags: 0
@@ -782,7 +781,7 @@ GameObject:
   - component: {fileID: 173604524}
   m_Layer: 5
   m_Name: NicknameInput
-  m_TagString: Untagged
+  m_TagString: NicknameInput
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5488,7 +5487,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f0ff0b5e0d23b14ea1e3e84d5063259, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LobbyManager
-  roomItemPrefab: {fileID: 6522297690870908275, guid: 4161472d6822f534290af26c40b7147e, type: 3}
+  roomItemPrefab: {fileID: 5208302576119704252, guid: d6de54a4b4d128b48adf548d540fb3b1, type: 3}
   contentTransform: {fileID: 96612322}
   page: {fileID: 369184509}
   itemsPerPage: 1
@@ -7323,7 +7322,7 @@ MonoBehaviour:
   passwordToggle: {fileID: 534734323}
   passwordInput: {fileID: 1435968845}
   playerPrefab:
-    RawGuidValue: eafeb81f66f312a46bbdb2f888262866
+    RawGuidValue: 00c1d7bf07f26d945b301f6c0946e72a
 --- !u!4 &2022309818
 Transform:
   m_ObjectHideFlags: 0

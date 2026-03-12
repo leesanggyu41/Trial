@@ -40,6 +40,7 @@ public class ServerConnectionManager : MonoBehaviour
         if (errorWindow != null) errorWindow.SetActive(false);
         
         await ConnectToServer();
+        
     }
 
     public async Task ConnectToServer()
@@ -192,5 +193,15 @@ public async void LeaveRoom()
     // Shutdown 완료 후 로비로 이동
     SceneManager.LoadScene(1);
 
+}
+public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+{
+    // 추방당하거나 연결 끊기면 로비로 이동
+    if (shutdownReason == ShutdownReason.DisconnectedByPluginLogic ||
+        shutdownReason == ShutdownReason.Ok)
+    {
+        if (ServerConnectionManager.Instance != null)
+            ServerConnectionManager.Instance.LeaveRoom();
+    }
 }
 }

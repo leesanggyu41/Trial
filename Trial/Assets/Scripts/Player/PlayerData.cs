@@ -15,6 +15,16 @@ public class PlayerData : NetworkBehaviour
                 ? NicknameManager.Instance.GetNickname()
                 : $"Player_{Random.Range(1000, 9999)}";
         }
+        if(WaitingRoomManager.Instance != null)
+        {
+            WaitingRoomManager.Instance.RefreshPlayerList();
+        }
+    }
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        
+        if (WaitingRoomManager.Instance != null && WaitingRoomManager.Instance.gameObject != null)
+            WaitingRoomManager.Instance.RefreshPlayerList();
     }
 
     void OnNicknameChanged()

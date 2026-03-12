@@ -11,11 +11,13 @@ public class SpawnManager : SimulationBehaviour, IPlayerJoined, IPlayerLeft
 
 
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
+    private Dictionary<PlayerRef, NetworkObject> _spawnedData = new Dictionary<PlayerRef, NetworkObject>();
 
     // Spawned() 대신 SimulationBehaviour는 이미 Runner에 접근 가능
     // AddCallbacks도 필요 없음 - 인터페이스만 구현하면 Fusion이 자동으로 호출
     public void PlayerJoined(PlayerRef player)
 {
+    Debug.Log($"playerPrefab.IsValid: {playerPrefab.IsValid}");
     if (Runner.IsServer)
     {
         var usedIndices = _spawnedCharacters.Values
@@ -38,8 +40,6 @@ public class SpawnManager : SimulationBehaviour, IPlayerJoined, IPlayerLeft
             }
         );
 
-        // 닉네임 데이터 오브젝트 스폰
-        Runner.Spawn(playerDatafab, Vector3.zero, Quaternion.identity, player);
 
         _spawnedCharacters.Add(player, networkPlayerObject);
     }

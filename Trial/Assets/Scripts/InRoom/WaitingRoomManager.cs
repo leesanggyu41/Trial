@@ -60,32 +60,43 @@ public class WaitingRoomManager : MonoBehaviour
             startButton.interactable = _runner.SessionInfo.PlayerCount >= 2;
     }
 
+    public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
+{
+    Debug.Log($"Shutdown: {shutdownReason}");
+    
+    _runner = null;
+    
+    if (ServerConnectionManager.Instance != null)
+        ServerConnectionManager.Instance.LeaveRoom();
+}
     public void RefreshPlayerList()
+{
+    
+    if (playerListContent == null || _runner == null) return;
+
+    for (int i = playerListContent.childCount - 1; i >= 0; i--)
     {
-        if (_runner == null || playerListContent == null) return;
-
-        // 기존 아이템 삭제
-        for (int i = playerListContent.childCount - 1; i >= 0; i--)
-            Destroy(playerListContent.GetChild(i).gameObject);
-        _playerItems.Clear();
-
-        // 현재 씬의 모든 PlayerObject 찾아서 목록 생성
-        var playerObjects = FindObjectsByType<PlayerData>(FindObjectsSortMode.None);
-        foreach (var playerData in playerObjects)
-        {
-            GameObject go = Instantiate(playerListItemPrefab, playerListContent);
-            PlayerListItem item = go.GetComponent<PlayerListItem>();
-
-            // 자기 자신은 추방 불가
-            bool isSelf = playerData.HasStateAuthority;
-            if (isSelf)
-                item.Setup(playerData, PlayerRef.None);
-            else
-                item.Setup(playerData, playerData.Runner.LocalPlayer);
-
-            _playerItems.Add(item);
-        }
+        var child = playerListContent.GetChild(i);
+        if (child != null) Destroy(child.gameObject);
     }
+    _playerItems.Clear();
+
+    var playerDataList = FindObjectsByType<PlayerData>(FindObjectsSortMode.None);
+    foreach (var playerData in playerDataList)
+    {
+        
+        if (playerData == null || playerData.gameObject == null) continue;
+
+        GameObject go = Instantiate(playerListItemPrefab, playerListContent);
+        PlayerListItem item = go.GetComponent<PlayerListItem>();
+
+        PlayerRef playerRef = playerData.Object.InputAuthority;
+        bool isSelf = playerRef == _runner.LocalPlayer;
+
+        item.Setup(playerData, playerRef, isSelf);
+        _playerItems.Add(item);
+    }
+}
 
     //  추방 모드 토글
     private void OnClickKick()
@@ -96,20 +107,22 @@ public class WaitingRoomManager : MonoBehaviour
             item.SetKickMode(_isKickMode);
 
         // 버튼 색으로 추방 모드 표시
-        kickButton.image.color = _isKickMode ? Color.red : Color.white;
+        kickButton.image.color = _isKickMode ? Color.red : new Color(0.1098039f,0.1098039f,0.1098039f);
+;
     }
 
     // 플레이어 추방
     public void KickPlayer(PlayerRef playerRef)
     {
         if (_runner == null || !_runner.IsServer || playerRef == PlayerRef.None) return;
+        if (playerRef == _runner.LocalPlayer) return;
 
         Debug.Log($"플레이어 추방: {playerRef.PlayerId}");
         _runner.Disconnect(playerRef);
 
         // 추방 후 킥 모드 해제
         _isKickMode = false;
-        kickButton.image.color = Color.white;
+        kickButton.image.color = new Color(0.1098039f,0.1098039f,0.1098039f);
         foreach (var item in _playerItems)
             item.SetKickMode(false);
     }
