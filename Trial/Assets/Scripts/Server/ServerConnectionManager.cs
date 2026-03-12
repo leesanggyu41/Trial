@@ -44,6 +44,14 @@ public class ServerConnectionManager : MonoBehaviour
 
     public async Task ConnectToServer()
     {
+        if (_runner == null)
+        {
+            // 자기 gameObject 말고 새 오브젝트에 붙이기
+            GameObject runnerObj = new GameObject("LobbyRunner");
+            DontDestroyOnLoad(runnerObj);
+            _runner = runnerObj.AddComponent<NetworkRunner>();
+            _runner.ProvideInput = true;
+        }
         // 1. 초기 UI 세팅
         if (retryButton != null) retryButton.SetActive(false);
         if (errorWindow != null) errorWindow.SetActive(false);
@@ -73,11 +81,6 @@ public class ServerConnectionManager : MonoBehaviour
     {
         UpdateStatus("로비 접속 성공!");
         
-        // 2. 중요: 로비 리스트를 그려줄 LobbyManager에게 "너도 서버 소식을 들어라"고 등록해줍니다.
-        if (LobbyManager.Instance != null)
-        {
-            _runner.AddCallbacks(LobbyManager.Instance);
-        }
         SceneManager.LoadScene(1);
     }
     else
@@ -113,7 +116,12 @@ catch (System.Exception e)
         }
     }
 
-    private void UpdateStatus(string msg) => statusText.text = msg;
+    private void UpdateStatus(string msg)
+    {
+        if (statusText != null) // null 체크
+        statusText.text = msg;
+    }
+
 
     private void ShowError(string msg)
     {
@@ -128,6 +136,8 @@ catch (System.Exception e)
 
     public async void JoinSession(SessionInfo session)
 {
+    if (NicknameManager.Instance != null)
+        NicknameManager.Instance.SaveNickname();
     Debug.Log($"{session.Name} 방으로 입장을 시작합니다.");
 
     // 1. 현재 로비에 접속된 러너(나 자신 혹은 변수)를 종료
@@ -169,10 +179,18 @@ public async void LeaveRoom()
     if (_runner != null && _runner.IsRunning)
     {
         await _runner.Shutdown();
+
+        if (_runner != null)
+        {
+            
+            _runner = null;
+        }
         _runner = null;
     }
 
+    
     // Shutdown 완료 후 로비로 이동
     SceneManager.LoadScene(1);
+
 }
 }

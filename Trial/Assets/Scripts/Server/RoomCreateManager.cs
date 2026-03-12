@@ -21,6 +21,9 @@ public class RoomCreateManager : MonoBehaviour
 
     public async void OnClickCreateRoom()
     {
+        if (NicknameManager.Instance != null)
+        NicknameManager.Instance.SaveNickname();
+        
         // [수정 포인트 1] 이미 사용 중이거나 씬에 남은 Runner가 있다면 정리
         if (_currentRunner != null)
         {

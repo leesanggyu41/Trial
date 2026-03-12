@@ -26,27 +26,19 @@ public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
 
 private void Start()
 {
-    // 1. 씬에 이미 존재하는 Runner를 찾습니다 (ServerConnectionManager에서 만든 놈)
     _runner = FindFirstObjectByType<NetworkRunner>();
 
     if (_runner != null)
     {
-        // 2. 혹시 모르니 기존 등록을 지우고 다시 등록 (중복 방지 및 확실한 연결)
-        _runner.RemoveCallbacks(this); 
+        // 항상 새로 등록 (씬 재로드 후 새 인스턴스니까)
+        _runner.RemoveCallbacks(this);
         _runner.AddCallbacks(this);
-        
-        Debug.Log("LobbyManager: 기존 Runner를 찾아 콜백을 성공적으로 등록했습니다!");
-
-        // 3. 만약 이미 로비에 접속된 상태라면, 현재 목록을 즉시 요청하거나 
-        // 서버가 보내주길 기다립니다.
-        if (_runner.SessionInfo.IsValid)
-        {
-             Debug.Log("현재 Runner가 유효한 세션/로비 정보를 가지고 있습니다.");
-        }
+        Debug.Log("LobbyManager: Runner 등록 완료");
     }
     else
     {
-        Debug.LogError("LobbyManager: 씬에서 NetworkRunner를 찾을 수 없습니다! 이전 씬에서 DontDestroyOnLoad가 되었는지 확인하세요.");
+        Debug.Log("LobbyManager: Runner 없음 - 로비 재접속 시도");
+        ServerConnectionManager.Instance.ConnectToServer();
     }
 }
     // [참가자용] 로비에 접속하기 위한 함수
@@ -70,6 +62,8 @@ private void Start()
     // [핵심] 방 목록이 바뀔 때마다 실행됨 (인원수 변경 포함)
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
+        
+        if (sessionList.Count == 0 && allSessions.Count > 0) return;
         Debug.Log($"방 목록 갱신됨: {sessionList.Count}개");
 
         // 1. 보이는 방만 필터링해서 저장
@@ -83,7 +77,16 @@ private void Start()
     {
         if (contentTransform == null) return;
         // 기존 아이템 싹 지우기
-        foreach (Transform child in contentTransform) Destroy(child.gameObject);
+        for (int i = contentTransform.childCount - 1; i >= 0; i--)
+    {
+        Destroy(contentTransform.GetChild(i).gameObject);
+    }
+    if (allSessions.Count == 0)
+    {
+        // 방 없을 때 처리 (빈 텍스트 표시 등)
+        Debug.Log("현재 방이 없습니다.");
+        return;
+    }
 
         // 현재 페이지에 보여줄 시작 인덱스와 끝 인덱스 계산
         int startIndex = currentPage * itemsPerPage;
@@ -108,7 +111,18 @@ private void Start()
         RoomItem item = go.GetComponent<RoomItem>();
         if (item != null) item.Setup(session);
     }
+    public async void OnClickRefresh()
+{
+    if (_runner == null || !_runner.IsRunning)
+    {
+        RefreshPage();
+    }
+    _runner.RemoveCallbacks(this);
+    _runner.AddCallbacks(this);
 
+    // 로비 재접속으로 세션 목록 강제 갱신
+    await _runner.JoinSessionLobby(SessionLobby.ClientServer);
+}
     public void OnClickNextPage()
     {
         if ((currentPage + 1) * itemsPerPage < allSessions.Count)

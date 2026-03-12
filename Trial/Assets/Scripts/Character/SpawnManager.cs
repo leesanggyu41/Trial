@@ -6,6 +6,7 @@ using System.Linq;
 public class SpawnManager : SimulationBehaviour, IPlayerJoined, IPlayerLeft
 {
     public NetworkPrefabRef playerPrefab;
+    public NetworkPrefabRef playerDatafab;
     public NetworkRunner _runner;
 
 
@@ -14,35 +15,35 @@ public class SpawnManager : SimulationBehaviour, IPlayerJoined, IPlayerLeft
     // Spawned() 대신 SimulationBehaviour는 이미 Runner에 접근 가능
     // AddCallbacks도 필요 없음 - 인터페이스만 구현하면 Fusion이 자동으로 호출
     public void PlayerJoined(PlayerRef player)
+{
+    if (Runner.IsServer)
     {
+        var usedIndices = _spawnedCharacters.Values
+            .Select(obj => obj.GetComponent<PlayerObject>().PlayerIndex)
+            .ToList();
 
-        if (Runner.IsServer)
-        {
-            Debug.Log($"PlayerJoined 호출됨 - player: {player.PlayerId}");
-            Debug.Log(System.Environment.StackTrace);
-            var usedIndices = _spawnedCharacters.Values
-                .Select(obj => obj.GetComponent<PlayerObject>().PlayerIndex)
-                .ToList();
+        int assignedIndex = 0;
+        while (usedIndices.Contains(assignedIndex))
+            assignedIndex++;
 
-            int assignedIndex = 0;
-            while (usedIndices.Contains(assignedIndex))
-                assignedIndex++;
-                Debug.Log($"Spawn 호출 직전 - player: {player.PlayerId}, index: {assignedIndex}, 현재 딕셔너리 크기: {_spawnedCharacters.Count}");
-                NetworkObject networkPlayerObject = Runner.Spawn(
-                playerPrefab,
-                Vector3.zero,
-                Quaternion.identity,
-                player,
-                onBeforeSpawned: (r, obj) =>
-                {
-                    obj.GetComponent<PlayerObject>().PlayerIndex = assignedIndex;
-                }
-            );
+        // 뒷배경 캐릭터 스폰
+        NetworkObject networkPlayerObject = Runner.Spawn(
+            playerPrefab,
+            Vector3.zero,
+            Quaternion.identity,
+            player,
+            onBeforeSpawned: (r, obj) =>
+            {
+                obj.GetComponent<PlayerObject>().PlayerIndex = assignedIndex;
+            }
+        );
 
-            _spawnedCharacters.Add(player, networkPlayerObject);
-            Debug.Log($"플레이어 {player.PlayerId} 입장. 인덱스: {assignedIndex}");
-        }
+        // 닉네임 데이터 오브젝트 스폰
+        Runner.Spawn(playerDatafab, Vector3.zero, Quaternion.identity, player);
+
+        _spawnedCharacters.Add(player, networkPlayerObject);
     }
+}
 
     public void PlayerLeft(PlayerRef player)
     {
