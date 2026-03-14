@@ -1,7 +1,7 @@
 using UnityEngine;
 using Fusion;
 using TMPro;
-
+using UnityEngine.InputSystem;
 public class PlayerController : NetworkBehaviour
 {
     [Header("카메라 설정")]
@@ -21,47 +21,57 @@ public class PlayerController : NetworkBehaviour
 
 
     public override void Spawned()
+{
+    if (HasInputAuthority)
     {
-        //내 캐릭터에만 카메라 붙이기
-        if (HasInputAuthority)
-        {
-            _camera = Camera.main;
-            _camera.transform.SetParent(HeadCameraPoint);
-            _camera.transform.localPosition = Vector3.zero;
-            _camera.transform.localRotation = Quaternion.identity;
-
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-        PlayerData playerData = GetComponent<PlayerData>();
-        if(playerData != null)
-        {
-            NameText.text = playerData.Nickname.ToString();
-
-            Transform spawnPoint = GameSceneManager.Instance.GetSpawnPoint(GetComponent<PlayerObject>().PlayerIndex);
-
-            if (spawnPoint != null)
-            {
-                transform.position = spawnPoint.position;
-                transform.rotation = spawnPoint.rotation;
-            }
-        }
+        _camera = Camera.main;
+        _camera.transform.SetParent(HeadCameraPoint);
+        _camera.transform.localPosition = Vector3.zero;
+        _camera.transform.localRotation = Quaternion.identity;
+        Cursor.lockState = CursorLockMode.Locked;
     }
+
+    PlayerData playerData = GetComponent<PlayerData>();
+    if (playerData != null)
+    {
+        NameText.text = playerData.Nickname.ToString();
+    }
+
+    // GameSceneManager null 체크
+    if (GameSceneManager.Instance == null)
+    {
+        Debug.LogError("GameSceneManager를 찾을 수 없음!");
+        return;
+    }
+
+    int index = GetComponent<PlayerObject>().PlayerIndex;
+    Transform spawnPoint = GameSceneManager.Instance.GetSpawnPoint(index);
+
+    if (spawnPoint != null)
+    {
+        transform.position = spawnPoint.position;
+        transform.rotation = spawnPoint.rotation;
+    }
+}
     
     public override void FixedUpdateNetwork()
-    {
-        if(!HasInputAuthority) return;
+{
+    if (!HasInputAuthority) return;
 
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+    var mouse = Mouse.current;
+    if (mouse == null) return;
 
-         CameraX += mouseX;
-         CameraY -= mouseY;
+    float mouseX = mouse.delta.x.ReadValue() * mouseSensitivity * 0.1f;
+    float mouseY = mouse.delta.y.ReadValue() * mouseSensitivity * 0.1f;
 
-         CameraX = Mathf.Clamp(CameraX , -Xlimit ,Xlimit);
-         CameraY = Mathf.Clamp(CameraY , MinYlimit, MaxYlimit);
+    CameraX += mouseX;
+    CameraY -= mouseY;
 
-         HeadCameraPoint.localRotation = Quaternion.Euler(CameraY, CameraX , 0f);
-    }
+    CameraX = Mathf.Clamp(CameraX, -Xlimit, Xlimit);
+    CameraY = Mathf.Clamp(CameraY, MinYlimit, MaxYlimit);
+
+    HeadCameraPoint.localRotation = Quaternion.Euler(CameraY, CameraX, 0f);
+}
 
     private void FixedUpdate()
     {

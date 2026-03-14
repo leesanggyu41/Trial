@@ -839,6 +839,7 @@ GameObject:
   m_Component:
   - component: {fileID: 983894026}
   - component: {fileID: 983894025}
+  - component: {fileID: 983894027}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -863,7 +864,7 @@ MonoBehaviour:
   - {fileID: 1228690320}
   - {fileID: 1489384134}
   - {fileID: 923322808}
-  PlayerPrefab: {fileID: 0}
+  PlayerPrefab: {fileID: 3890996208925137358, guid: db29aced5de7ae54abfcff375c3b7e28, type: 3}
 --- !u!4 &983894026
 Transform:
   m_ObjectHideFlags: 0
@@ -879,6 +880,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &983894027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 983894024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 320814420
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 983894025}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &1228690319
 GameObject:
   m_ObjectHideFlags: 0
@@ -1265,13 +1285,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1951200815}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 1.5, y: 0, z: -4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 792875495}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1001 &1988310111
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -2,7 +2,7 @@ using UnityEngine;
 using Fusion;
 using System.Collections.Generic;
 
-public class GameSceneManager : MonoBehaviour
+public class GameSceneManager : NetworkBehaviour
 {
     public static GameSceneManager Instance;
 
@@ -16,6 +16,46 @@ public class GameSceneManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+    }
+
+    public override void Spawned()
+    {
+        if (Runner.IsServer)
+        {
+            foreach(var player in Runner.ActivePlayers)
+            {
+                SpawnPlayer(player);
+            }
+        }
+    }
+
+    public void SpawnPlayer(PlayerRef player)
+    {
+        int index = 0;
+
+        foreach(var play in Runner.ActivePlayers)
+        {
+            if(play == player) break;
+
+            index++;
+            
+        }
+
+        Transform spawnPoint = SpawnPoint[index % SpawnPoint.Length];
+
+        NetworkObject Playerobj = Runner.Spawn
+        (
+            PlayerPrefab,
+            spawnPoint.position,
+            spawnPoint.rotation,
+            player,
+            onBeforeSpawned: (r, obj) =>
+            {
+                obj.GetComponent<PlayerObject>().PlayerIndex = index;
+            }
+        );
+
+        _spawnedPlayers.Add(player, Playerobj);
     }
     public Transform GetSpawnPoint(int playerIndex)
     {
