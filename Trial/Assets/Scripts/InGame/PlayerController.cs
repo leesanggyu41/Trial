@@ -6,7 +6,7 @@ public class PlayerController : NetworkBehaviour
 {
     [Header("카메라 설정")]
     public Transform HeadCameraPoint;
-    public float mouseSensitivity = 2f;
+    public float mouseSensitivity = 1f;  
     [Header("카메라 제한")]
     public float Xlimit = 60f;
     public float MinYlimit = -30f;
@@ -27,7 +27,7 @@ public class PlayerController : NetworkBehaviour
         _camera = Camera.main;
         _camera.transform.SetParent(HeadCameraPoint);
         _camera.transform.localPosition = Vector3.zero;
-        _camera.transform.localRotation = Quaternion.identity;
+        _camera.transform.localRotation = HeadCameraPoint.rotation;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -65,7 +65,7 @@ public class PlayerController : NetworkBehaviour
     float mouseY = mouse.delta.y.ReadValue() * mouseSensitivity * 0.1f;
 
     CameraX += mouseX;
-    CameraY -= mouseY;
+    CameraY += mouseY;
 
     CameraX = Mathf.Clamp(CameraX, -Xlimit, Xlimit);
     CameraY = Mathf.Clamp(CameraY, MinYlimit, MaxYlimit);
@@ -74,10 +74,16 @@ public class PlayerController : NetworkBehaviour
 }
 
     private void FixedUpdate()
-    {
-        if(NamePoint == null || _camera == null) return;
+{
+    // 내 캐릭터 닉네임은 움직일 필요 없음
+    if (HasInputAuthority) return;
+    
+    // 상대 닉네임이 로컬 카메라를 바라보게
+    Camera localCamera = Camera.main;
+    if (NamePoint == null || localCamera == null) return;
 
-        NamePoint.LookAt(NamePoint.position+ _camera.transform.rotation * Vector3.forward, _camera.transform.rotation * Vector3.up);
-    }
+    NamePoint.LookAt(NamePoint.position + localCamera.transform.rotation * Vector3.forward, 
+        localCamera.transform.rotation * Vector3.up);
+}
 
 }
