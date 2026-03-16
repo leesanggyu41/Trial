@@ -1,3 +1,5 @@
+// GameStartManager는 방장이 게임을 시작할 때 필요한 로직을 처리하는 클래스입니다.
+// 방장이 [게임 시작] 버튼을 클릭하면, 최소 인원 체크를 수행하고, 방을 비공개로 전환한 후 모든 플레이어를 게임 씬으로 이동시키는 역할을 합니다.
 using UnityEngine;
 using Fusion;
 using System.Linq;

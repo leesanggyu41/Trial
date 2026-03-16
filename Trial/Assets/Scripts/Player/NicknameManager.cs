@@ -1,3 +1,6 @@
+// NicknameManager는 플레이어의 닉네임을 관리하는 클래스입니다.
+// 플레이어가 닉네임을 입력하고 저장할 수 있도록 하며, 
+//게임 씬에서 해당 닉네임을 불러와 사용할 수 있도록 합니다.
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -31,7 +34,7 @@ public class NicknameManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-   
+    // 씬이 로드될 때마다 닉네임 입력 필드를 찾아서 연결하는 메서드입니다.
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         GameObject inputObj = GameObject.FindWithTag("NicknameInput");
@@ -51,7 +54,7 @@ public class NicknameManager : MonoBehaviour
 
         Debug.Log($"NicknameInput 연결 완료 - 씬: {scene.name}");
     }
-
+    // 닉네임을 저장하는 메서드입니다. 입력된 닉네임이 유효한 경우 PlayerPrefs에 저장합니다.
     public void SaveNickname()
     {
         string nickname = GetNickname();
@@ -65,7 +68,7 @@ public class NicknameManager : MonoBehaviour
         PlayerPrefs.Save();
         Debug.Log($"닉네임 저장됨: {nickname}");
     }
-
+    // 저장된 닉네임을 반환하는 메서드입니다. 입력 필드에 값이 있으면 그 값을 반환하고, 그렇지 않으면 PlayerPrefs에서 가져오거나 기본값을 생성하여 반환합니다.
     public string GetNickname()
     {
         if (NicknameInput != null && !string.IsNullOrEmpty(NicknameInput.text))

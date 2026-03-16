@@ -1,3 +1,7 @@
+// LobbyManager는 대기실에서 방 목록을 관리하는 클래스입니다.
+// 방 목록을 서버에서 받아와서 UI에 표시하고, 
+//페이지네이션 기능을 제공하여 여러 페이지에 걸쳐 방을 탐색할 수 있도록 합니다.\
+// 또한, 방 목록이 업데이트될 때마다 UI를 새로고침하여 최신 상태를 유지합니다.
 using UnityEngine;
 using Fusion;
 using System.Collections.Generic;
@@ -34,7 +38,7 @@ public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
         }
         else
         {
-            ServerConnectionManager.Instance.ConnectToServer();
+            _ = ServerConnectionManager.Instance.ConnectToServer();
         }
     }
 
@@ -42,7 +46,7 @@ public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         page.text = $"{currentPage + 1}/{Mathf.Max(1, allSessions.Count)}";
     }
-
+    // 방 목록이 업데이트될 때마다 호출되는 콜백 메서드입니다. 받은 방 목록에서 유효한 방만 필터링하여 저장하고, UI를 새로고침합니다.
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
         if (sessionList.Count == 0 && allSessions.Count > 0) return;
@@ -76,14 +80,14 @@ public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
         RoomItem item = go.GetComponent<RoomItem>();
         if (item != null) item.Setup(session);
     }
-
+    
     public async void OnClickRefresh()
     {
         if (_runner == null  || !_runner.IsCloudReady) return;
         Debug.Log("방리스트 새로고침");
         _runner.RemoveCallbacks(this);
         _runner.AddCallbacks(this);
-        await _runner.JoinSessionLobby(SessionLobby.ClientServer);
+        _ = await _runner.JoinSessionLobby(SessionLobby.ClientServer);
     }
 
     public void OnClickNextPage()

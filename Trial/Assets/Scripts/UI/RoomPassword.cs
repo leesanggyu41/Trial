@@ -1,3 +1,5 @@
+// RoomPassword는 방 생성 UI에서 비밀번호 설정과 관련된 UI 요소들을 관리하는 클래스입니다.
+// 사용자가 비밀번호 사용 여부를 토글하면, 해당 상태에 따라 비밀번호 입력 칸과 그 배경의 색상을 변경하여 시각적으로 활성화/비활성화 상태를 구분할 수 있도록 처리합니다.
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;

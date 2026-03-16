@@ -1,3 +1,6 @@
+// ServerConnectionManager는 게임의 서버 연결과 관련된 모든 로직을 관리하는 싱글톤 클래스입니다.
+// 로비 접속, 방 생성, 방 참가, 방 나가기 등의 기능을 담당하며, 네트워크 러너(NetworkRunner)를 생성하고 관리하는 역할을 합니다.
+// 또한, 네트워크 연결 상태에 따른 UI 업데이트와 오류 처리도 포함되어 있습니다
 using UnityEngine;
 using Fusion;
 using UnityEngine.SceneManagement;
