@@ -12,11 +12,11 @@ public class RoomCreateManager : MonoBehaviour
     public TMP_InputField roomNameInput;
     public Toggle passwordToggle;
     public TMP_InputField passwordInput;
-    public GameObject waitpanal;
+    
 
     public async void OnClickCreateRoom()
     {
-        waitpanal.SetActive(true);
+        
         string roomName = roomNameInput.text;
         //방이름을 적지 않을시 임의로 방이름 생성
         if (string.IsNullOrEmpty(roomName))

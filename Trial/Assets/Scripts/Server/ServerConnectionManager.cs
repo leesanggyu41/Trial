@@ -2,6 +2,7 @@
 // 로비 접속, 방 생성, 방 참가, 방 나가기 등의 기능을 담당하며, 네트워크 러너(NetworkRunner)를 생성하고 관리하는 역할을 합니다.
 // 또한, 네트워크 연결 상태에 따른 UI 업데이트와 오류 처리도 포함되어 있습니다
 using UnityEngine;
+using System.Linq;
 using Fusion;
 using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ public class ServerConnectionManager : MonoBehaviour
     public TextMeshProUGUI errorText;
     public TextMeshProUGUI statusText;
     public GameObject retryButton;
+
+    public GameObject waitpanal; // 입장 대기 패널
 
     [Header("Spawn 설정")]
     public NetworkPrefabRef playerPrefab;
@@ -54,7 +57,7 @@ public class ServerConnectionManager : MonoBehaviour
 
     public NetworkRunner GetRunner() => _runner;
 
-    // 로비 접속
+    // 서버에 연결하여 로비에 입장하는 함수입니다. 네트워크 상태를 확인하고, Runner를 생성하여 로비에 접속을 시도합니다. 접속 성공 여부에 따라 UI를 업데이트하고, 실패 시 오류 메시지를 표시합니다.
     public async Task ConnectToServer()
     {
         if (retryButton != null) retryButton.SetActive(false);
@@ -89,10 +92,19 @@ public class ServerConnectionManager : MonoBehaviour
             ShowError($"오류 발생: {e.Message}");
         }
     }
-
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+{
+    //특정 씬일 때만 실행
+    if (scene.buildIndex == 1) // 대기씬
+    {
+        Debug.Log("로비씬 로드됨!");
+        waitpanal = GameObject.FindGameObjectWithTag("WaitPanel");
+    }
+}
     // 방 생성
     public async Task CreateRoom(string roomName, Dictionary<string, SessionProperty> customProps)
     {
+        waitpanal.SetActive(true);
         if (NicknameManager.Instance != null)
             NicknameManager.Instance.SaveNickname();
 
@@ -118,6 +130,7 @@ public class ServerConnectionManager : MonoBehaviour
             Debug.Log("방 생성 성공");
         else
         {
+            waitpanal.SetActive(false);
             Debug.LogError($"방 생성 실패: {result.ShutdownReason}");
             Destroy(_runner.gameObject);
             _runner = null;
@@ -129,7 +142,7 @@ public class ServerConnectionManager : MonoBehaviour
     {
         if (NicknameManager.Instance != null)
             NicknameManager.Instance.SaveNickname();
-
+        waitpanal.SetActive(true);
         string sessionName = session.Name;
 
         if (_runner != null && _runner.IsRunning)
@@ -156,6 +169,7 @@ public class ServerConnectionManager : MonoBehaviour
         {
             Debug.LogError($"방 입장 실패: {result.ShutdownReason}");
             Destroy(_runner.gameObject);
+            waitpanal.SetActive(false);
             _runner = null;
         }
     }

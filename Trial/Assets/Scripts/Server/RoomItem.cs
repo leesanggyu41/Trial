@@ -12,7 +12,7 @@ public class RoomItem : MonoBehaviour
     public TextMeshProUGUI roomNameText;    // 방 제목
     public TextMeshProUGUI playerCountText; // 인원 (1/4)
     public GameObject lockIcon;            // 자물쇠 이미지 오브젝트
-
+    
     private SessionInfo _session;
 
     // LobbyManager에서 데이터를 넣어주는 함수
@@ -55,6 +55,7 @@ public class RoomItem : MonoBehaviour
     }
     else
     {
+        
         // 바로 입장 (매니저 호출)
         ServerConnectionManager.Instance.JoinSession(_session);
     }
