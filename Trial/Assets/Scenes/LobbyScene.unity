@@ -781,11 +781,11 @@ GameObject:
   - component: {fileID: 167325959}
   m_Layer: 5
   m_Name: waitpanal
-  m_TagString: Untagged
+  m_TagString: waitpanal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &167325958
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7535,7 +7535,6 @@ MonoBehaviour:
   roomNameInput: {fileID: 1666670342}
   passwordToggle: {fileID: 534734323}
   passwordInput: {fileID: 1435968845}
-  waitpanal: {fileID: 167325957}
 --- !u!4 &2022309818
 Transform:
   m_ObjectHideFlags: 0

@@ -125,7 +125,17 @@ public class WaitingRoomManager : MonoBehaviour
     private void OnClickStart()
     {
         if (_runner != null && _runner.IsServer)
+        {
+            _runner.SessionInfo.UpdateCustomProperties(new Dictionary<string, SessionProperty>
+            {
+                { "IsStarted", true }
+            });
+
+        
+            _runner.SessionInfo.IsOpen = false;
             Debug.Log("게임 시작!");
             _runner.LoadScene(SceneRef.FromIndex(3));
+        }
+            
     }
 }

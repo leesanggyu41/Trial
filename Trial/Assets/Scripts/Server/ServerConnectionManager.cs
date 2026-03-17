@@ -38,6 +38,11 @@ public class ServerConnectionManager : MonoBehaviour
         if (errorWindow != null) errorWindow.SetActive(false);
         await ConnectToServer();
     }
+    void OnEnable()
+    {
+    	  // 씬 매니저의 sceneLoaded에 체인을 건다.
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
 
     // Runner 생성 공통 함수
     private NetworkRunner CreateRunner(string name = "Runner")
@@ -92,15 +97,17 @@ public class ServerConnectionManager : MonoBehaviour
             ShowError($"오류 발생: {e.Message}");
         }
     }
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-{
-    //특정 씬일 때만 실행
-    if (scene.buildIndex == 1) // 대기씬
+    public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("로비씬 로드됨!");
-        waitpanal = GameObject.FindGameObjectWithTag("WaitPanel");
+        Debug.Log("응디");
+        //특정 씬일 때만 실행
+        if (scene.buildIndex == 1) // 대기씬
+        {
+            Debug.Log("로비씬 로드됨!");
+            waitpanal = GameObject.FindGameObjectWithTag("waitpanal");
+            waitpanal.SetActive(false);
+        }
     }
-}
     // 방 생성
     public async Task CreateRoom(string roomName, Dictionary<string, SessionProperty> customProps)
     {
