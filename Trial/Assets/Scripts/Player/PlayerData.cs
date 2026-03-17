@@ -38,8 +38,11 @@ public class PlayerData : NetworkBehaviour
     }
 
     void OnNicknameChanged()
-    {
-        if (WaitingRoomManager.Instance != null)
-            WaitingRoomManager.Instance.RefreshPlayerList();
-    }
+{
+    
+    GetComponent<PlayerController>()?.UpdateNameText(Nickname.ToString());
+
+    if (WaitingRoomManager.Instance != null)
+        WaitingRoomManager.Instance.RefreshPlayerList();
+}
 }

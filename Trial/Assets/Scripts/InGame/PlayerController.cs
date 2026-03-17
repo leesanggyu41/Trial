@@ -30,15 +30,14 @@ public class PlayerController : NetworkBehaviour
         _camera = Camera.main;
         _camera.transform.SetParent(HeadCameraPoint);
         _camera.transform.localPosition = Vector3.zero;
-        _camera.transform.localRotation = HeadCameraPoint.rotation;
+        _camera.transform.localRotation = Quaternion.identity;
         Cursor.lockState = CursorLockMode.Locked;
     }
+    
 
     PlayerData playerData = GetComponent<PlayerData>();
     if (playerData != null)
-    {
-        NameText.text = playerData.Nickname.ToString();
-    }
+        UpdateNameText(playerData.Nickname.ToString());
 
     // GameSceneManager null 체크
     if (GameSceneManager.Instance == null)
@@ -56,6 +55,12 @@ public class PlayerController : NetworkBehaviour
         transform.rotation = spawnPoint.rotation;
     }
 }
+
+public void UpdateNameText(string nickname)
+{
+    if (NameText != null)
+        NameText.text = nickname;
+}
     
     public override void FixedUpdateNetwork()
 {
@@ -68,7 +73,7 @@ public class PlayerController : NetworkBehaviour
     float mouseY = mouse.delta.y.ReadValue() * mouseSensitivity * 0.1f;
 
     CameraX += mouseX;
-    CameraY += mouseY;
+    CameraY -= mouseY;
 
     CameraX = Mathf.Clamp(CameraX, -Xlimit, Xlimit);
     CameraY = Mathf.Clamp(CameraY, MinYlimit, MaxYlimit);
