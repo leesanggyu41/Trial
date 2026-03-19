@@ -265,6 +265,7 @@ GameObject:
   - component: {fileID: 3485994599022493227}
   - component: {fileID: -6193320690357500488}
   - component: {fileID: 7810111254709352513}
+  - component: {fileID: 5517022818228603993}
   - component: {fileID: 2658898219430251723}
   - component: {fileID: 3201149987544829826}
   m_Layer: 0
@@ -327,7 +328,7 @@ MonoBehaviour:
   MaxYlimit: 30
   NameText: {fileID: 1279286960750095752}
   NamePoint: {fileID: 1185260439819314941}
-  playerCanTouch: 1
+  _playerTurn: 0
 --- !u!114 &3485994599022493227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,6 +350,7 @@ MonoBehaviour:
   - {fileID: -7036155347277358006}
   - {fileID: -6193320690357500488}
   - {fileID: 7810111254709352513}
+  - {fileID: 5517022818228603993}
   - {fileID: 2658898219430251723}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &-6193320690357500488
@@ -377,6 +379,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerGameData
   _HP: 4
+--- !u!114 &5517022818228603993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3890996208925137358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21e72f268605fb54a9aeb841baeeed1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerTurnChange
+  rend: {fileID: 5839716619945731325}
+  turnMat: {fileID: 2100000, guid: 5cde5f417247d474cacdb060ea65c994, type: 2}
+  normalMat: {fileID: 2100000, guid: ccb34ca02098bce44907b8bf67696e02, type: 2}
+  _IsMyTurn: 0
 --- !u!114 &2658898219430251723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -428,6 +446,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3890996208925137358}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
