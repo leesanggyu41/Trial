@@ -152,6 +152,7 @@ MonoBehaviour:
   errorText: {fileID: 805823048}
   statusText: {fileID: 733944588}
   retryButton: {fileID: 1347420967}
+  waitpanal: {fileID: 0}
   playerPrefab:
     RawGuidValue: 00c1d7bf07f26d945b301f6c0946e72a
 --- !u!4 &50619302

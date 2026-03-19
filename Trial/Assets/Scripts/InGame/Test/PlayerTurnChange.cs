@@ -1,25 +1,30 @@
 using UnityEngine;
 using Fusion;
+using UnityEngine.InputSystem;
 
 public class PlayerTurnChange : NetworkBehaviour
 {
     public Renderer rend;
     public Material turnMat;
     public Material normalMat;
-
-    [Networked]
     public bool IsMyTurn { get; set; }
 
-    public override void Render()
+
+    
+    public void SetTurn(InputAction.CallbackContext context)
     {
-        rend.material = IsMyTurn ? turnMat : normalMat;
+        if (!context.started) return;
+
+        if (Object.HasInputAuthority)
+        {
+            RPC_SetTurn();
+        }
     }
 
-    [ContextMenu("색깔 바구기")]
-    //[Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void SetTurn(bool value)
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_SetTurn()
     {
-        if (Object.HasStateAuthority)
-            IsMyTurn = value;
+        IsMyTurn = !IsMyTurn;
+        rend.material = IsMyTurn ? turnMat : normalMat;
     }
 }
