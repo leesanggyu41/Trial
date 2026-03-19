@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Syringe : MonoBehaviour,ReactionObject
+public class Syringe : MonoBehaviour
 {
    public enum SyringeType{Normal,Poison}
    public SyringeType type;
