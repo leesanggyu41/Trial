@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 //플레이어의 체력을 테스트하기위해 만들어진 코드
-public class TestCube : MonoBehaviour,ReactionObject
+public class TestCube : MonoBehaviour
 {
     public enum CubeType { Damage, Heal }
     public CubeType cubeType;
