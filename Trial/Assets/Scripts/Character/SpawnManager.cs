@@ -25,16 +25,6 @@ public class SpawnManager : SimulationBehaviour, IPlayerJoined, IPlayerLeft
     private void OnSceneLoad(Scene scene, LoadSceneMode mode)
     {
         FindSpawnPoints();
-        if (scene.buildIndex == 3 && Runner.IsServer)
-    {
-        foreach (var networkObject in _spawnedCharacters.Values)
-        {
-            if (networkObject != null)
-                Runner.Despawn(networkObject);
-        }
-        _spawnedCharacters.Clear();
-        Debug.Log("대기씬 오브젝트 정리 완료");
-    }
     }
     // 씬이 시작될 때 스폰 포인트를 찾아서 정렬합니다.
     private void FindSpawnPoints()

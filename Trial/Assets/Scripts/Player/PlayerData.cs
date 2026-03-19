@@ -11,26 +11,24 @@ public class PlayerData : NetworkBehaviour
 
     public PlayerListItem LinkedItem { get; set; }
 
-public override void Spawned()
-{
-    if (HasInputAuthority)
+    public override void Spawned()
     {
-        string nickname = NicknameManager.Instance != null
-            ? NicknameManager.Instance.GetNickname()
-            : $"Player_{Random.Range(1000, 9999)}";
+        if (HasStateAuthority)
+        {
+            Nickname = NicknameManager.Instance != null
+                ? NicknameManager.Instance.GetNickname()
+                : $"Player_{Random.Range(1000, 9999)}";
+        }
 
-        //직접 설정 제거, RPC만 사용
-        Rpc_SetNickname(nickname);
+        if (WaitingRoomManager.Instance != null)
+            WaitingRoomManager.Instance.RefreshPlayerList();
     }
-
-    if (WaitingRoomManager.Instance != null)
-        WaitingRoomManager.Instance.RefreshPlayerList();
-}
-[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-public void Rpc_SetNickname(string nickname)
-{
-    Nickname = nickname; // StateAuthority(서버)가 설정
-}
+    // 플레이어가 게임에서 퇴장할 때 해당 플레이어의 네트워크 객체를 제거하여 게임에서 사라지도록 합니다.
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        if (LinkedItem != null)
+            Destroy(LinkedItem.gameObject);
+    }
     [Rpc(RpcSources.StateAuthority, RpcTargets.InputAuthority)]
     public void Rpc_Kick()
     {
@@ -39,14 +37,10 @@ public void Rpc_SetNickname(string nickname)
             ServerConnectionManager.Instance.LeaveRoom();
     }
 
-void OnNicknameChanged()
+    void OnNicknameChanged()
 {
-    Debug.Log($"[OnNicknameChanged] Object: {gameObject.name}, Nickname: '{Nickname}', IsEmpty: {string.IsNullOrEmpty(Nickname.ToString())}");
-    if (string.IsNullOrEmpty(Nickname.ToString())) return;
-    Debug.Log($"[OnNicknameChanged] Object: {gameObject.name}, Nickname: {Nickname}, InputAuthority: {Object.InputAuthority}");
     
-    var controller = GetComponent<PlayerController>();
-    Debug.Log($"[OnNicknameChanged] Controller: {controller}, NameText: {controller?.NameText}");
+    GetComponent<PlayerController>()?.UpdateNameText(Nickname.ToString());
 
     if (WaitingRoomManager.Instance != null)
         WaitingRoomManager.Instance.RefreshPlayerList();
