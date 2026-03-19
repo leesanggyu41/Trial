@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "PlayerInputAction",
+    "maps": [
+        {
+            "name": "Local_Player",
+            "id": "a672f762-ecda-41b6-b206-1431d798eec5",
+            "actions": [
+                {
+                    "name": "ObjectClick",
+                    "type": "Button",
+                    "id": "7a5fa4a9-c1ae-40f5-9fd4-f61c30a4a424",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "2b4c64a9-ca81-4df9-81d4-bb997b017260",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ObjectClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

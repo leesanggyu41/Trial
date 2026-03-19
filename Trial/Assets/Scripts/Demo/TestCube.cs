@@ -3,29 +3,30 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 //플레이어의 체력을 테스트하기위해 만들어진 코드
-public class TestCube : MonoBehaviour
+public class TestCube : MonoBehaviour,ReactionObject
 {
     public enum CubeType { Damage, Heal }
     public CubeType cubeType;
 
-    private void Update()
-    {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            // 레이캐스트로 클릭한 오브젝트 감지
-            Vector2 mousePos = Mouse.current.position.ReadValue();
-            Ray ray = Camera.main.ScreenPointToRay(new Vector3(mousePos.x, mousePos.y, 0f));
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                // 클릭한 오브젝트가 이 큐브인지 확인
-                if (hit.collider.gameObject == gameObject)
-                    OnClicked();
-            }
-        }
-    }
+    // private void Update()
+    // {
+    //     if (Mouse.current.leftButton.wasPressedThisFrame)
+    //     {
+    //         // 레이캐스트로 클릭한 오브젝트 감지
+    //         Vector2 mousePos = Mouse.current.position.ReadValue();
+    //         Ray ray = Camera.main.ScreenPointToRay(new Vector3(mousePos.x, mousePos.y, 0f));
+    //         if (Physics.Raycast(ray, out RaycastHit hit))
+    //         {
+    //             // 클릭한 오브젝트가 이 큐브인지 확인
+    //             if (hit.collider.gameObject == gameObject)
+    //                 OnClicked();
+    //         }
+    //     }
+    // }
 
-    private void OnClicked()
+    public void OnEvent()
     {
+        Debug.Log("TestCube OnClick");
         PlayerGameData playerData = FindLocalPlayer();
         if (playerData == null) return;
 
