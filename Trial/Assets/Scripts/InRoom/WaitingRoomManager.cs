@@ -55,8 +55,9 @@ public class WaitingRoomManager : MonoBehaviour
     {
         if (_runner == null) return;
 
-        if (_runner.IsServer)
-            startButton.interactable = _runner.SessionInfo.PlayerCount >= 2;
+        if (_runner.IsServer && _runner.SessionInfo.PlayerCount >= 2)
+            Invoke("openstartbutton", 5f);
+            
 
         // Runner 끊기면 로비로
         if (!_runner.IsRunning)
@@ -65,7 +66,10 @@ public class WaitingRoomManager : MonoBehaviour
             ServerConnectionManager.Instance.LeaveRoom();
         }
     }
-
+    public void openstartbutton()
+    {
+        startButton.interactable = true;
+    }
     public void RefreshPlayerList()
     {
         if (playerListContent == null || _runner == null) return;

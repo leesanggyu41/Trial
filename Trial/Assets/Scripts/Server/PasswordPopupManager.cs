@@ -35,6 +35,13 @@ public class PasswordPopupManager : MonoBehaviour
         panel.SetActive(true);
     }
 
+    public void ClosePasswordPanel()
+    {
+        inputField.text = "";
+        errorText.text = "";
+        panel.SetActive(false);
+    }
+
     // [확인] 버튼에 연결할 함수
     public void OnClickConfirm()
     {
@@ -50,7 +57,13 @@ public class PasswordPopupManager : MonoBehaviour
         {
             errorText.text = "비밀번호가 틀렸습니다.";
             inputField.text = "";
+            Invoke(nameof(ClearError), 2f); // 2초 후에 오류 메시지 제거
         }
+    }
+
+    private void ClearError()
+    {
+        errorText.text = "";
     }
 
     // [취소] 버튼에 연결
