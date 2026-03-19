@@ -33,29 +33,47 @@ public class PlayerController : NetworkBehaviour
         _camera.transform.localRotation = Quaternion.identity;
         Cursor.lockState = CursorLockMode.Locked;
     }
+    StartCoroutine(WaitForNickname());
     
 
-    PlayerData playerData = GetComponent<PlayerData>();
-    if (playerData != null)
-        UpdateNameText(playerData.Nickname.ToString());
+    // PlayerData playerData = GetComponent<PlayerData>();
+    // if (playerData != null)
+    //     UpdateNameText(playerData.Nickname.ToString());
 
     // GameSceneManager null 체크
-    if (GameSceneManager.Instance == null)
-    {
-        Debug.LogError("GameSceneManager를 찾을 수 없음!");
-        return;
-    }
+    // if (GameSceneManager.Instance == null)
+    // {
+    //     Debug.LogError("GameSceneManager를 찾을 수 없음!");
+    //     return;
+    // }
 
-    int index = GetComponent<PlayerObject>().PlayerIndex;
-    Transform spawnPoint = GameSceneManager.Instance.GetSpawnPoint(index);
+    // int index = GetComponent<PlayerObject>().PlayerIndex;
+    // Transform spawnPoint = GameSceneManager.Instance.GetSpawnPoint(index);
 
-    if (spawnPoint != null)
-    {
-        transform.position = spawnPoint.position;
-        transform.rotation = spawnPoint.rotation;
-    }
+    // if (spawnPoint != null)
+    // {
+    //     transform.position = spawnPoint.position;
+    //     transform.rotation = spawnPoint.rotation;
+    // }
 }
 
+private System.Collections.IEnumerator WaitForNickname()
+{
+    PlayerData playerData = GetComponent<PlayerData>();
+    if (playerData == null) yield break;
+
+    // 자기 오브젝트 저장
+    NetworkObject thisObject = GetComponent<NetworkObject>();
+
+    while (string.IsNullOrEmpty(playerData.Nickname.ToString()))
+        yield return null;
+
+    // 아직 이 오브젝트가 살아있는지 확인
+    if (thisObject == null || !thisObject.IsValid) yield break;
+
+    Debug.Log($"[WaitForNickname] Object: {gameObject.name}, Nickname: {playerData.Nickname}");
+    UpdateNameText(playerData.Nickname.ToString());
+}
 public void UpdateNameText(string nickname)
 {
     if (NameText != null)

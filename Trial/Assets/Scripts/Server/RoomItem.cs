@@ -32,17 +32,18 @@ public class RoomItem : MonoBehaviour
         {
             if (lockIcon != null) lockIcon.SetActive(false);
         }
-        if (!session.IsOpen)
-        {
-            GetComponent<CanvasGroup>().alpha = 0.5f; // 어둡게
-            // 버튼 클릭 비활성화
-            GetComponent<Button>().interactable = false;
-        }
-        else
-        {
-            GetComponent<CanvasGroup>().alpha = 1f;
-            GetComponent<Button>().interactable = true;
-        }
+
+    
+    if (!session.IsOpen)
+    {
+        GetComponent<CanvasGroup>().alpha = 0.5f;
+        GetComponent<Button>().interactable = false;
+    }
+    else
+    {
+        GetComponent<CanvasGroup>().alpha = 1f;
+        GetComponent<Button>().interactable = true;
+    }
     }
 
     // 버튼 클릭 시 호출 (Unity Button 이벤트에 연결)
