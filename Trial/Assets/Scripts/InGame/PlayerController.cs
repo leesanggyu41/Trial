@@ -18,6 +18,9 @@ public class PlayerController : NetworkBehaviour
     public TMP_Text NameText;
     public Transform NamePoint;
 
+    [Header("플레이어 턴")]
+    [Networked] public bool playerTurn {get; set;}
+
     private Camera _camera;
     private float CameraX;
     private float CameraY;
@@ -81,6 +84,25 @@ public void UpdateNameText(string nickname)
     HeadCameraPoint.localRotation = Quaternion.Euler(CameraY, CameraX, 0f);
 }
 
+// 성씨가 만듬
+// 플레이어가 좌클릭으로 오브젝트와 상호 작용
+public void CanPlayerTouch(InputAction.CallbackContext context)
+{
+    // 자신이 오브젝트를 선택할 수 있는지 여부를 검색
+    if(!context.started || !playerTurn) return;
+    
+    Ray ray = _camera.ScreenPointToRay(Mouse.current.position.ReadValue());
+    RaycastHit hitInof;
+
+    // 만약 해당 오브젝트가 ReactionObject타입이면 클릭 이벤트 실행
+    if(Physics.Raycast(ray, out hitInof, 200f)&& hitInof.collider.TryGetComponent(out ReactionObject reactionObj))
+    {
+        reactionObj.OnEvent();
+    }
+
+
+}
+
     private void FixedUpdate()
 {
     // 내 캐릭터 닉네임은 움직일 필요 없음
@@ -94,4 +116,12 @@ public void UpdateNameText(string nickname)
         localCamera.transform.rotation * Vector3.up);
 }
 
+}
+
+
+// 성씨가 만듬
+// 플레이어가 클릭할 시 반응하는 인터페이스 함수
+public interface ReactionObject
+{
+    public void OnEvent();
 }

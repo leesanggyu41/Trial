@@ -5,6 +5,7 @@ using UnityEngine;
 using Fusion;
 using System.Collections.Generic;
 
+[DefaultExecutionOrder(-100)]
 public class GameSceneManager : NetworkBehaviour
 {
     public static GameSceneManager Instance;
@@ -30,6 +31,7 @@ public class GameSceneManager : NetworkBehaviour
                 SpawnPlayer(player);
             }
         }
+
     }
     // 플레이어가 게임에 참여할 때 네트워크 객체를 생성하고, 플레이어의 인덱스를 할당하여 동기화합니다.
     public void SpawnPlayer(PlayerRef player)
@@ -39,7 +41,7 @@ public class GameSceneManager : NetworkBehaviour
         foreach(var play in Runner.ActivePlayers)
         {
             if(play == player) break;
-
+            
             index++;
             
         }
@@ -55,10 +57,17 @@ public class GameSceneManager : NetworkBehaviour
             onBeforeSpawned: (r, obj) =>
             {
                 obj.GetComponent<PlayerObject>().PlayerIndex = index;
+                // 임시로 플레이어 이름 설정
+                obj.name = index.ToString();
             }
+            
         );
 
         _spawnedPlayers.Add(player, Playerobj);
+
+ 
+        
+      
     }
     // 플레이어가 게임에서 퇴장할 때 해당 플레이어의 네트워크 객체를 제거하여 게임에서 사라지도록 합니다.
     public Transform GetSpawnPoint(int playerIndex)
@@ -67,4 +76,6 @@ public class GameSceneManager : NetworkBehaviour
             return SpawnPoint[playerIndex];
         return SpawnPoint[0];
     }
+
+
 }
