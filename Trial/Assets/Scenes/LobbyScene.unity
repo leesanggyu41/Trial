@@ -5567,7 +5567,7 @@ MonoBehaviour:
   roomItemPrefab: {fileID: 5208302576119704252, guid: d6de54a4b4d128b48adf548d540fb3b1, type: 3}
   contentTransform: {fileID: 96612322}
   page: {fileID: 369184509}
-  itemsPerPage: 1
+  itemsPerPage: 8
 --- !u!4 &1391512373
 Transform:
   m_ObjectHideFlags: 0
@@ -7345,7 +7345,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2021454022
 RectTransform:
   m_ObjectHideFlags: 0
