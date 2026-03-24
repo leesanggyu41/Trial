@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 04a4a2caff43ba746bd61500e1a40dc5
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308636
+  packageName: Sick Person
+  packageVersion: 1.0
+  assetPath: Assets/Sick_person/URP/Animations/Sick_person_idle_1_animator.controller
+  uploadId: 726119

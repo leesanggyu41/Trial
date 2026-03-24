@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 65a6c80b25a17da4d87b32bfe83bf564
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308636
+  packageName: Sick Person
+  packageVersion: 1.0
+  assetPath: Assets/Sick_person/HDRP/Materials/Sick_person_body_material _v3.mat
+  uploadId: 726119

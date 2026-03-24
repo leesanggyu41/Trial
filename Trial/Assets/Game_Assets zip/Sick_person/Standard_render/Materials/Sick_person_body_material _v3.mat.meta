@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 165b6192c135902478ad6ab22b92a87c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308636
+  packageName: Sick Person
+  packageVersion: 1.0
+  assetPath: Assets/Sick_person/Standard_render/Materials/Sick_person_body_material
+    _v3.mat
+  uploadId: 726119

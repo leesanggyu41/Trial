@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ae7355d6d2392cb45808a6787781d04a
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308636
+  packageName: Sick Person
+  packageVersion: 1.0
+  assetPath: Assets/Sick_person/HDRP/Demoscene/camera_movement.anim
+  uploadId: 726119

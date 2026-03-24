@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 165fe7dc40b4a4c438108d033d0e2637
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308636
+  packageName: Sick Person
+  packageVersion: 1.0
+  assetPath: Assets/Sick_person/Standard_render/Animations/Sick_person_hit_wall_animator.controller
+  uploadId: 726119

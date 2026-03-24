@@ -1,0 +1,10 @@
+Interferences:   https://assetstore.unity.com/packages/slug/281861
+Distortions:     https://assetstore.unity.com/packages/slug/282947
+Hacked:          https://assetstore.unity.com/packages/slug/293724
+Cheap Camera:    https://assetstore.unity.com/packages/slug/287563
+Artifacts:       https://assetstore.unity.com/packages/slug/288952
+Broken LCD:      https://assetstore.unity.com/packages/slug/294991
+Corrupt Memory:  https://assetstore.unity.com/packages/slug/274730
+Color Blindness: https://assetstore.unity.com/packages/slug/273126
+Bad GPU:         https://assetstore.unity.com/packages/slug/288689
+VHS:             https://assetstore.unity.com/packages/slug/282181

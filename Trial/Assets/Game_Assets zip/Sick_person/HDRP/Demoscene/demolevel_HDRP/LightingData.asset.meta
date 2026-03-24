@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: dffd53c743744534fa41b3f1eada5d8b
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 112000000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308636
+  packageName: Sick Person
+  packageVersion: 1.0
+  assetPath: Assets/Sick_person/HDRP/Demoscene/demolevel_HDRP/LightingData.asset
+  uploadId: 726119

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9e4c4d2d60666d84cba5fe756cd4fd7d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308636
+  packageName: Sick Person
+  packageVersion: 1.0
+  assetPath: Assets/Sick_person/Standard_render/Materials/Sick_person_eye_cover_material.mat
+  uploadId: 726119

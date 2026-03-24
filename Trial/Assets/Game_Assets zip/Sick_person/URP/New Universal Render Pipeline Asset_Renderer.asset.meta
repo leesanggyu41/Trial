@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7cac6d90e2f50384388ddb9af134a7fb
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308636
+  packageName: Sick Person
+  packageVersion: 1.0
+  assetPath: Assets/Sick_person/URP/New Universal Render Pipeline Asset_Renderer.asset
+  uploadId: 726119

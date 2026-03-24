@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9ffdbd73123888d43b29f73f5fda402d
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308636
+  packageName: Sick Person
+  packageVersion: 1.0
+  assetPath: Assets/Sick_person/Standard_render/Animations/Sick_person_idle_2_animator.controller
+  uploadId: 726119

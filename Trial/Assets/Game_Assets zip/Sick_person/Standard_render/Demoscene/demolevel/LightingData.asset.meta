@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 35bd53461bc172b498a607e938cd7f16
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 112000000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308636
+  packageName: Sick Person
+  packageVersion: 1.0
+  assetPath: Assets/Sick_person/Standard_render/Demoscene/demolevel/LightingData.asset
+  uploadId: 726119

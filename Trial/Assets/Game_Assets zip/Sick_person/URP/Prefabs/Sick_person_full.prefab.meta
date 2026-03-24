@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 87099dc385a62af4792c23507aafc4bd
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308636
+  packageName: Sick Person
+  packageVersion: 1.0
+  assetPath: Assets/Sick_person/URP/Prefabs/Sick_person_full.prefab
+  uploadId: 726119

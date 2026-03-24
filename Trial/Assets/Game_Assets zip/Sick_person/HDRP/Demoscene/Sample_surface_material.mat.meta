@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d03d0a0c15f9d3a48b06bac38b4389db
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308636
+  packageName: Sick Person
+  packageVersion: 1.0
+  assetPath: Assets/Sick_person/HDRP/Demoscene/Sample_surface_material.mat
+  uploadId: 726119

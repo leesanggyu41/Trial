@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5d7b9f12c9f2cfa40b66164125bab28c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308636
+  packageName: Sick Person
+  packageVersion: 1.0
+  assetPath: Assets/Sick_person/URP/Animations/Sick_person_walk_animatior.controller
+  uploadId: 726119

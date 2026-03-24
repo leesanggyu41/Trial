@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 4c0aabda9fa4c384e8f4f308a7dd0dbd
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 112000000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308636
+  packageName: Sick Person
+  packageVersion: 1.0
+  assetPath: Assets/Sick_person/URP/Demoscene/demolevel_URP/LightingData.asset
+  uploadId: 726119

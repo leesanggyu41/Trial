@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 592656a2326bde543807617724c6bc81
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 308636
+  packageName: Sick Person
+  packageVersion: 1.0
+  assetPath: Assets/Sick_person/HDRP/Materials/Sick_person_hair_brown_material.mat
+  uploadId: 726119
