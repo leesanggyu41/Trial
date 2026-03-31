@@ -65,9 +65,11 @@ public class GameSceneManager : NetworkBehaviour
 
         _spawnedPlayers.Add(player, Playerobj);
 
- 
-        
-      
+        GameTurnManager.Instance.RegisterPlayer(Playerobj.GetComponent<PlayerController>());
+
+
+
+
     }
     // 플레이어가 게임에서 퇴장할 때 해당 플레이어의 네트워크 객체를 제거하여 게임에서 사라지도록 합니다.
     public Transform GetSpawnPoint(int playerIndex)
