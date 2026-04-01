@@ -18,7 +18,7 @@ public class PlayerController : NetworkBehaviour
     public TMP_Text NameText;
     public Transform NamePoint;
 
-   // [Header("플레이어 턴")]
+    [Header("플레이어 턴")]
     [Networked] public bool playerTurn {get; set;}
 
     private Camera _camera;

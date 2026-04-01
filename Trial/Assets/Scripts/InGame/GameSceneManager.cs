@@ -57,8 +57,6 @@ public class GameSceneManager : NetworkBehaviour
             onBeforeSpawned: (r, obj) =>
             {
                 obj.GetComponent<PlayerObject>().PlayerIndex = index;
-                // 임시로 플레이어 이름 설정
-                obj.name = index.ToString();
             }
             
         );
