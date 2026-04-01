@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI; // Slider, Toggle 사용을 위해 필요
+using UnityEngine.UI;
 using TMPro;
 using Michsky.UI.Dark; // TMP_Dropdown 사용을 위해 필요
 
