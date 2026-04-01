@@ -22,6 +22,9 @@ public class SettingManager : MonoBehaviour
     public Slider motionBlurSlider;
     public HorizontalSelector fullScreenToggle; 
 
+    [Header("Setting panal")]
+    public GameObject settingPanal;
+
     void Start()
     {
         // 1. 데이터 로드
@@ -47,6 +50,7 @@ public class SettingManager : MonoBehaviour
     {
         SaveSystem.SaveSettings(currentSettings);
         Debug.Log("설정이 JSON 파일로 저장되었습니다!");
+        settingPanal.SetActive(false); // 설정창 닫기
     }
 
     void ApplySettingsToUI()
