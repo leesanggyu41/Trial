@@ -1,10 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Michsky.UI.Dark; // TMP_Dropdown 사용을 위해 필요
+using Michsky.UI.Dark;
+using UnityEngine.Audio;
+using UnityEngine.Rendering.PostProcessing; // TMP_Dropdown 사용을 위해 필요
 
 public class SettingManager : MonoBehaviour
 {
+
+    public static SettingManager Instance;
     [Header("Data")]
     public GameSettings currentSettings;
 
@@ -25,6 +29,18 @@ public class SettingManager : MonoBehaviour
     [Header("Setting panal")]
     public GameObject settingPanal;
 
+     void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     void Start()
     {
         // 1. 데이터 로드
@@ -36,9 +52,23 @@ public class SettingManager : MonoBehaviour
 
     // --- [UI에서 호출할 public 함수들] ---
 
-    public void UpdateMasterVolume(float value) => currentSettings.masterVolume = value;
-    public void UpdateMusicVolume(float value) => currentSettings.musicVolume = value;
-    public void UpdateSFXVolume(float value) => currentSettings.sfxVolume = value;
+public void UpdateMasterVolume(float value)
+{
+    currentSettings.masterVolume = value;
+    AudioManager.Instance.SetVolume("Master", value);
+}
+
+public void UpdateMusicVolume(float value)
+{
+    currentSettings.musicVolume = value;
+    AudioManager.Instance.SetVolume("Music", value);
+}
+
+public void UpdateSFXVolume(float value)
+{
+    currentSettings.sfxVolume = value;
+    AudioManager.Instance.SetVolume("SFX", value);
+}    
     public void UpdateSensitivity(float value) => currentSettings.mouseSensitivity = value;
     public void UpdateGamma(float value) => currentSettings.gamma = value;
     public void UpdateMotionBlur(float value) => currentSettings.motionBlur = value;

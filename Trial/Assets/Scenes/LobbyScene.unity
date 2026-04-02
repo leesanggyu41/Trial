@@ -6700,11 +6700,23 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114224424709591902, guid: 5c234451c80e7544a98fb9b9eacdc3c5, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114224424709591902, guid: 5c234451c80e7544a98fb9b9eacdc3c5, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1285167089}
     - target: {fileID: 114224424709591902, guid: 5c234451c80e7544a98fb9b9eacdc3c5, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1234768735}
+    - target: {fileID: 114224424709591902, guid: 5c234451c80e7544a98fb9b9eacdc3c5, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114224424709591902, guid: 5c234451c80e7544a98fb9b9eacdc3c5, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114224424709591902, guid: 5c234451c80e7544a98fb9b9eacdc3c5, type: 3}
@@ -6713,6 +6725,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114224424709591902, guid: 5c234451c80e7544a98fb9b9eacdc3c5, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SettingManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 114224424709591902, guid: 5c234451c80e7544a98fb9b9eacdc3c5, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
       value: SettingManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 114224424709591902, guid: 5c234451c80e7544a98fb9b9eacdc3c5, type: 3}
@@ -8892,6 +8908,51 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1234768735
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1234768737}
+  - component: {fileID: 1234768736}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1234768736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1234768735}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 175344699eaaa5944bf2e7db65ab4861, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  audioMixer: {fileID: 24100000, guid: 31749ac2f25212349acce72d0315b3ec, type: 2}
+--- !u!4 &1234768737
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1234768735}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 571.17883, y: -0, z: 3451.516}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1257771059
 GameObject:
   m_ObjectHideFlags: 0
@@ -9757,7 +9818,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 327080266165325537, guid: faf72926bc734ef4ebf2e8a85d566758, type: 3}
       propertyPath: buttonText
-      value: Getting
+      value: Setting
       objectReference: {fileID: 0}
     - target: {fileID: 3418292388012002055, guid: faf72926bc734ef4ebf2e8a85d566758, type: 3}
       propertyPath: m_Name
@@ -9765,7 +9826,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4006715118232086706, guid: faf72926bc734ef4ebf2e8a85d566758, type: 3}
       propertyPath: m_text
-      value: Getting
+      value: Setting
       objectReference: {fileID: 0}
     - target: {fileID: 4006715118232086706, guid: faf72926bc734ef4ebf2e8a85d566758, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -9773,7 +9834,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5927651940847589453, guid: faf72926bc734ef4ebf2e8a85d566758, type: 3}
       propertyPath: m_text
-      value: Getting
+      value: Setting
       objectReference: {fileID: 0}
     - target: {fileID: 5927651940847589453, guid: faf72926bc734ef4ebf2e8a85d566758, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -13381,3 +13442,4 @@ SceneRoots:
   - {fileID: 2118632052}
   - {fileID: 29234834}
   - {fileID: 1285167090}
+  - {fileID: 1234768737}
