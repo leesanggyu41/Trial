@@ -2,7 +2,10 @@ using Fusion;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum GameTurn
 {
@@ -16,11 +19,12 @@ public enum GameTurn
 
 [DefaultExecutionOrder(-50)]
 public class GameTurnManager : NetworkBehaviour
+
 {
     public static GameTurnManager Instance;
     // 게임 턴 관리 부분 -----------------------------------------------------------------------------------------------------
     [Networked] public GameTurn NowTurn {get; set;}
-
+    public  SyringeTurn Sy_T;
 
 
 
@@ -63,6 +67,7 @@ public class GameTurnManager : NetworkBehaviour
     public void SyringeTurn_Rpc()
     {
         Debug.LogWarning("주사기");
+        Sy_T.SyringeSpawner_Rpc(10);
     }
 
      [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -93,11 +98,10 @@ public class GameTurnManager : NetworkBehaviour
         if (!Runner.IsServer) return;
 
         int turn = (int)NowTurn;
-        NowTurn = (GameTurn)((turn + 1) % (System.Enum.GetNames(typeof(GameTurn)).Length -1));
+        NowTurn = (GameTurn)((turn + 1) % (System.Enum.GetNames(typeof(GameTurn)).Length ));
         GameTurns();
 
     }
-
 
 
 
@@ -139,3 +143,5 @@ public class GameTurnManager : NetworkBehaviour
         _playerIndex.Remove(player);
     }
 }
+
+
