@@ -24,7 +24,7 @@ public class SettingManager : MonoBehaviour
     public TMP_Dropdown resolutionDropdown;
     public Slider gammaSlider;
     public Slider motionBlurSlider;
-    public HorizontalSelector fullScreenToggle; 
+    public HorizontalSelector fullScreenmode; 
 
     [Header("Setting panal")]
     public GameObject settingPanal;
@@ -72,7 +72,10 @@ public void UpdateSFXVolume(float value)
     public void UpdateSensitivity(float value) => currentSettings.mouseSensitivity = value;
     public void UpdateGamma(float value) => currentSettings.gamma = value;
     public void UpdateMotionBlur(float value) => currentSettings.motionBlur = value;
-    public void UpdateResolution(int index) => currentSettings.resolutionIndex = index;
+    public void UpdateResolution(int index) {
+        currentSettings.resolutionIndex = index;
+        Debug.Log("실제 저장된 값: " + currentSettings.resolutionIndex);
+    } 
     public void UpdateFullScreen(int isFull) => currentSettings.isFullScreen = isFull;
 
     // 최종 저장 버튼이나 설정창을 닫을 때 호출
@@ -97,6 +100,6 @@ public void UpdateSFXVolume(float value)
         gammaSlider.value = currentSettings.gamma;
         motionBlurSlider.value = currentSettings.motionBlur;
         
-        fullScreenToggle.index = currentSettings.isFullScreen;
+        fullScreenmode.index = currentSettings.isFullScreen;
     }
 }
