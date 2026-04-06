@@ -63,7 +63,7 @@ public class GameSceneManager : NetworkBehaviour
 
         _spawnedPlayers.Add(player, Playerobj);
 
-        GameTurnManager.Instance.RegisterPlayer(Playerobj.GetComponent<PlayerController>());
+        GameTurnManager.Instance.RegisterPlayer(Playerobj.GetComponent<PlayerControll>());
 
 
 

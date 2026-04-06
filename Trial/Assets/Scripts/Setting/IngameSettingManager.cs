@@ -9,7 +9,7 @@ public class IngameSettingManager : MonoBehaviour
 
     public LiftGammaGain liftGammaGain;
     public MotionBlur motionBlur;
-    public PlayerController playerController;
+    public PlayerControll playerController;
 
     private Volume postProcessVolume;
 
@@ -32,9 +32,29 @@ public class IngameSettingManager : MonoBehaviour
             postProcessVolume.profile.TryGet(out liftGammaGain);
             postProcessVolume.profile.TryGet(out motionBlur);
         }
-        playerController = FindFirstObjectByType<PlayerController>();
+        if(SceneManager.GetActiveScene().name == "GameScene")
+        {
+            Debug.Log("GameScene loaded, finding PlayerController...");
+            Invoke(nameof(FindPlayerController), 0.5f); // 약간의 지연 후에 PlayerController 찾기
+        }
+
+        
 
         ApplySettings();
+    }
+
+    void FindPlayerController()
+    {
+        playerController = FindFirstObjectByType<PlayerControll>();
+        if (playerController != null)
+        {
+            Debug.Log("PlayerController found!");
+            ApplySettings();
+        }
+        else
+        {
+            Debug.LogWarning("PlayerController not found in the scene.");
+        }
     }
 
     public void ApplySettings()
