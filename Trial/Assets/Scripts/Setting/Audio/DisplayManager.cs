@@ -9,6 +9,8 @@ public class VideoManager : MonoBehaviour
     public TMP_Dropdown resDropdown;
     private List<Resolution> filteredResolutions; // 필터링된 실제 해상도 데이터
 
+    
+
     void Awake()
     {
         if (Instance == null) { Instance = this; DontDestroyOnLoad(gameObject); }
