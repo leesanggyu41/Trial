@@ -50,7 +50,7 @@ void OnNicknameChanged()
     if (string.IsNullOrEmpty(Nickname.ToString())) return;
     Debug.Log($"[OnNicknameChanged] Object: {gameObject.name}, Nickname: {Nickname}, InputAuthority: {Object.InputAuthority}");
     
-    var controller = GetComponent<PlayerController>();
+    var controller = GetComponent<PlayerControll>();
     Debug.Log($"[OnNicknameChanged] Controller: {controller}, NameText: {controller?.NameText}");
 
     if (WaitingRoomManager.Instance != null)

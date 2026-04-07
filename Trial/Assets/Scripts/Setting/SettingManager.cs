@@ -1,10 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Michsky.UI.Dark; // TMP_Dropdown 사용을 위해 필요
+using Michsky.UI.Dark;
+using UnityEngine.Audio;
+using UnityEngine.Rendering.PostProcessing; // TMP_Dropdown 사용을 위해 필요
 
 public class SettingManager : MonoBehaviour
 {
+
+    public static SettingManager Instance;
     [Header("Data")]
     public GameSettings currentSettings;
 
@@ -20,11 +24,23 @@ public class SettingManager : MonoBehaviour
     public TMP_Dropdown resolutionDropdown;
     public Slider gammaSlider;
     public Slider motionBlurSlider;
-    public HorizontalSelector fullScreenToggle; 
+    public HorizontalSelector fullScreenmode; 
 
     [Header("Setting panal")]
     public GameObject settingPanal;
 
+     void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     void Start()
     {
         // 1. 데이터 로드
@@ -36,13 +52,44 @@ public class SettingManager : MonoBehaviour
 
     // --- [UI에서 호출할 public 함수들] ---
 
-    public void UpdateMasterVolume(float value) => currentSettings.masterVolume = value;
-    public void UpdateMusicVolume(float value) => currentSettings.musicVolume = value;
-    public void UpdateSFXVolume(float value) => currentSettings.sfxVolume = value;
-    public void UpdateSensitivity(float value) => currentSettings.mouseSensitivity = value;
-    public void UpdateGamma(float value) => currentSettings.gamma = value;
-    public void UpdateMotionBlur(float value) => currentSettings.motionBlur = value;
-    public void UpdateResolution(int index) => currentSettings.resolutionIndex = index;
+public void UpdateMasterVolume(float value)
+{
+    currentSettings.masterVolume = value;
+    AudioManager.Instance.SetVolume("Master", value);
+}
+
+public void UpdateMusicVolume(float value)
+{
+    currentSettings.musicVolume = value;
+    AudioManager.Instance.SetVolume("Music", value);
+}
+
+public void UpdateSFXVolume(float value)
+{
+    currentSettings.sfxVolume = value;
+    AudioManager.Instance.SetVolume("SFX", value);
+}    
+    public void UpdateSensitivity(float value)
+    {
+        currentSettings.mouseSensitivity = value;
+        IngameSettingManager.Instance.ApplySettings();
+    }
+    public void UpdateGamma(float value)
+    {
+        currentSettings.gamma = value;
+        IngameSettingManager.Instance.ApplySettings();
+    }
+    public void UpdateMotionBlur(float value)
+    {
+        currentSettings.motionBlur = value;
+        IngameSettingManager.Instance.ApplySettings();
+    }
+    public void UpdateResolution(int index) 
+    {
+        currentSettings.resolutionIndex = index;
+        Debug.Log("실제 저장된 값: " + currentSettings.resolutionIndex);
+        
+    } 
     public void UpdateFullScreen(int isFull) => currentSettings.isFullScreen = isFull;
 
     // 최종 저장 버튼이나 설정창을 닫을 때 호출
@@ -67,6 +114,6 @@ public class SettingManager : MonoBehaviour
         gammaSlider.value = currentSettings.gamma;
         motionBlurSlider.value = currentSettings.motionBlur;
         
-        fullScreenToggle.index = currentSettings.isFullScreen;
+        fullScreenmode.index = currentSettings.isFullScreen;
     }
 }

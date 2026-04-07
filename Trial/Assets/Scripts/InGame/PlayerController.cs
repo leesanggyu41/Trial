@@ -5,7 +5,7 @@ using UnityEngine;
 using Fusion;
 using TMPro;
 using UnityEngine.InputSystem;
-public class PlayerController : NetworkBehaviour
+public class PlayerControll : NetworkBehaviour
 {
     [Header("카메라 설정")]
     public Transform HeadCameraPoint;

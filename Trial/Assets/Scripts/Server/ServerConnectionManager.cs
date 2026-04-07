@@ -99,7 +99,6 @@ public class ServerConnectionManager : MonoBehaviour
     }
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("응디");
         //특정 씬일 때만 실행
         if (scene.buildIndex == 1) // 대기씬
         {
