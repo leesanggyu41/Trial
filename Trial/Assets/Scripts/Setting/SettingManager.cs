@@ -69,12 +69,26 @@ public void UpdateSFXVolume(float value)
     currentSettings.sfxVolume = value;
     AudioManager.Instance.SetVolume("SFX", value);
 }    
-    public void UpdateSensitivity(float value) => currentSettings.mouseSensitivity = value;
-    public void UpdateGamma(float value) => currentSettings.gamma = value;
-    public void UpdateMotionBlur(float value) => currentSettings.motionBlur = value;
-    public void UpdateResolution(int index) {
+    public void UpdateSensitivity(float value)
+    {
+        currentSettings.mouseSensitivity = value;
+        IngameSettingManager.Instance.ApplySettings();
+    }
+    public void UpdateGamma(float value)
+    {
+        currentSettings.gamma = value;
+        IngameSettingManager.Instance.ApplySettings();
+    }
+    public void UpdateMotionBlur(float value)
+    {
+        currentSettings.motionBlur = value;
+        IngameSettingManager.Instance.ApplySettings();
+    }
+    public void UpdateResolution(int index) 
+    {
         currentSettings.resolutionIndex = index;
         Debug.Log("실제 저장된 값: " + currentSettings.resolutionIndex);
+        
     } 
     public void UpdateFullScreen(int isFull) => currentSettings.isFullScreen = isFull;
 

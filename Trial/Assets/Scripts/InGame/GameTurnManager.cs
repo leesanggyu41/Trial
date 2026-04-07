@@ -32,7 +32,7 @@ public class GameTurnManager : NetworkBehaviour
     // 플레이어 턴 관리 부분 -------------------------------------------------------------------------------------------------
     [Networked] public int CurrentTurnIndex { get; set; }
 
-    private Dictionary<PlayerController, int> _playerIndex = new Dictionary<PlayerController, int>();
+    private Dictionary<PlayerControll, int> _playerIndex = new Dictionary<PlayerControll, int>();
 
 
     private void Awake() => Instance = this;
@@ -107,7 +107,7 @@ public class GameTurnManager : NetworkBehaviour
 
 
     // 플레이어 턴 관련 메서드 -----------------------------------------------------------------------------------------------
-    public void RegisterPlayer(PlayerController player)
+    public void RegisterPlayer(PlayerControll player)
     {
         if (!_playerIndex.ContainsKey(player))
         {
@@ -137,7 +137,7 @@ public class GameTurnManager : NetworkBehaviour
     }
 
     // 해당 플레이어 턴 삭제
-    public void DeletePlayer(PlayerController player)
+    public void DeletePlayer(PlayerControll player)
     {
         if (_playerIndex.ContainsKey(player))
         _playerIndex.Remove(player);
