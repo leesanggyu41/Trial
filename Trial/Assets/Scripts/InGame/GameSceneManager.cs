@@ -57,13 +57,14 @@ public class GameSceneManager : NetworkBehaviour
             onBeforeSpawned: (r, obj) =>
             {
                 obj.GetComponent<PlayerObject>().PlayerIndex = index;
+                
             }
             
         );
 
         _spawnedPlayers.Add(player, Playerobj);
 
-        GameTurnManager.Instance.RegisterPlayer(Playerobj.GetComponent<PlayerControll>());
+        GameTurnManager.Instance.Pt_T.RegisterPlayer(Playerobj.GetComponent<PlayerControll>());
 
 
 

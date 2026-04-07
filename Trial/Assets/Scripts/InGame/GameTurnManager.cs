@@ -25,8 +25,8 @@ public class GameTurnManager : NetworkBehaviour
     // 게임 턴 관리 부분 -----------------------------------------------------------------------------------------------------
     [Networked] public GameTurn NowTurn {get; set;}
     public  SyringeTurn Sy_T;
-
-
+    public ItemTurn It_T;
+    public PlayerTurn Pt_T;
 
 
     // 플레이어 턴 관리 부분 -------------------------------------------------------------------------------------------------
@@ -74,11 +74,15 @@ public class GameTurnManager : NetworkBehaviour
     public void ItemTurn_Rpc()
     {
         Debug.LogWarning("아이템");
+        It_T.ItemSpawner_Rpc();
     }
      [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void PlayerTurn_Rpc()
     {
         Debug.LogWarning("플레이어");
+        Pt_T.PlayerTurnStart_Rpc();
+
+
     }
 
 
@@ -107,41 +111,41 @@ public class GameTurnManager : NetworkBehaviour
 
 
     // 플레이어 턴 관련 메서드 -----------------------------------------------------------------------------------------------
-    public void RegisterPlayer(PlayerControll player)
-    {
-        if (!_playerIndex.ContainsKey(player))
-        {
-            int index = _playerIndex.Count;
-            _playerIndex.Add(player, index);
-        }
-    }
+    // public void RegisterPlayer(PlayerControll player)
+    // {
+    //     if (!_playerIndex.ContainsKey(player))
+    //     {
+    //         int index = _playerIndex.Count;
+    //         _playerIndex.Add(player, index);
+    //     }
+    // }
 
-    public override void Spawned()
-    {
-        if (Runner.IsServer) ApplyTurn(0);
-    }
+    // public override void Spawned()
+    // {
+    //     if (Runner.IsServer) ApplyTurn(0);
+    // }
 
-    [ContextMenu("다음 플레이어 턴")]
-    public void NextTurn()
-    {
-        if (!Runner.IsServer) return;
-        ApplyTurn((CurrentTurnIndex + 1) % _playerIndex.Count);
-    }
+    // [ContextMenu("다음 플레이어 턴")]
+    // public void NextTurn()
+    // {
+    //     if (!Runner.IsServer) return;
+    //     ApplyTurn((CurrentTurnIndex + 1) % _playerIndex.Count);
+    // }
 
-    // 턴 지정
-    private void ApplyTurn(int index)
-    {
-        CurrentTurnIndex = index;
-        foreach (var (player, playerIndex) in _playerIndex)
-            player.playerTurn = (playerIndex == index);
-    }
+    // // 턴 지정
+    // private void ApplyTurn(int index)
+    // {
+    //     CurrentTurnIndex = index;
+    //     foreach (var (player, playerIndex) in _playerIndex)
+    //         player.playerTurn = (playerIndex == index);
+    // }
 
-    // 해당 플레이어 턴 삭제
-    public void DeletePlayer(PlayerControll player)
-    {
-        if (_playerIndex.ContainsKey(player))
-        _playerIndex.Remove(player);
-    }
+    // // 해당 플레이어 턴 삭제
+    // public void DeletePlayer(PlayerControll player)
+    // {
+    //     if (_playerIndex.ContainsKey(player))
+    //     _playerIndex.Remove(player);
+    // }
 }
 
 
