@@ -48,6 +48,8 @@ public class WaitingRoomManager : MonoBehaviour
         leaveButton.onClick.AddListener(() => ServerConnectionManager.Instance.LeaveRoom());
         startButton.onClick.AddListener(OnClickStart);
 
+        startButton.interactable = false;
+
         RefreshPlayerList();
     }
 
@@ -55,8 +57,7 @@ public class WaitingRoomManager : MonoBehaviour
     {
         if (_runner == null) return;
 
-        if (_runner.IsServer && _runner.SessionInfo.PlayerCount >= 2)
-            Invoke("openstartbutton", 5f);
+        
             
 
         // Runner 끊기면 로비로
@@ -94,6 +95,9 @@ public class WaitingRoomManager : MonoBehaviour
             _playerItems.Add(item);
             playerData.LinkedItem = item;
         }
+
+        if (_runner.IsServer && _runner.SessionInfo.PlayerCount >= 2)
+            Invoke("openstartbutton", 1f);
     }
 
     private void OnClickKick()
