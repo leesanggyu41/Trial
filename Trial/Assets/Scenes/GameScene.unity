@@ -697,6 +697,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sick_person_full (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5707712728778243414, guid: 87099dc385a62af4792c23507aafc4bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5781325534666616633, guid: 87099dc385a62af4792c23507aafc4bd, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.43182364
@@ -1323,7 +1327,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &476965536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2151,6 +2155,67 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &684756745
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 684756747}
+  - component: {fileID: 684756746}
+  m_Layer: 0
+  m_Name: Item_Turn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &684756746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684756745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37fe69f079e3deb4f81ce79f0f13b02e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemTurn
+  itemPrefeb:
+  - {fileID: 4052712063053005659, guid: e65b0213a2881964e8d1aedb157b73c8, type: 3}
+  - {fileID: 6993736407491565739, guid: 29c36859fee745541bfe4af178f5066c, type: 3}
+  - {fileID: 7115254592560947801, guid: ae1d69b6a8e41cd41bd540a24ff7034c, type: 3}
+  playerItems:
+  - spawnPoint: {fileID: 0}
+    sapwnitemNum: 0
+    useitemNum: 0
+  - spawnPoint: {fileID: 0}
+    sapwnitemNum: 0
+    useitemNum: 0
+  - spawnPoint: {fileID: 0}
+    sapwnitemNum: 0
+    useitemNum: 0
+  - spawnPoint: {fileID: 0}
+    sapwnitemNum: 0
+    useitemNum: 0
+--- !u!4 &684756747
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684756745}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 983894026}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &714215185
 PrefabInstance:
@@ -3781,6 +3846,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2029370532}
+  - {fileID: 684756747}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &983894027
@@ -3803,6 +3869,7 @@ MonoBehaviour:
   - {fileID: 983894025}
   - {fileID: 983894028}
   - {fileID: 2029370531}
+  - {fileID: 684756746}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &983894028
 MonoBehaviour:
@@ -4222,6 +4289,10 @@ PrefabInstance:
     - target: {fileID: 4845979038420885154, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
       propertyPath: m_Name
       value: Sick_person_ver_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4845979038420885154, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5191437532740486168, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
       propertyPath: m_LocalScale.x
@@ -4913,7 +4984,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1325924588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5410,7 +5481,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1392824838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5777,7 +5848,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1508042663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6736,6 +6807,10 @@ PrefabInstance:
     - target: {fileID: 5707712728778243414, guid: 87099dc385a62af4792c23507aafc4bd, type: 3}
       propertyPath: m_Name
       value: Sick_person_full
+      objectReference: {fileID: 0}
+    - target: {fileID: 5707712728778243414, guid: 87099dc385a62af4792c23507aafc4bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5781325534666616633, guid: 87099dc385a62af4792c23507aafc4bd, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7721,7 +7796,7 @@ GameObject:
   - component: {fileID: 2029370532}
   - component: {fileID: 2029370531}
   m_Layer: 0
-  m_Name: SyringeTurn
+  m_Name: Syringe_Turn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7741,8 +7816,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SyringeTurn
   SyringeBox: {fileID: 2081936532}
   SyringePrefab: {fileID: 5743306241839007399, guid: 3f6bd61ef10b47040a06a318c69b2755, type: 3}
-  So: []
-  St: 
+  _So: []
+  _St: 
   Toxin_Text: {fileID: 1058740166}
   NS_Text: {fileID: 1992297878}
 --- !u!4 &2029370532
