@@ -21,6 +21,10 @@ public class SyringeTurn : NetworkBehaviour
 
     public void SyringeSpawner_Rpc(int spawnCount)
     {
+        int toxin = 0;
+        int ns = 0;
+
+
         for(int i = 0; i < spawnCount; i++)
         {
             // 아이템 생성
@@ -36,16 +40,24 @@ public class SyringeTurn : NetworkBehaviour
             // 아이템 재활용
             else
             {
-                if(Runner.TryFindObject(So.Get(i), out NetworkObject obj) 
-                   && obj.gameObject.activeSelf == false)
+                if(Runner.TryFindObject(So.Get(i), out NetworkObject obj))
                 {
                     obj.gameObject.SetActive(true);
 
                     if(Runner.IsServer)
-                        St.Set(i, (SyringeType)(Random.Range(0, 10) % 2));
+                    St.Set(i, (SyringeType)(Random.Range(0, 10) % 2));
                 }
             }
+
+                    // 독소 주사기와 NS 주사기 개수 세기
+                    if(St.Get(i) == SyringeType.Toxin) toxin++;
+                    if(St.Get(i) == SyringeType.NS) ns++;
+
         }
+
+
+        Toxin_Text.text = toxin.ToString();
+        NS_Text.text = ns.ToString();
     }
 
     // NetworkId → GameObject 변환 헬퍼
