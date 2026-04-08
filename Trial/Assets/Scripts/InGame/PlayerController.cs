@@ -12,7 +12,7 @@ public class PlayerControll : NetworkBehaviour
     public float mouseSensitivity = 1f;  
     [Header("카메라 제한")]
     public float Xlimit = 60f;
-    public float MinYlimit = -30f;
+    public float MinYlimit = -120f;
     public float MaxYlimit = 30f;
     [Header("닉네임")]
     public TMP_Text NameText;
@@ -137,7 +137,3 @@ public void CanPlayerTouch(InputAction.CallbackContext context)
 
 // 성씨가 만듬
 // 플레이어가 클릭할 시 반응하는 인터페이스 함수
-public interface ReactionObject
-{
-    public void OnEvent();
-}

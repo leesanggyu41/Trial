@@ -325,7 +325,7 @@ MonoBehaviour:
   mouseSensitivity: 2
   Xlimit: 60
   MinYlimit: -30
-  MaxYlimit: 30
+  MaxYlimit: 70
   NameText: {fileID: 1279286960750095752}
   NamePoint: {fileID: 1185260439819314941}
   _playerTurn: 0
@@ -394,7 +394,6 @@ MonoBehaviour:
   rend: {fileID: 5839716619945731325}
   turnMat: {fileID: 2100000, guid: 5cde5f417247d474cacdb060ea65c994, type: 2}
   normalMat: {fileID: 2100000, guid: ccb34ca02098bce44907b8bf67696e02, type: 2}
-  _IsMyTurn: 0
 --- !u!114 &2658898219430251723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,7 +498,7 @@ Transform:
   m_GameObject: {fileID: 5350754238406524278}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.7, z: 0}
+  m_LocalPosition: {x: 0, y: 1.7, z: 0.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

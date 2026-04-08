@@ -9,6 +9,8 @@ public class SyringeTurn : NetworkBehaviour
     public GameObject SyringeBox;
     public GameObject SyringePrefab;
 
+    public Animator SyringeBoxAnim;
+
     // 주사기 리스트
     [Networked, Capacity(10)]
     public NetworkLinkedList<NetworkId> So { get; }
@@ -32,7 +34,7 @@ public class SyringeTurn : NetworkBehaviour
             {
                 if(Runner.IsServer)
                 {
-                    NetworkObject sy = Runner.Spawn(SyringePrefab);
+                    NetworkObject sy = Runner.Spawn(SyringePrefab, SyringeBox.transform.position, Quaternion.identity);
                     So.Add(sy.Id);  // NetworkId로 저장
                     St.Add((SyringeType)(Random.Range(0,10) % 2));
                 }
@@ -58,6 +60,9 @@ public class SyringeTurn : NetworkBehaviour
 
         Toxin_Text.text = toxin.ToString();
         NS_Text.text = ns.ToString();
+
+
+        Invoke("UpBox", 3f);
     }
 
     // NetworkId → GameObject 변환 헬퍼
@@ -66,6 +71,11 @@ public class SyringeTurn : NetworkBehaviour
         if(Runner.TryFindObject(So.Get(index), out NetworkObject obj))
             return obj.gameObject;
         return null;
+    }
+
+    public void UpBox()
+    {
+        SyringeBoxAnim.SetTrigger("Up");
     }
 }
 

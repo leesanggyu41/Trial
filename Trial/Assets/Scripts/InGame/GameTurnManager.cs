@@ -22,6 +22,10 @@ public class GameTurnManager : NetworkBehaviour
 
 {
     public static GameTurnManager Instance;
+
+    // 애니메이션 ----------------------------------------
+
+    public Animator syringeboxAnim;
     // 게임 턴 관리 부분 -----------------------------------------------------------------------------------------------------
     [Networked] public GameTurn NowTurn {get; set;}
     public  SyringeTurn Sy_T;
@@ -65,6 +69,12 @@ public class GameTurnManager : NetworkBehaviour
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)] // 반장이 실행하고 다른 플레이어에게 결과를 똑같이 전달
     public void SyringeTurn_Rpc()
+    {
+        syringeboxAnim.SetTrigger("Down");
+        Invoke("GameTurns_Rpc", 3f);
+    }
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void GameTurns_Rpc()
     {
         Debug.LogWarning("주사기");
         Sy_T.SyringeSpawner_Rpc(10);

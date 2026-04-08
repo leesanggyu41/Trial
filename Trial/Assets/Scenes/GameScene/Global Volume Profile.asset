@@ -25,6 +25,22 @@ MonoBehaviour:
   clamp:
     m_OverrideState: 1
     m_Value: 0.2
+--- !u!114 &-6642186069020888195
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81180773991d8724ab7f2d216912b564, type: 3}
+  m_Name: ChromaticAberration
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.ChromaticAberration
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.3
 --- !u!114 &-5459978893726872325
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -93,6 +109,56 @@ MonoBehaviour:
   gain:
     m_OverrideState: 1
     m_Value: {x: 0.9645139, y: 1, z: 0.9800847, w: 0}
+--- !u!114 &-3463488963435831749
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2db86121404754db890f4c8dfe81b2, type: 3}
+  m_Name: Bloom
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.Bloom
+  active: 1
+  skipIterations:
+    m_OverrideState: 0
+    m_Value: 1
+  threshold:
+    m_OverrideState: 1
+    m_Value: 0.37
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0.36
+  scatter:
+    m_OverrideState: 0
+    m_Value: 0.7
+  clamp:
+    m_OverrideState: 0
+    m_Value: 65472
+  tint:
+    m_OverrideState: 0
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
+  highQualityFiltering:
+    m_OverrideState: 0
+    m_Value: 0
+  filter:
+    m_OverrideState: 0
+    m_Value: 0
+  downscale:
+    m_OverrideState: 0
+    m_Value: 0
+  maxIterations:
+    m_OverrideState: 0
+    m_Value: 6
+  dirtTexture:
+    m_OverrideState: 0
+    m_Value: {fileID: 0}
+    dimension: 1
+  dirtIntensity:
+    m_OverrideState: 0
+    m_Value: 0
 --- !u!114 &-2853418424155629742
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -167,6 +233,8 @@ MonoBehaviour:
   - {fileID: -2853418424155629742}
   - {fileID: -4781008177133483731}
   - {fileID: -8362983084606304645}
+  - {fileID: -3463488963435831749}
+  - {fileID: -6642186069020888195}
 --- !u!114 &3074328739773535042
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -374,7 +442,7 @@ MonoBehaviour:
     m_Value: {x: 0.9766171, y: 0.9879331, z: 1, w: 0}
   midtones:
     m_OverrideState: 1
-    m_Value: {x: 0.9869683, y: 0.983123, z: 1, w: 0}
+    m_Value: {x: 0.91736174, y: 0.9057348, z: 1, w: 0.0370801}
   highlights:
     m_OverrideState: 1
     m_Value: {x: 0.99544984, y: 0.99964017, z: 1, w: 0}
