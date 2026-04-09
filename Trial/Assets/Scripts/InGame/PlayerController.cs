@@ -148,6 +148,7 @@ private Dictionary<Vector2, PlayerControll> _targetMap = new Dictionary<Vector2,
 
 public void CanPlayerTouch(InputAction.CallbackContext context)
 {
+    if (GameTurnManager.Instance.NowTurn != GameTurn.Player) return;
     // 1. 클릭 시작(Started) 시점인지 + 내 턴인지 확인
     if (!context.started || !playerTurn) return;
 
