@@ -9,10 +9,10 @@ using UnityEngine.UI;
 
 public enum GameTurn
 {
+    Player,      // 플레이어 턴 시작
     Syringe,        // 주사기 지급
-    Item,           // 아이템 지급
-
-    Player        // 플레이어 턴 시작
+    Item        // 아이템 지급
+            
 
 
 }
@@ -43,7 +43,10 @@ public class GameTurnManager : NetworkBehaviour
 
     // 게임 턴 관련 메서드 ---------------------------------------------------------------------------------------------------
 
-
+    private void Start()
+    {
+        StartCoroutine(WaitTurnManager());
+    }
 
     public void GameTurns()
     {
@@ -67,7 +70,7 @@ public class GameTurnManager : NetworkBehaviour
     }
 
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)] // 반장이 실행하고 다른 플레이어에게 결과를 똑같이 전달
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)] // 방장이 실행하고 다른 플레이어에게 결과를 똑같이 전달
     public void SyringeTurn_Rpc()
     {
         syringeboxAnim.SetTrigger("Down");
@@ -95,6 +98,12 @@ public class GameTurnManager : NetworkBehaviour
 
     }
 
+        IEnumerator WaitTurnManager()
+        {
+            yield return new WaitForSeconds(3f);
+            GamesTurnChange();
+        }
+
 
     // 주사기 턴 -> 아이템 턴 -> 플레이어 턴 -> 주사기 턴 ...
     IEnumerator NextGameTurn(float waitTime)
@@ -116,46 +125,6 @@ public class GameTurnManager : NetworkBehaviour
         GameTurns();
 
     }
-
-
-
-
-    // 플레이어 턴 관련 메서드 -----------------------------------------------------------------------------------------------
-    // public void RegisterPlayer(PlayerControll player)
-    // {
-    //     if (!_playerIndex.ContainsKey(player))
-    //     {
-    //         int index = _playerIndex.Count;
-    //         _playerIndex.Add(player, index);
-    //     }
-    // }
-
-    // public override void Spawned()
-    // {
-    //     if (Runner.IsServer) ApplyTurn(0);
-    // }
-
-    // [ContextMenu("다음 플레이어 턴")]
-    // public void NextTurn()
-    // {
-    //     if (!Runner.IsServer) return;
-    //     ApplyTurn((CurrentTurnIndex + 1) % _playerIndex.Count);
-    // }
-
-    // // 턴 지정
-    // private void ApplyTurn(int index)
-    // {
-    //     CurrentTurnIndex = index;
-    //     foreach (var (player, playerIndex) in _playerIndex)
-    //         player.playerTurn = (playerIndex == index);
-    // }
-
-    // // 해당 플레이어 턴 삭제
-    // public void DeletePlayer(PlayerControll player)
-    // {
-    //     if (_playerIndex.ContainsKey(player))
-    //     _playerIndex.Remove(player);
-    // }
 }
 
 

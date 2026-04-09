@@ -11,6 +11,8 @@ public class PlayerData : NetworkBehaviour
 
     public PlayerListItem LinkedItem { get; set; }
 
+
+
 public override void Spawned()
 {
     if (HasInputAuthority)

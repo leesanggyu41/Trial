@@ -8,8 +8,10 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
 {
     public int MaxHP => 4;
 
+    [Networked] public int BonusItemCount { get; set; } = 0; // NS 자가 사격 보너스
+
     [Networked, OnChangedRender(nameof(OnHPChanged))]
-    public int HP { get; set; }
+    public int HP { get; set; } 
 
     public override void Spawned()
     {

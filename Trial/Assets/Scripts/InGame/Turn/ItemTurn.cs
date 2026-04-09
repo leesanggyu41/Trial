@@ -23,9 +23,11 @@ public class ItemTurn : NetworkBehaviour
     public List<PlayerItems> PI;
     public int DefaultItemNum = 2;
 
+    public GameTurnManager GTM;
+
     void Start()
     {
-        
+        GTM = FindFirstObjectByType<GameTurnManager>();
     }
 
     public void ItemSpawner_Rpc()
@@ -46,7 +48,7 @@ public class ItemTurn : NetworkBehaviour
 
         }
 
-        
+        GTM.GamesTurnChange();
 
 
     }

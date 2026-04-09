@@ -28,8 +28,14 @@ public class PlayerTurn : NetworkBehaviour
     }
     public void PlayerTurnStart_Rpc()
     {
+        if (!Runner.IsServer) return;
+
+    
+        foreach (var pc in FindObjectsByType<PlayerControll>(FindObjectsSortMode.None))
+        {
+        pc.InitializeTargetMap();
+        }
         IsTurnOn = true;
-        ApplyTurn(0);
     }
 
     [ContextMenu("다음 플레이어 턴")]
