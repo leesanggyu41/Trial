@@ -21,7 +21,7 @@ public class ItemTurn : NetworkBehaviour
     
     public GameObject[] itemPrefeb;
     public List<PlayerItems> PI;
-    public int DefaultItemNum = 2;
+    public int DefaultItemNum = 1;
 
     public GameTurnManager GTM;
 
@@ -31,25 +31,31 @@ public class ItemTurn : NetworkBehaviour
     }
 
     public void ItemSpawner_Rpc()
+{
+    if (!Runner.IsServer) return;
+
+    var players = FindObjectsByType<PlayerGameData>(FindObjectsSortMode.None)
+                    .OrderBy(p => p.GetComponent<PlayerObject>().PlayerIndex)
+                    .ToList();
+
+    for (int i = 0; i < players.Count; i++)
     {
-        if(Runner.IsServer != true) return;
+        PlayerGameData data = players[i];
+        int totalItems = PI[i].sapwnitemNum + data.BonusItemCount;
 
-        // 현제 플레이어 수만큼 반복
-        for(int i = 0; i < Runner.ActivePlayers.Count(); i++)
+        Debug.Log($"[ItemSpawn] {i}번 플레이어 아이템 {PI[i].sapwnitemNum} + 보너스 {data.BonusItemCount} = {totalItems}개 지급");
+
+        for (int pp = 0; pp < totalItems; pp++)
         {
-                
-            for(int pp = 0; pp < PI[i].sapwnitemNum; pp++)
-            {
-                int index = UnityEngine.Random.Range(0, itemPrefeb.Length);
-                NetworkObject ob = Runner.Spawn(itemPrefeb[index]);
-                
-                ob.transform.localPosition = PI[i].spawnPoint.position;
-            }
-
+            int index = UnityEngine.Random.Range(0, itemPrefeb.Length);
+            NetworkObject ob = Runner.Spawn(itemPrefeb[index]);
+            ob.transform.localPosition = PI[i].spawnPoint.position;
         }
 
-        GTM.GamesTurnChange();
-
-
+        // 지급 후 보너스 초기화
+        data.BonusItemCount = 0;
     }
+
+    GTM.GamesTurnChange();
+}
 }
