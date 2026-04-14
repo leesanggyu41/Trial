@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 public class PlayerControll : NetworkBehaviour
 {
@@ -20,6 +21,10 @@ public class PlayerControll : NetworkBehaviour
 
     [Header("플레이어 턴")]
     [Networked] public bool playerTurn {get; set;}
+
+    [Header("아이템 위치")]
+    public List<Transform> mySlot = new List<Transform>(); // 아이템이 생성될 위치 리스트 (인덱스 0~7)
+    private List<GameObject> heldItems = new List<GameObject>(); // 현재 보유한 아이템 오브젝트 리스트
 
     public enum PlayerState { Idle, DecidingTarget }
 public PlayerState currentState = PlayerState.Idle;
@@ -45,7 +50,9 @@ private Dictionary<Vector2, PlayerControll> _targetMap = new Dictionary<Vector2,
             _camera.transform.localPosition = Vector3.zero;
             _camera.transform.localRotation = Quaternion.identity;
             Cursor.lockState = CursorLockMode.Locked;
+            
         }
+        FindMyItemSlots();
         StartCoroutine(WaitForNickname());
     }
 
@@ -69,7 +76,58 @@ private Dictionary<Vector2, PlayerControll> _targetMap = new Dictionary<Vector2,
         if (NameText != null)
             NameText.text = nickname;
     }
-    
+
+    private void FindMyItemSlots()
+    {
+        // 씬에 있는 모든 슬롯(ItemSlot 태그)을 찾음
+        GameObject[] allSlots = GameObject.FindGameObjectsWithTag("ItemSlot");
+
+        // 내 위치에서 가까운 순서대로 6개를 뽑음
+        mySlot = allSlots
+            .OrderBy(slot => Vector3.Distance(transform.position, slot.transform.position))
+            .Take(6)
+            // 슬롯들이 왼쪽->오른쪽 순서대로 정렬되도록 X축(혹은 Z축) 정렬 추가
+            .OrderBy(slot => slot.transform.position.x) 
+            .Select(slot => slot.transform)
+            .ToList();
+
+        Debug.Log($"{gameObject.name} 슬롯 {mySlot.Count}개 할당 완료");
+    }
+    // 아이템을 받아서 빈 슬롯으로 이동시키는 함수
+    public void ReceiveItem(GameObject item)
+    {
+        if (heldItems.Count >= 6) return;
+
+        // 현재 아이템 개수를 인덱스로 사용하여 다음 빈 슬롯 지정
+        Transform targetSlot = mySlot[heldItems.Count];
+        heldItems.Add(item);
+
+        // 아이템 이동 코루틴 시작
+        StartCoroutine(MoveItemToSlot(item, targetSlot));
+    }
+    private IEnumerator MoveItemToSlot(GameObject item, Transform slot)
+    {
+        float duration = 0.7f; // 날아가는 시간
+        float elapsed = 0f;
+        Vector3 startPos = item.transform.position;
+
+        while (elapsed < duration)
+        {
+            if (item == null) yield break;
+            elapsed += Time.deltaTime;
+            
+            // 부드러운 이동 (Lerp)
+            item.transform.position = Vector3.Lerp(startPos, slot.position, elapsed / duration);
+            item.transform.rotation = Quaternion.Lerp(item.transform.rotation, slot.rotation, elapsed / duration);
+            yield return null;
+        }
+
+        item.transform.position = slot.position;
+        item.transform.rotation = slot.rotation;
+        item.transform.SetParent(slot); // 슬롯의 자식으로 설정
+        item.transform.localPosition = Vector3.zero; // 슬롯 위치에 정확히 맞춤
+        item.transform.localRotation = Quaternion.identity; // 슬롯 회전에 맞춤
+    }
     public override void FixedUpdateNetwork()
     {
         if (!HasInputAuthority) return;
