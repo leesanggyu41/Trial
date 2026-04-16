@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 58536072042729219}
   - component: {fileID: 4597310852534509878}
   - component: {fileID: 7483415783118189565}
+  - component: {fileID: 4705047535798370115}
   m_Layer: 0
   m_Name: Item2
   m_TagString: Untagged
@@ -132,6 +133,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 7483415783118189565}
+  - {fileID: 4705047535798370115}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &7483415783118189565
 MonoBehaviour:
@@ -150,3 +152,15 @@ MonoBehaviour:
   SyncParent: 1
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
+--- !u!114 &4705047535798370115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6993736407491565739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e77f96e53467d714ea32a6d6fddfa31c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Stimulant

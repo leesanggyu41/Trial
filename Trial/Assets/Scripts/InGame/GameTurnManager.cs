@@ -12,7 +12,7 @@ public enum GameTurn
     Player,      // 플레이어 턴 시작
     Syringe,        // 주사기 지급
     Item        // 아이템 지급
-            
+
 
 
 }
@@ -27,8 +27,8 @@ public class GameTurnManager : NetworkBehaviour
 
     public Animator syringeboxAnim;
     // 게임 턴 관리 부분 -----------------------------------------------------------------------------------------------------
-    [Networked] public GameTurn NowTurn {get; set;}
-    public  SyringeTurn Sy_T;
+    [Networked] public GameTurn NowTurn { get; set; }
+    public SyringeTurn Sy_T;
     public ItemTurn It_T;
     public PlayerTurn Pt_T;
 
@@ -51,7 +51,7 @@ public class GameTurnManager : NetworkBehaviour
     public void GameTurns()
     {
         Debug.LogWarning("턴을 골라 볼까요잉!!!");
-         if (!Runner.IsServer) return;
+        if (!Runner.IsServer) return;
 
         switch (NowTurn)
         {
@@ -74,7 +74,19 @@ public class GameTurnManager : NetworkBehaviour
     public void SyringeTurn_Rpc()
     {
         syringeboxAnim.SetTrigger("Down");
-        Invoke("GameTurns_Rpc", 3f);
+
+        // 중요: 오직 서버(방장)만 다음 RPC를 실행할 타이머를 돌립니다.
+        if (Object.HasStateAuthority)
+        {
+            StartCoroutine(WaitAndCallGameTurns(3f));
+        }
+    }
+    private IEnumerator WaitAndCallGameTurns(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+
+        // 이제 서버권한이 있는 곳에서만 호출하므로 에러가 나지 않습니다.
+        GameTurns_Rpc();
     }
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void GameTurns_Rpc()
@@ -83,13 +95,13 @@ public class GameTurnManager : NetworkBehaviour
         Sy_T.SyringeSpawner_Rpc(10);
     }
 
-     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void ItemTurn_Rpc()
     {
         Debug.LogWarning("아이템");
         It_T.ItemSpawner_Rpc();
     }
-     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void PlayerTurn_Rpc()
     {
         Debug.LogWarning("플레이어");
@@ -98,11 +110,11 @@ public class GameTurnManager : NetworkBehaviour
 
     }
 
-        IEnumerator WaitTurnManager()
-        {
-            yield return new WaitForSeconds(3f);
-            GamesTurnChange();
-        }
+    IEnumerator WaitTurnManager()
+    {
+        yield return new WaitForSeconds(3f);
+        GamesTurnChange();
+    }
 
 
     // 주사기 턴 -> 아이템 턴 -> 플레이어 턴 -> 주사기 턴 ...
@@ -111,7 +123,7 @@ public class GameTurnManager : NetworkBehaviour
 
         yield return new WaitForSeconds(waitTime);
         int turn = (int)NowTurn;
-        NowTurn = (GameTurn)((turn + 1) % (System.Enum.GetNames(typeof(GameTurn)).Length -1));
+        NowTurn = (GameTurn)((turn + 1) % (System.Enum.GetNames(typeof(GameTurn)).Length - 1));
     }
 
 
@@ -121,7 +133,7 @@ public class GameTurnManager : NetworkBehaviour
         if (!Runner.IsServer) return;
 
         int turn = (int)NowTurn;
-        NowTurn = (GameTurn)((turn + 1) % (System.Enum.GetNames(typeof(GameTurn)).Length ));
+        NowTurn = (GameTurn)((turn + 1) % (System.Enum.GetNames(typeof(GameTurn)).Length));
         GameTurns();
 
     }

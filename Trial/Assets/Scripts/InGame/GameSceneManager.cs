@@ -15,7 +15,7 @@ public class GameSceneManager : NetworkBehaviour
     [Header("캐릭터 프리팹")]
     public GameObject PlayerPrefab;
     // 플레이어 참조와 네트워크 객체를 관리하는 딕셔너리입니다.
-    private Dictionary<PlayerRef, NetworkObject> _spawnedPlayers = new Dictionary<PlayerRef, NetworkObject>();
+    public Dictionary<PlayerRef, NetworkObject> _spawnedPlayers = new Dictionary<PlayerRef, NetworkObject>();
 
     private void Awake()
     {
@@ -44,7 +44,7 @@ public class GameSceneManager : NetworkBehaviour
             
             index++;
             
-        }
+        }   
 
         Transform spawnPoint = SpawnPoint[index % SpawnPoint.Length];
 
@@ -63,6 +63,7 @@ public class GameSceneManager : NetworkBehaviour
         );
 
         _spawnedPlayers.Add(player, Playerobj);
+        Runner.SetPlayerObject(player, Playerobj);
 
         GameTurnManager.Instance.Pt_T.RegisterPlayer(Playerobj.GetComponent<PlayerControll>());
 

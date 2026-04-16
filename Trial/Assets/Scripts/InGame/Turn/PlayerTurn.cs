@@ -12,6 +12,8 @@ public class PlayerTurn : NetworkBehaviour
 
     [Networked] public bool IsTurnOn {get; set;}
 
+    [Networked] public bool IsReversed { get; set; } = false;
+
 
     public void RegisterPlayer(PlayerControll player)
     {
@@ -38,6 +40,17 @@ public class PlayerTurn : NetworkBehaviour
         IsTurnOn = true;
     }
 
+    // [리모컨 아이템에서 호출할 함수]
+    public void ToggleReverse()
+    {
+        if (!Runner.IsServer) return;
+
+        // 스위치 반전: false -> true / true -> false
+        IsReversed = !IsReversed;
+        
+        Debug.Log($"서버: 리모컨 사용! 현재 역방향 모드: {IsReversed}");
+    }
+
     [ContextMenu("다음 플레이어 턴")]
     public void NextTurn()
     {
@@ -45,7 +58,9 @@ public class PlayerTurn : NetworkBehaviour
 
         if(IsTurnOn == false) return;
 
-        ApplyTurn((CurrentTurnIndex + 1) % _playerIndex.Count);
+        int step = IsReversed ? -1 : 1;
+
+        ApplyTurn((CurrentTurnIndex + step + _playerIndex.Count) % _playerIndex.Count);
     }
 
     // 턴 지정

@@ -10,6 +10,8 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
 
     [Networked] public int BonusItemCount { get; set; } = 0; // NS 자가 사격 보너스
 
+    [Networked] public bool IsAwakening { get; set; } = false; // 각성 상태
+
     [Networked, OnChangedRender(nameof(OnHPChanged))]
     public int HP { get; set; } 
 

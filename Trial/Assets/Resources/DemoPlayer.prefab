@@ -209,12 +209,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   HeadCameraPoint: {fileID: 2064062101518808712}
   mouseSensitivity: 2
-  Xlimit: 60
+  Xlimit: 70
   MinYlimit: -30
   MaxYlimit: 70
   NameText: {fileID: 1279286960750095752}
   NamePoint: {fileID: 1185260439819314941}
   _playerTurn: 0
+  mySlot: []
   currentState: 0
 --- !u!114 &3485994599022493227
 MonoBehaviour:
@@ -553,6 +554,46 @@ PrefabInstance:
     - target: {fileID: 2833486294907880315, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 80.67
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894042081239551343, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.11093366
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894042081239551343, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.000000118801836
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894042081239551343, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.00000011289566
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894042081239551343, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9951846
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894042081239551343, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.037480567
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894042081239551343, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.0034085743
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894042081239551343, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.09050565
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894042081239551343, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 4.243
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894042081239551343, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0.78
+      objectReference: {fileID: 0}
+    - target: {fileID: 2894042081239551343, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 10.422
       objectReference: {fileID: 0}
     - target: {fileID: 4670155962361873657, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
       propertyPath: m_LocalPosition.x
