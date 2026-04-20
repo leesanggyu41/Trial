@@ -8,6 +8,7 @@ TagManager:
   - SpawnPoint
   - waitpanal
   - ItemSlot
+  - TV
   layers:
   - Default
   - TransparentFX

@@ -8,10 +8,6 @@ using System.Collections;
 
 public class PlayerControll : NetworkBehaviour
 {
-    [Header("TV 설정")]
-    public GameObject MyTv;
-    private List<TvTargetButton> _myTvButtons = new List<TvTargetButton>();
-
     [Header("카메라 설정")]
     public Transform HeadCameraPoint;
     public float mouseSensitivity = 1f;
@@ -54,26 +50,10 @@ public class PlayerControll : NetworkBehaviour
             _camera.transform.localPosition = Vector3.zero;
             _camera.transform.localRotation = Quaternion.identity;
             Cursor.lockState = CursorLockMode.Locked;
-            // 맵에 있는 모든 TV 오브젝트를 찾음 (태그 "TV" 권장)
-            GameObject[] allTvs = GameObject.FindGameObjectsWithTag("TV");
 
-            if (allTvs.Length > 0)
-            {
-                // 내 위치에서 가장 가까운 TV 하나를 선택
-                MyTv = allTvs
-                    .OrderBy(tv => Vector3.Distance(transform.position, tv.transform.position))
-                    .First();
-
-                // 그 TV 안에 있는 모든 버튼(TvTargetButton)들을 미리 리스트에 담아둠
-                _myTvButtons = MyTv.GetComponentsInChildren<TvTargetButton>(true).ToList();
-
-                Debug.Log($"{gameObject.name}가 가장 가까운 TV({MyTv.name})를 할당받았습니다.");
-            }
         }
         FindMyItemSlots();
         StartCoroutine(WaitForNickname());
-
-
     }
 
     private System.Collections.IEnumerator WaitForNickname()
@@ -156,6 +136,10 @@ public class PlayerControll : NetworkBehaviour
             yield return null;
         }
 
+        
+
+
+
 
     }
     public override void FixedUpdateNetwork()
@@ -179,8 +163,15 @@ public class PlayerControll : NetworkBehaviour
 
     // --- 추가: 매 프레임 레이캐스트로 윤곽선 레이어 변경 ---
     private void Update()
+
+
+
+
+
     {
         if (!HasInputAuthority || _camera == null) return;
+
+
 
         // --- 추가: 타겟 고르는 중이면 방향키 입력만 받음 ---
         if (currentState == PlayerState.DecidingTarget)
@@ -191,6 +182,8 @@ public class PlayerControll : NetworkBehaviour
 
         Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hitInfo;
+
+
 
         if (Physics.Raycast(ray, out hitInfo, 200f))
         {
@@ -216,6 +209,8 @@ public class PlayerControll : NetworkBehaviour
         else { ResetHighlight(); }
     }
 
+
+
     private void ResetHighlight()
     {
         if (lastHighlightedObject != null)
@@ -240,73 +235,34 @@ public class PlayerControll : NetworkBehaviour
         if (GameTurnManager.Instance.NowTurn != GameTurn.Player) return;
         if (!context.started || !playerTurn) return;
 
+
         Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hitInfo;
 
+
         if (Physics.Raycast(ray, out hitInfo, 200f))
         {
+            // 핵심: 이제 SyringeItem만 찾는게 아니라 모든 ReactionObject를 찾습니다.
             ReactionObject interactable = hitInfo.collider.GetComponentInParent<ReactionObject>();
 
             if (interactable != null)
             {
-                selectedSyringe = interactable;
+                selectedSyringe = interactable; // 리모컨, 주사기 모두 여기 담깁니다.
+                InitializeTargetMap();
+                currentState = PlayerState.DecidingTarget;
 
-                if (!selectedSyringe.NeedsTargeting)
-                {
-                    ConfirmUse(true);
-                }
-                // 타겟팅이 필요하고 타겟이 플레이어일 때 TV 작동
-                else if (selectedSyringe.DesiredTarget == TargetType.Player)
-                {
-                    // 1. 타겟 맵 계산
-                    InitializeTargetMap();
-
-                    // 2. TV UI 갱신 (가까운 TV의 버튼들에 닉네임 할당)
-                    UpdateTvButtonsUI();
-
-                    // 3. TV 애니메이션 재생 (Animator가 MyTv에 있다고 가정)
-                    if (MyTv != null && MyTv.TryGetComponent<Animator>(out var anim))
-                    {
-                        anim.SetTrigger("Open"); // "Open"은 Animator에 설정한 트리거 이름
-                    }
-
-                    currentState = PlayerState.DecidingTarget;
-                    
-                }
+                Debug.Log($"[Click] {hitInfo.collider.gameObject.name} 선택됨! 타겟팅 모드 진입.");
             }
         }
-    }
-    private void UpdateTvButtonsUI()
-    {
-        if (_myTvButtons == null || _myTvButtons.Count == 0) return;
 
-        foreach (var btn in _myTvButtons)
-        {
-            if (_targetMap.TryGetValue(btn.DirectionKey, out PlayerControll target))
-            {
-                // 해당 방향에 플레이어가 있으면 닉네임 표시하고 활성화
-                string nick = target.GetComponent<PlayerData>().Nickname.ToString();
-                btn.SetName(nick);
-                btn.gameObject.SetActive(true);
-                // 만약 버튼에 콜라이더가 자식에 있다면 그것도 체크해야 함
-            }
-            else
-            {
-                // 플레이어가 없는 방향의 버튼은 비활성화
-                btn.gameObject.SetActive(false);
-            }
-        }
-    }
-    private void CloseTv()
-    {
-        // TV 닫기 애니메이션
-        if (MyTv != null && MyTv.TryGetComponent<Animator>(out var anim))
-        {
-            anim.SetTrigger("Close");
-        }
 
-        currentState = PlayerState.Idle;
+
+
+
+
+
     }
+
 
     private void FixedUpdate()
     {
@@ -356,44 +312,74 @@ public class PlayerControll : NetworkBehaviour
     {
         if (selectedSyringe == null) return;
 
-        // 1. 즉시 사용 (각성제 등)
+
+        // 1. 타겟팅이 필요 없는 아이템(리모컨 등)은 즉시 실행
         if (!selectedSyringe.NeedsTargeting)
         {
+            Debug.Log("즉시 사용");
             ConfirmUse(true);
             return;
         }
 
-        // 2. TV 조준 클릭 (기존 키보드 로직을 대체)
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        // 2. 플레이어 타겟팅 아이템 (기존 로직 유지)
+        if (selectedSyringe.DesiredTarget == TargetType.Player)
         {
-            Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-            if (Physics.Raycast(ray, out RaycastHit hit, 10f))
-            {
-                TvTargetButton btn = hit.collider.GetComponent<TvTargetButton>();
+            
+            if (Keyboard.current.downArrowKey.wasPressedThisFrame) ConfirmUse(true);
 
-                // 기존에 키보드로 하던 짓: _targetMap[input] -> ConfirmUse
-                // 이제 버튼이 가진 DirectionKey로 맵에서 플레이어를 찾음
-                if (btn != null && _targetMap.TryGetValue(btn.DirectionKey, out PlayerControll target))
-                {
-                    Debug.Log($"{btn.DirectionKey} 방향의 {target.name} 선택!");
-                    ConfirmUse(false, target.GetComponent<NetworkObject>());
-                    CloseTv(); // TV 닫기
-                }
+            Vector2 input = Vector2.zero;
+            if (Keyboard.current.upArrowKey.wasPressedThisFrame) input = Vector2.up;
+            else if (Keyboard.current.leftArrowKey.wasPressedThisFrame) input = Vector2.left;
+            else if (Keyboard.current.rightArrowKey.wasPressedThisFrame) input = Vector2.right;
+
+            if (input != Vector2.zero && _targetMap.TryGetValue(input, out PlayerControll target))
+            {
+                ConfirmUse(false, target.GetComponent<NetworkObject>()); // NetworkObject로 전달
             }
         }
+        // 3. 주사기 타겟팅 아이템 (감별기, 망치 등)
+        else if (selectedSyringe.DesiredTarget == TargetType.Syringe)
+        {
+            // 여기서 숫자키(1~6)나 다른 방식으로 테이블 위 주사기 선택 로직 추가
+            if (Keyboard.current.digit1Key.wasPressedThisFrame)
+            {
+                // 예: 1번 주사기 오브젝트를 찾아서 ConfirmUse 호출
+                // ConfirmUse(false, firstSyringeOnTable);
+            }
+        }
+
+
     }
 
+
     private void ConfirmUse(bool isSelf, NetworkObject targetObj = null)
+
+
+
+
+
+
+
+
+
     {
         if (selectedSyringe != null)
         {
             // 자가 사용이면 내 ID, 타겟이 있으면 그 오브젝트(플레이어/주사기)의 ID
             NetworkId targetId = isSelf ? Object.Id : (targetObj != null ? targetObj.Id : default);
 
+
             selectedSyringe.OnEvent(isSelf, targetId);
+
 
             selectedSyringe = null;
             currentState = PlayerState.Idle;
         }
+
+
+
+
+
     }
+
 }
