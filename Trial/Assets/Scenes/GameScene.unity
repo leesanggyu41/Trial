@@ -1380,6 +1380,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1228823589}
     m_Modifications:
+    - target: {fileID: -9212948326196691051, guid: d295603a03a276040bcecbe73fd124b5, type: 3}
+      propertyPath: Animator
+      value: 
+      objectReference: {fileID: 160298400}
+    - target: {fileID: 482265886464578329, guid: d295603a03a276040bcecbe73fd124b5, type: 3}
+      propertyPath: SortKey
+      value: 2332247194
+      objectReference: {fileID: 0}
     - target: {fileID: 2609735451942148218, guid: d295603a03a276040bcecbe73fd124b5, type: 3}
       propertyPath: 'm_Materials.Array.data[3]'
       value: 
@@ -4080,6 +4088,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1228823589}
     m_Modifications:
+    - target: {fileID: -9212948326196691051, guid: d295603a03a276040bcecbe73fd124b5, type: 3}
+      propertyPath: Animator
+      value: 
+      objectReference: {fileID: 527043803}
+    - target: {fileID: 482265886464578329, guid: d295603a03a276040bcecbe73fd124b5, type: 3}
+      propertyPath: SortKey
+      value: 467211567
+      objectReference: {fileID: 0}
     - target: {fileID: 2609735451942148218, guid: d295603a03a276040bcecbe73fd124b5, type: 3}
       propertyPath: 'm_Materials.Array.data[3]'
       value: 
@@ -8147,6 +8163,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1228823589}
     m_Modifications:
+    - target: {fileID: -9212948326196691051, guid: d295603a03a276040bcecbe73fd124b5, type: 3}
+      propertyPath: Animator
+      value: 
+      objectReference: {fileID: 883786402}
+    - target: {fileID: 482265886464578329, guid: d295603a03a276040bcecbe73fd124b5, type: 3}
+      propertyPath: SortKey
+      value: 3495036592
+      objectReference: {fileID: 0}
     - target: {fileID: 2609735451942148218, guid: d295603a03a276040bcecbe73fd124b5, type: 3}
       propertyPath: 'm_Materials.Array.data[3]'
       value: 
@@ -9777,6 +9801,11 @@ MonoBehaviour:
   - {fileID: 1228690320}
   - {fileID: 1489384134}
   - {fileID: 923322808}
+  TVPoint:
+  - {fileID: 883786401}
+  - {fileID: 1849841209}
+  - {fileID: 527043802}
+  - {fileID: 160298399}
   PlayerPrefab: {fileID: 3890996208925137358, guid: db29aced5de7ae54abfcff375c3b7e28, type: 3}
 --- !u!4 &983894026
 Transform:
@@ -15916,6 +15945,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1228823589}
     m_Modifications:
+    - target: {fileID: -9212948326196691051, guid: d295603a03a276040bcecbe73fd124b5, type: 3}
+      propertyPath: Animator
+      value: 
+      objectReference: {fileID: 1849841210}
+    - target: {fileID: 482265886464578329, guid: d295603a03a276040bcecbe73fd124b5, type: 3}
+      propertyPath: SortKey
+      value: 3521144241
+      objectReference: {fileID: 0}
     - target: {fileID: 2609735451942148218, guid: d295603a03a276040bcecbe73fd124b5, type: 3}
       propertyPath: 'm_Materials.Array.data[3]'
       value: 

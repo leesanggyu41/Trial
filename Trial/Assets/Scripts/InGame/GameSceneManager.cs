@@ -10,8 +10,9 @@ public class GameSceneManager : NetworkBehaviour
 {
     public static GameSceneManager Instance;
 
-    [Header("캐릭터 스폰포인트")]
+    [Header("캐릭터 스폰포인트 & TV")]
     public Transform[] SpawnPoint;
+    public GameObject[] TVPoint;
     [Header("캐릭터 프리팹")]
     public GameObject PlayerPrefab;
     // 플레이어 참조와 네트워크 객체를 관리하는 딕셔너리입니다.
@@ -47,6 +48,7 @@ public class GameSceneManager : NetworkBehaviour
         }   
 
         Transform spawnPoint = SpawnPoint[index % SpawnPoint.Length];
+        GameObject tv = TVPoint[index % SpawnPoint.Length];
 
         NetworkObject Playerobj = Runner.Spawn
         (
@@ -57,6 +59,7 @@ public class GameSceneManager : NetworkBehaviour
             onBeforeSpawned: (r, obj) =>
             {
                 obj.GetComponent<PlayerObject>().PlayerIndex = index;
+                obj.GetComponent<PlayerControll>().tvnumder = index % TVPoint.Length;
                 
             }
             

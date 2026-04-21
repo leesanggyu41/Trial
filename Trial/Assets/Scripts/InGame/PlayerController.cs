@@ -26,6 +26,10 @@ public class PlayerControll : NetworkBehaviour
     public List<Transform> mySlot = new List<Transform>(); // 아이템이 생성될 위치 리스트 (인덱스 0~7)
     private List<GameObject> heldItems = new List<GameObject>(); // 현재 보유한 아이템 오브젝트 리스트
 
+    [Header("플레이어 TV")]
+    [Networked] public int tvnumder{get; set;}
+    public GameObject my_TV;
+
     public enum PlayerState { Idle, DecidingTarget }
     public PlayerState currentState = PlayerState.Idle;
     private ReactionObject selectedSyringe;
@@ -52,6 +56,9 @@ public class PlayerControll : NetworkBehaviour
             Cursor.lockState = CursorLockMode.Locked;
 
         }
+
+        // tv 입력받기
+        my_TV = GameSceneManager.Instance.TVPoint[tvnumder];
         FindMyItemSlots();
         StartCoroutine(WaitForNickname());
     }
@@ -172,12 +179,14 @@ public class PlayerControll : NetworkBehaviour
         if (!HasInputAuthority || _camera == null) return;
 
 
-
+        if (Object.HasInputAuthority)
+        {
         // --- 추가: 타겟 고르는 중이면 방향키 입력만 받음 ---
         if (currentState == PlayerState.DecidingTarget)
         {
             HandleTargetSelection();
             return;
+        }
         }
 
         Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
@@ -308,8 +317,27 @@ public class PlayerControll : NetworkBehaviour
         }
     }
 
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    public void RPC_tvAnimation(bool isOpen)
+    {
+        if (my_TV != null)
+    {
+        var animator = my_TV.GetComponent<Animator>();
+        if (animator != null)
+        {
+            animator.SetBool("open", isOpen);
+        }
+    }
+    }
     private void HandleTargetSelection()
     {
+
+        // tv를 한번 열시 상태 반복 x
+        if (!my_TV.GetComponent<Animator>().GetBool("open"))
+        {
+            // tv 애니메이션 작동
+            RPC_tvAnimation(true);
+        }
         if (selectedSyringe == null) return;
 
 
@@ -321,10 +349,10 @@ public class PlayerControll : NetworkBehaviour
             return;
         }
 
-        // 2. 플레이어 타겟팅 아이템 (기존 로직 유지)
+        // 2. 플레이어 타겟팅 아이템 (기존 로직 유지) 아이템 주사기 모두 포함
         if (selectedSyringe.DesiredTarget == TargetType.Player)
         {
-            
+
             if (Keyboard.current.downArrowKey.wasPressedThisFrame) ConfirmUse(true);
 
             Vector2 input = Vector2.zero;
@@ -334,6 +362,8 @@ public class PlayerControll : NetworkBehaviour
 
             if (input != Vector2.zero && _targetMap.TryGetValue(input, out PlayerControll target))
             {
+                RPC_tvAnimation(false);
+
                 ConfirmUse(false, target.GetComponent<NetworkObject>()); // NetworkObject로 전달
             }
         }
