@@ -20,8 +20,8 @@ public class SyringeTurn : NetworkBehaviour
     [Networked, Capacity(10)]
     public NetworkLinkedList<SyringeType> St { get; }
 
-    public TextMeshPro Toxin_Text;
-    public TextMeshPro NS_Text;
+    public TextMeshPro[] Toxin_Text;
+    public TextMeshPro[] NS_Text;
 
     public void Start()
     {
@@ -78,9 +78,11 @@ public class SyringeTurn : NetworkBehaviour
             if(St.Get(i) == SyringeType.Toxin) toxin++;
             if(St.Get(i) == SyringeType.NS) ns++;
         }
-
-        Toxin_Text.text = toxin.ToString();
-        NS_Text.text = ns.ToString();
+        for(int i = 0; i < Toxin_Text.Length; i++)
+        {
+            Toxin_Text[i].text = toxin.ToString();
+            NS_Text[i].text = ns.ToString();
+        }
 
         Invoke("UpBox", 3f);
     }
