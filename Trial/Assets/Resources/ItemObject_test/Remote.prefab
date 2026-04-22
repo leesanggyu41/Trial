@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1411036247216937747}
   - component: {fileID: -5039709473874877462}
   m_Layer: 0
-  m_Name: item1
+  m_Name: Remote
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -12,6 +12,8 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
 
     [Networked] public bool IsAwakening { get; set; } = false; // 각성 상태
 
+    [Networked] public bool IsStunned { get; set; } = false; // 스턴 상태
+
     [Networked, OnChangedRender(nameof(OnHPChanged))]
     public int HP { get; set; } 
 

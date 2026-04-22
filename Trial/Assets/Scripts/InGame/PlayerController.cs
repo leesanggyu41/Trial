@@ -241,6 +241,7 @@ public class PlayerControll : NetworkBehaviour
 
     public void CanPlayerTouch(InputAction.CallbackContext context)
     {
+        if(_camera == null) return;
         if (GameTurnManager.Instance.NowTurn != GameTurn.Player) return;
         if (!context.started || !playerTurn) return;
 

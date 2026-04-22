@@ -4,13 +4,13 @@ using Fusion;
 
 public class PlayerTurn : NetworkBehaviour
 {
-    
+
 
     [Networked] public int CurrentTurnIndex { get; set; }
 
     private Dictionary<PlayerControll, int> _playerIndex = new Dictionary<PlayerControll, int>();
 
-    [Networked] public bool IsTurnOn {get; set;}
+    [Networked] public bool IsTurnOn { get; set; }
 
     [Networked] public bool IsReversed { get; set; } = false;
 
@@ -32,10 +32,10 @@ public class PlayerTurn : NetworkBehaviour
     {
         if (!Runner.IsServer) return;
 
-    
+
         foreach (var pc in FindObjectsByType<PlayerControll>(FindObjectsSortMode.None))
         {
-        pc.InitializeTargetMap();
+            pc.InitializeTargetMap();
         }
         IsTurnOn = true;
     }
@@ -47,7 +47,7 @@ public class PlayerTurn : NetworkBehaviour
 
         // 스위치 반전: false -> true / true -> false
         IsReversed = !IsReversed;
-        
+
         Debug.Log($"서버: 리모컨 사용! 현재 역방향 모드: {IsReversed}");
     }
 
@@ -56,11 +56,38 @@ public class PlayerTurn : NetworkBehaviour
     {
         if (!Runner.IsServer) return;
 
-        if(IsTurnOn == false) return;
+        if (IsTurnOn == false) return;
 
         int step = IsReversed ? -1 : 1;
+        int playerCount = _playerIndex.Count;
 
-        ApplyTurn((CurrentTurnIndex + step + _playerIndex.Count) % _playerIndex.Count);
+        int nextIndex = (CurrentTurnIndex + step + playerCount) % playerCount;
+
+        PlayerControll nextPlayer = GetPlayerByIndex(nextIndex);
+
+        PlayerGameData nextplayerData = nextPlayer.GetComponent<PlayerGameData>();
+
+        if (nextPlayer != null && nextplayerData.IsStunned == true)
+        {
+            Debug.Log($"플레이어 {nextIndex}는 스턴 상태입니다. 다음 플레이어로 넘어갑니다.");
+            CurrentTurnIndex = nextIndex; // 턴은 넘어가지만 행동은 불가능
+            nextplayerData.IsStunned = false; // 스턴 상태 해제
+            NextTurn(); // 재귀적으로 다음 플레이어로 넘어감
+        }
+        else
+        {
+            ApplyTurn(nextIndex);
+        }
+
+    }
+
+    private PlayerControll GetPlayerByIndex(int index)
+    {
+        foreach (var (player, playerIndex) in _playerIndex)
+        {
+            if (playerIndex == index) return player;
+        }
+        return null;
     }
 
     // 턴 지정
@@ -75,6 +102,6 @@ public class PlayerTurn : NetworkBehaviour
     public void DeletePlayer(PlayerControll player)
     {
         if (_playerIndex.ContainsKey(player))
-        _playerIndex.Remove(player);
+            _playerIndex.Remove(player);
     }
 }
