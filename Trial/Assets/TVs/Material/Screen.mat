@@ -92,6 +92,8 @@ Material:
     - _Shak_Speed: 2
     - _Split_Line: 50
     - _Split_Line_Speed: 2
+    - _TVScreen: 0
+    - _TV_turn_Off: 0
     m_Colors:
     - _Color: {r: 6.1611705, g: 6.1611705, b: 6.1611705, a: 0}
     - _Noise_Speed: {r: 0, g: 0.1, b: 0, a: 0}
