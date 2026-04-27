@@ -8,6 +8,8 @@ using System.Collections;
 
 public class PlayerControll : NetworkBehaviour
 {
+    public static PlayerControll Local { get; private set; }
+
     [Header("카메라 설정")]
     public Transform HeadCameraPoint;
     public float mouseSensitivity = 1f;
@@ -47,6 +49,11 @@ public class PlayerControll : NetworkBehaviour
 
     public override void Spawned()
     {
+        if (Object.HasInputAuthority)
+        {
+            Local = this;
+            Debug.Log("로컬 플레이어 인스턴스 설정 완료");
+        }
         if (HasInputAuthority)
         {
             _camera = Camera.main;
@@ -54,6 +61,7 @@ public class PlayerControll : NetworkBehaviour
             _camera.transform.localPosition = Vector3.zero;
             _camera.transform.localRotation = Quaternion.identity;
             Cursor.lockState = CursorLockMode.Locked;
+            
         }
 
         // TV 및 슬롯 초기화
@@ -64,7 +72,10 @@ public class PlayerControll : NetworkBehaviour
         
         FindMyItemSlots();
         StartCoroutine(WaitForNickname());
+        //InitializeTargetMap();
     }
+
+
 
     private void Update()
     {
@@ -156,8 +167,10 @@ public class PlayerControll : NetworkBehaviour
 
     private void ExecuteTargetByDirection(Vector2 dir)
     {
+        Debug.Log($"[TV] 방향 선택: {dir}");
         if (_targetMap.TryGetValue(dir, out PlayerControll target))
         {
+            Debug.Log($"[TV] 타겟 선택: {target.NameText.text}");
             RPC_tvAnimation(false);
             ConfirmUse(false, target.GetComponent<NetworkObject>());
         }
@@ -202,14 +215,22 @@ public class PlayerControll : NetworkBehaviour
         if (!context.started || !playerTurn) return;
         if (currentState == PlayerState.DecidingTarget) return;
 
+        
+
         Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         if (Physics.Raycast(ray, out RaycastHit hitInfo, 200f))
         {
             ReactionObject interactable = hitInfo.collider.GetComponentInParent<ReactionObject>();
             if (interactable != null)
             {
+                ItemBase item = hitInfo.collider.GetComponentInParent<ItemBase>();
+                if(item != null && item.OwnerRef != Runner.LocalPlayer)
+                {
+                    return;
+                }
+
                 selectedSyringe = interactable;
-                InitializeTargetMap();
+                //InitializeTargetMap();
                 currentState = PlayerState.DecidingTarget;
                // Debug.Log($"[Click] {interactable.gameObject.name} 선택됨!");
             }
@@ -297,8 +318,8 @@ public class PlayerControll : NetworkBehaviour
     {
         _targetMap.Clear();
         var otherPlayers = FindObjectsByType<PlayerControll>(FindObjectsSortMode.None).Where(p => p != this).ToList();
-        Vector3 myForward = HeadCameraPoint.forward; myForward.y = 0; myForward.Normalize();
-        Vector3 myRight = HeadCameraPoint.right; myRight.y = 0; myRight.Normalize();
+        Vector3 myForward = transform.forward; myForward.y = 0; myForward.Normalize();
+        Vector3 myRight = transform.right; myRight.y = 0; myRight.Normalize();
 
         foreach (var target in otherPlayers)
         {

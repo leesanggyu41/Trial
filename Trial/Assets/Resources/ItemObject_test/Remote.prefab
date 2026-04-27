@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: -366165702173687508}
   - component: {fileID: 1411036247216937747}
   - component: {fileID: -5039709473874877462}
+  - component: {fileID: -355058540319210821}
+  - component: {fileID: -686909955853998197}
   m_Layer: 0
   m_Name: Remote
   m_TagString: Untagged
@@ -135,6 +137,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 1411036247216937747}
   - {fileID: -5039709473874877462}
+  - {fileID: -686909955853998197}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &1411036247216937747
 MonoBehaviour:
@@ -165,6 +168,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1171009550da8354faa9431cf58e3edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Remote
+--- !u!114 &-355058540319210821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4052712063053005659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 590d0a4a23369fe4094bee34430c4b38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.UI.DebugUIHandlerColor
+  colorDefault: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorSelected: {r: 0.25, g: 0.65, b: 0.8, a: 1}
+  nameLabel: {fileID: 0}
+  valueToggle: {fileID: 0}
+  colorImage: {fileID: 0}
+  fieldR: {fileID: 0}
+  fieldG: {fileID: 0}
+  fieldB: {fileID: 0}
+  fieldA: {fileID: 0}
+--- !u!114 &-686909955853998197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4052712063053005659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b7906227254bc845a1b7bd5dee3227a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemBase
 --- !u!1001 &3073497185114582889
 PrefabInstance:
   m_ObjectHideFlags: 0

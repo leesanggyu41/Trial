@@ -53,6 +53,12 @@ public class ItemTurn : NetworkBehaviour
             {
                 int randIndex = UnityEngine.Random.Range(0, itemPrefeb.Length);
                 NetworkObject ob = Runner.Spawn(itemPrefeb[randIndex], PI[i].spawnPoint.position, Quaternion.identity);
+                ItemBase ibase = ob.GetComponent<ItemBase>();
+
+                if(ibase != null)
+                {
+                    ibase.OwnerRef = pc.Object.InputAuthority; // 아이템의 소유자 설정
+                }
 
                 if (pc != null)
                 {

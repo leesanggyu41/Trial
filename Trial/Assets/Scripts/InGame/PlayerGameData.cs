@@ -14,6 +14,8 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
 
     [Networked] public bool IsStunned { get; set; } = false; // 스턴 상태
 
+    [Networked] public bool IsDead { get; set; } = false; // 사망 상태
+
     [Networked, OnChangedRender(nameof(OnHPChanged))]
     public int HP { get; set; } 
 
@@ -29,7 +31,11 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
         HP = Mathf.Max(0, HP - damage);
 
         if (HP <= 0)
+        {
             Debug.Log($"{gameObject.name} 탈락!");
+            IsDead = true;
+        }
+            
     }
 
     public void Heal(int amount)
