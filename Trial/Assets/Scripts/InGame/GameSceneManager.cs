@@ -27,7 +27,7 @@ public class GameSceneManager : NetworkBehaviour
     {
         if (Runner.IsServer)
         {
-            foreach(var player in Runner.ActivePlayers)
+            foreach (var player in Runner.ActivePlayers)
             {
                 SpawnPlayer(player);
             }
@@ -39,13 +39,20 @@ public class GameSceneManager : NetworkBehaviour
     {
         int index = 0;
 
-        foreach(var play in Runner.ActivePlayers)
+        foreach (var play in Runner.ActivePlayers)
         {
-            if(play == player) break;
-            
+            if (play == player) break;
+
             index++;
-            
-        }   
+
+        }
+        int count =0;
+        foreach (var play in Runner.ActivePlayers)
+        {
+
+            count++;
+
+        }
 
         Transform spawnPoint = SpawnPoint[index % SpawnPoint.Length];
         GameObject tv = TVPoint[index % SpawnPoint.Length];
@@ -60,19 +67,30 @@ public class GameSceneManager : NetworkBehaviour
             {
                 obj.GetComponent<PlayerObject>().PlayerIndex = index;
                 obj.GetComponent<PlayerControll>().tvnumder = index % TVPoint.Length;
-                
+
             }
-            
+
         );
 
         _spawnedPlayers.Add(player, Playerobj);
         Runner.SetPlayerObject(player, Playerobj);
 
         GameTurnManager.Instance.Pt_T.RegisterPlayer(Playerobj.GetComponent<PlayerControll>());
+        if (Runner.SessionInfo.PlayerCount == count)
+        {
+            // 모든 인원이 들어왔다면, 잠시 대기 후 모든 클라이언트에서 맵 생성
+            // RPC를 사용하거나, 게임 시작 상태(State)가 바뀔 때 호출하는 게 좋습니다.
+            RPC_InitializeTargetMap();
+        }
 
 
 
-
+    }
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_InitializeTargetMap()
+    {
+        // 각자의 화면에서 자기 기준으로 맵을 한 번만 계산
+        PlayerControll.Local.InitializeTargetMap();
     }
     // 플레이어가 게임에서 퇴장할 때 해당 플레이어의 네트워크 객체를 제거하여 게임에서 사라지도록 합니다.
     public Transform GetSpawnPoint(int playerIndex)

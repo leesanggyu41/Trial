@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: -6343899023370557773}
   - component: {fileID: 6514281324974251788}
   - component: {fileID: 4938221937649687278}
+  - component: {fileID: -1896759348917560775}
+  - component: {fileID: -6313573490691227458}
   m_Layer: 0
   m_Name: StunGun
   m_TagString: Untagged
@@ -114,6 +116,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: -6343899023370557773}
   - {fileID: 6514281324974251788}
+  - {fileID: -6313573490691227458}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &-6343899023370557773
 MonoBehaviour:
@@ -165,6 +168,39 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.41766644, y: 0.2077055, z: 1}
   m_Center: {x: 0.01876831, y: 0.0006496906, z: 0}
+--- !u!114 &-1896759348917560775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7115254592560947801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 590d0a4a23369fe4094bee34430c4b38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.UI.DebugUIHandlerColor
+  colorDefault: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  colorSelected: {r: 0.25, g: 0.65, b: 0.8, a: 1}
+  nameLabel: {fileID: 0}
+  valueToggle: {fileID: 0}
+  colorImage: {fileID: 0}
+  fieldR: {fileID: 0}
+  fieldG: {fileID: 0}
+  fieldB: {fileID: 0}
+  fieldA: {fileID: 0}
+--- !u!114 &-6313573490691227458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7115254592560947801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b7906227254bc845a1b7bd5dee3227a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemBase
 --- !u!1001 &8231826699151117538
 PrefabInstance:
   m_ObjectHideFlags: 0
