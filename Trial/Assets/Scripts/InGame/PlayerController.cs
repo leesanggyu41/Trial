@@ -87,6 +87,7 @@ public class PlayerControll : NetworkBehaviour
             // TV 애니메이션 상태 체크 및 실행
             HandleTVState();
 
+
             // 마우스 클릭 처리
             if (Mouse.current.leftButton.wasPressedThisFrame)
             {
@@ -107,11 +108,29 @@ public class PlayerControll : NetworkBehaviour
     private void HandleTVState()
     {
         if (my_TV == null) return;
+
         var anim = my_TV.GetComponent<Animator>();
-        if (anim != null && !anim.GetBool("open"))
+        if (anim != null && !anim.GetBool("open")) // TV가 열리지 않았을 때
         {
             RPC_tvAnimation(true);
         }
+        else    // 마우스로 TV를 가리킬 때
+        {
+        Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+         if (Physics.Raycast(ray, out RaycastHit hit, 10f))
+        {
+            // TV_Script 구성 요소 확인
+            TV_Script tvScript = hit.collider.GetComponentInParent<TV_Script>();
+            
+            if (tvScript != null && tvScript.gameObject == my_TV)
+            {
+                // 클릭된 콜라이더의 인덱스 확인
+                tvScript.PointRotate(hit.collider);
+            }
+        }
+        }
+
+       
     }
 
     private void HandleTVClick()
@@ -148,6 +167,7 @@ public class PlayerControll : NetworkBehaviour
                 break;
 
             case 0: // Element 0: Up
+                Debug.Log("[TV] 위쪽 방향 선택");
                 ExecuteTargetByDirection(Vector2.up);
                 break;
 
