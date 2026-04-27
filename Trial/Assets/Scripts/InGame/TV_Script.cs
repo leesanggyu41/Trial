@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class TV_Script : MonoBehaviour
 {
-    
     public Renderer tvScreen;
     public Collider[] TVScreenPoint;
 
