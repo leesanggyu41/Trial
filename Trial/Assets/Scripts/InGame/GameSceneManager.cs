@@ -4,6 +4,8 @@
 using UnityEngine;
 using Fusion;
 using System.Collections.Generic;
+using System.Collections;
+using System.Linq;
 
 [DefaultExecutionOrder(-100)]
 public class GameSceneManager : NetworkBehaviour
@@ -46,7 +48,7 @@ public class GameSceneManager : NetworkBehaviour
             index++;
 
         }
-        int count =0;
+        int count = 0;
         foreach (var play in Runner.ActivePlayers)
         {
 
@@ -76,21 +78,44 @@ public class GameSceneManager : NetworkBehaviour
         Runner.SetPlayerObject(player, Playerobj);
 
         GameTurnManager.Instance.Pt_T.RegisterPlayer(Playerobj.GetComponent<PlayerControll>());
-        if (Runner.SessionInfo.PlayerCount == count)
+
+        int countt = Runner.ActivePlayers.Count(); // LINQ 사용
+
+        // [수정] 모든 인원이 들어왔을 때만 실행
+        if (count == Runner.SessionInfo.PlayerCount)
         {
-            // 모든 인원이 들어왔다면, 잠시 대기 후 모든 클라이언트에서 맵 생성
-            // RPC를 사용하거나, 게임 시작 상태(State)가 바뀔 때 호출하는 게 좋습니다.
-            RPC_InitializeTargetMap();
+            Debug.Log("모든 인원 스폰 확인! 1초 뒤 모든 클라이언트의 타겟 맵을 초기화합니다.");
+            // 서버에서만 코루틴을 돌려 약간의 지연 후 RPC를 날립니다.
+            StartCoroutine(DelayedRPC());
         }
 
 
 
     }
+
+    private IEnumerator DelayedRPC()
+    {
+        // 중요: 모든 플레이어의 NetworkObject가 각 클라이언트에 전파될 시간을 줍니다.
+        yield return new WaitForSeconds(1.0f);
+        RPC_InitializeTargetMap();
+    }
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_InitializeTargetMap()
     {
-        // 각자의 화면에서 자기 기준으로 맵을 한 번만 계산
+        // 각 클라이언트에서 실행
+        StartCoroutine(SafeLocalInit());
+    }
+
+    private IEnumerator SafeLocalInit()
+    {
+        // Local 인스턴스가 잡힐 때까지 대기
+        while (PlayerControll.Local == null) yield return null;
+
+        // 마지막으로 한 번 더 아주 잠깐 대기 (물리적 객체 로드 보장)
+        yield return new WaitForSeconds(0.2f);
+
         PlayerControll.Local.InitializeTargetMap();
+        Debug.Log($"[TargetMap] {Runner.LocalPlayer.PlayerId}번 플레이어 지도 생성 완료");
     }
     // 플레이어가 게임에서 퇴장할 때 해당 플레이어의 네트워크 객체를 제거하여 게임에서 사라지도록 합니다.
     public Transform GetSpawnPoint(int playerIndex)
