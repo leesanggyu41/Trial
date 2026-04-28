@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using UnityEngine.UI;
+using Unity.Cinemachine;
 
 public class PlayerControll : NetworkBehaviour
 {
@@ -12,6 +14,10 @@ public class PlayerControll : NetworkBehaviour
 
     [Header("카메라 설정")]
     public Transform HeadCameraPoint;
+    public Transform TopCameraPoint;
+    public Camera PlayerCamera;
+    private bool isTopView = false;
+
     public float mouseSensitivity = 1f;
     [Header("카메라 제한")]
     public float Xlimit = 60f;
@@ -43,7 +49,7 @@ public class PlayerControll : NetworkBehaviour
     private int defaultLayer;
     private const int OUTLINE_LAYER = 8;
 
-    private Camera _camera;
+    //private Camera _camera;
     private float CameraX;
     private float CameraY;
 
@@ -56,12 +62,15 @@ public class PlayerControll : NetworkBehaviour
         }
         if (HasInputAuthority)
         {
-            _camera = Camera.main;
-            _camera.transform.SetParent(HeadCameraPoint);
-            _camera.transform.localPosition = Vector3.zero;
-            _camera.transform.localRotation = Quaternion.identity;
-            Cursor.lockState = CursorLockMode.Locked;
+            PlayerCamera = Camera.main;
+            TopCameraPoint = GameObject.FindGameObjectWithTag("TopCameraPoint").transform;
 
+            // 시작할 때 HeadCameraPoint에 붙이기
+            PlayerCamera.transform.SetParent(HeadCameraPoint);
+            PlayerCamera.transform.localPosition = Vector3.zero;
+            PlayerCamera.transform.localRotation = Quaternion.identity;
+
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         // TV 및 슬롯 초기화
@@ -79,29 +88,74 @@ public class PlayerControll : NetworkBehaviour
 
     private void Update()
     {
-        if (!HasInputAuthority || _camera == null) return;
+        if (!HasInputAuthority || PlayerCamera == null) return;
 
-        // 1. 타겟 결정 모드 (TV가 열린 상태)
+        if (Mouse.current.rightButton.wasPressedThisFrame)
+        {
+            OnTopViewButtonClick();
+        }
+
+        // 1. 타겟 결정 모드
         if (currentState == PlayerState.DecidingTarget)
         {
-            // TV 애니메이션 상태 체크 및 실행
-            HandleTVState();
 
+            if (selectedSyringe == null) return;
 
-            // 마우스 클릭 처리
-            if (Mouse.current.leftButton.wasPressedThisFrame)
+            // 타겟팅 불필요 → 즉시 실행
+            if (!selectedSyringe.NeedsTargeting)
             {
-                HandleTVClick();
+                ConfirmUse(true);
+                RPC_tvAnimation(false);
+                return;
             }
 
-            // 키보드 입력 처리
-            HandleKeyboardSelection();
-            return;
+            // 플레이어 타겟팅 → TV 방식
+            if (selectedSyringe.DesiredTarget == TargetType.Player)
+            {
+                HandleTVState();
+                if (Mouse.current.leftButton.wasPressedThisFrame) HandleTVClick();
+                HandleKeyboardSelection();
+                return;
+            }
+
+            // 주사기 타겟팅 → 탑뷰 방식
+            if (selectedSyringe.DesiredTarget == TargetType.Syringe)
+            {
+                //HandleSyringeTargeting();
+                return;
+            }
         }
 
         // 2. 일반 모드 (아이템 조준 및 하이라이트)
         HandleHighlightUpdate();
     }
+
+    #region [카메라]
+    public void OnTopViewButtonClick()
+    {
+        isTopView = !isTopView;
+
+        if (isTopView)
+        {
+            // TopCameraPoint에 붙이기
+            PlayerCamera.transform.SetParent(TopCameraPoint);
+            PlayerCamera.transform.localPosition = Vector3.zero;
+            PlayerCamera.transform.localRotation = Quaternion.identity;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            // HeadCameraPoint에 다시 붙이기
+            PlayerCamera.transform.SetParent(HeadCameraPoint);
+            PlayerCamera.transform.localPosition = Vector3.zero;
+            PlayerCamera.transform.localRotation = Quaternion.identity;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
+
+    #endregion
 
     #region [TV 클릭 시스템]
 
@@ -116,7 +170,7 @@ public class PlayerControll : NetworkBehaviour
         }
         else    // 마우스로 TV를 가리킬 때
         {
-            Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+            Ray ray = PlayerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
             if (Physics.Raycast(ray, out RaycastHit hit, 10f))
             {
                 // TV_Script 구성 요소 확인
@@ -136,7 +190,7 @@ public class PlayerControll : NetworkBehaviour
     private void HandleTVClick()
     {
         // 화면 중앙에서 레이를 쏨
-        Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        Ray ray = PlayerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         if (Physics.Raycast(ray, out RaycastHit hit, 10f))
         {
             // TV_Script 구성 요소 확인
@@ -241,14 +295,15 @@ public class PlayerControll : NetworkBehaviour
 
     public void CanPlayerTouch(InputAction.CallbackContext context)
     {
-        if (_camera == null) return;
+        if (PlayerCamera == null) return;
         if (GameTurnManager.Instance == null || GameTurnManager.Instance.NowTurn != GameTurn.Player) return;
         if (!context.started || !playerTurn) return;
         if (currentState == PlayerState.DecidingTarget) return;
 
+        Ray ray = isTopView
+            ? PlayerCamera.ScreenPointToRay(Mouse.current.position.ReadValue())
+            : PlayerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
-
-        Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         if (Physics.Raycast(ray, out RaycastHit hitInfo, 200f))
         {
             ReactionObject interactable = hitInfo.collider.GetComponentInParent<ReactionObject>();
@@ -270,7 +325,10 @@ public class PlayerControll : NetworkBehaviour
 
     private void HandleHighlightUpdate()
     {
-        Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+
+        Ray ray = isTopView
+            ? PlayerCamera.ScreenPointToRay(Mouse.current.position.ReadValue())
+            : PlayerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         if (Physics.Raycast(ray, out RaycastHit hitInfo, 200f))
         {
             ReactionObject reactionObj = hitInfo.collider.GetComponentInParent<ReactionObject>();
@@ -312,6 +370,8 @@ public class PlayerControll : NetworkBehaviour
     public override void FixedUpdateNetwork()
     {
         if (!HasInputAuthority) return;
+        if (isTopView) return; // 탑뷰일 때 시야 이동 막기
+
         var mouse = Mouse.current;
         if (mouse == null) return;
 

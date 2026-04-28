@@ -9,6 +9,10 @@ TagManager:
   - waitpanal
   - ItemSlot
   - TV
+  - SyringeCamera
+  - TopViewButton
+  - VCam
+  - TopCameraPoint
   layers:
   - Default
   - TransparentFX
