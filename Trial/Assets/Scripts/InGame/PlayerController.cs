@@ -26,8 +26,8 @@ public class PlayerControll : NetworkBehaviour
     [Networked] public bool playerTurn { get; set; }
 
     [Header("아이템 위치")]
-    public List<Transform> mySlot = new List<Transform>(); 
-    private List<GameObject> heldItems = new List<GameObject>(); 
+    public List<Transform> mySlot = new List<Transform>();
+    private List<GameObject> heldItems = new List<GameObject>();
 
     [Header("플레이어 TV")]
     [Networked] public int tvnumder { get; set; }
@@ -41,7 +41,7 @@ public class PlayerControll : NetworkBehaviour
     [Header("하이라이트 설정")]
     private GameObject lastHighlightedObject;
     private int defaultLayer;
-    private const int OUTLINE_LAYER = 8; 
+    private const int OUTLINE_LAYER = 8;
 
     private Camera _camera;
     private float CameraX;
@@ -61,7 +61,7 @@ public class PlayerControll : NetworkBehaviour
             _camera.transform.localPosition = Vector3.zero;
             _camera.transform.localRotation = Quaternion.identity;
             Cursor.lockState = CursorLockMode.Locked;
-            
+
         }
 
         // TV 및 슬롯 초기화
@@ -69,7 +69,7 @@ public class PlayerControll : NetworkBehaviour
         {
             my_TV = GameSceneManager.Instance.TVPoint[tvnumder];
         }
-        
+
         FindMyItemSlots();
         StartCoroutine(WaitForNickname());
         //InitializeTargetMap();
@@ -116,21 +116,21 @@ public class PlayerControll : NetworkBehaviour
         }
         else    // 마우스로 TV를 가리킬 때
         {
-        Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-         if (Physics.Raycast(ray, out RaycastHit hit, 10f))
-        {
-            // TV_Script 구성 요소 확인
-            TV_Script tvScript = hit.collider.GetComponentInParent<TV_Script>();
-            
-            if (tvScript != null && tvScript.gameObject == my_TV)
+            Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+            if (Physics.Raycast(ray, out RaycastHit hit, 10f))
             {
-                // 클릭된 콜라이더의 인덱스 확인
-                tvScript.PointRotate(hit.collider);
+                // TV_Script 구성 요소 확인
+                TV_Script tvScript = hit.collider.GetComponentInParent<TV_Script>();
+
+                if (tvScript != null && tvScript.gameObject == my_TV)
+                {
+                    // 클릭된 콜라이더의 인덱스 확인
+                    tvScript.PointRotate(hit.collider);
+                }
             }
         }
-        }
 
-       
+
     }
 
     private void HandleTVClick()
@@ -141,7 +141,7 @@ public class PlayerControll : NetworkBehaviour
         {
             // TV_Script 구성 요소 확인
             TV_Script tvScript = hit.collider.GetComponentInParent<TV_Script>();
-            
+
             if (tvScript != null && tvScript.gameObject == my_TV)
             {
                 // 클릭된 콜라이더의 인덱스 확인
@@ -188,11 +188,22 @@ public class PlayerControll : NetworkBehaviour
     private void ExecuteTargetByDirection(Vector2 dir)
     {
         Debug.Log($"[TV] 방향 선택: {dir}");
+
+        Debug.Log($"[TV] _targetMap 크기: {_targetMap.Count}");
+        foreach (var kvp in _targetMap)
+        {
+            Debug.Log($"  키: {kvp.Key} → 플레이어: {kvp.Value.NameText.text}");
+        }
+
         if (_targetMap.TryGetValue(dir, out PlayerControll target))
         {
             Debug.Log($"[TV] 타겟 선택: {target.NameText.text}");
             RPC_tvAnimation(false);
             ConfirmUse(false, target.GetComponent<NetworkObject>());
+        }
+        else
+        {
+            Debug.LogWarning($"[TV] {dir} 방향에 해당하는 타겟이 없음!");
         }
     }
 
@@ -230,12 +241,12 @@ public class PlayerControll : NetworkBehaviour
 
     public void CanPlayerTouch(InputAction.CallbackContext context)
     {
-        if(_camera == null) return;
+        if (_camera == null) return;
         if (GameTurnManager.Instance == null || GameTurnManager.Instance.NowTurn != GameTurn.Player) return;
         if (!context.started || !playerTurn) return;
         if (currentState == PlayerState.DecidingTarget) return;
 
-        
+
 
         Ray ray = _camera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         if (Physics.Raycast(ray, out RaycastHit hitInfo, 200f))
@@ -244,7 +255,7 @@ public class PlayerControll : NetworkBehaviour
             if (interactable != null)
             {
                 ItemBase item = hitInfo.collider.GetComponentInParent<ItemBase>();
-                if(item != null && item.OwnerRef != Runner.LocalPlayer)
+                if (item != null && item.OwnerRef != Runner.LocalPlayer)
                 {
                     return;
                 }
@@ -252,7 +263,7 @@ public class PlayerControll : NetworkBehaviour
                 selectedSyringe = interactable;
                 //InitializeTargetMap();
                 currentState = PlayerState.DecidingTarget;
-               // Debug.Log($"[Click] {interactable.gameObject.name} 선택됨!");
+                // Debug.Log($"[Click] {interactable.gameObject.name} 선택됨!");
             }
         }
     }
@@ -336,28 +347,67 @@ public class PlayerControll : NetworkBehaviour
 
     public void InitializeTargetMap()
     {
-        _targetMap.Clear();
-        var otherPlayers = FindObjectsByType<PlayerControll>(FindObjectsSortMode.None).Where(p => p != this).ToList();
-        Vector3 myForward = transform.forward; myForward.y = 0; myForward.Normalize();
-        Vector3 myRight = transform.right; myRight.y = 0; myRight.Normalize();
+        // 코루틴으로 실행하여 인원이 다 찰 때까지 재시도합니다.
+        StartCoroutine(RetryInitializeTargetMap());
+    }
 
-        foreach (var target in otherPlayers)
+    private IEnumerator RetryInitializeTargetMap()
+    {
+        int expectedCount = Runner.ActivePlayers.Count() - 1;
+        int retryCount = 0;
+        int maxRetries = 10;
+
+        while (retryCount < maxRetries)
         {
-            Vector3 dir = (target.transform.position - transform.position);
-            dir.y = 0; dir.Normalize();
-            float dotF = Vector3.Dot(myForward, dir);
-            float dotR = Vector3.Dot(myRight, dir);
+            _targetMap.Clear();
+            var otherPlayers = FindObjectsByType<PlayerControll>(FindObjectsSortMode.None)
+                                .Where(p => p != this && p.Object != null && p.Object.IsValid)
+                                .ToList();
 
-            if (Mathf.Abs(dotF) >= Mathf.Abs(dotR))
+            if (otherPlayers.Count >= expectedCount)
             {
-                if (dotF > 0) _targetMap[Vector2.up] = target;
+                Vector3 myForward = transform.forward; myForward.y = 0; myForward.Normalize();
+
+                var sorted = otherPlayers.Select(target =>
+                {
+                    Vector3 dir = (target.transform.position - transform.position);
+                    dir.y = 0; dir.Normalize();
+                    float angle = Vector3.SignedAngle(myForward, dir, Vector3.up);
+                    return (target, angle);
+                })
+                .OrderBy(x => x.angle)
+                .ToList();
+
+                var frontPlayer = sorted.OrderBy(x => Mathf.Abs(x.angle)).First();
+
+                if (Mathf.Abs(frontPlayer.angle) < 30f)
+                {
+                    // 앞에 플레이어가 있는 경우 → up/left/right 배정
+                    _targetMap[Vector2.up] = frontPlayer.target;
+                    foreach (var p in sorted.Where(x => x.target != frontPlayer.target))
+                    {
+                        _targetMap[p.angle < 0 ? Vector2.left : Vector2.right] = p.target;
+                    }
+                }
+                else
+                {
+                    // 앞에 플레이어가 없는 경우 → left/right만 배정
+                    foreach (var p in sorted)
+                    {
+                        _targetMap[p.angle < 0 ? Vector2.left : Vector2.right] = p.target;
+                    }
+                }
+
+                Debug.Log($"[TargetMap] 맵 초기화 완료! 타겟 수: {_targetMap.Count}");
+                yield break;
             }
-            else
-            {
-                if (dotR > 0) _targetMap[Vector2.right] = target;
-                else _targetMap[Vector2.left] = target;
-            }
+
+            retryCount++;
+            Debug.Log($"[TargetMap] 플레이어를 찾는 중... ({retryCount}/{maxRetries})");
+            yield return new WaitForSeconds(0.2f);
         }
+
+        Debug.LogError("[TargetMap] 최대 재시도 횟수 초과!");
     }
 
     private void FindMyItemSlots()

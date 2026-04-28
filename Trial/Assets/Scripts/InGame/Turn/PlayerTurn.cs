@@ -28,16 +28,21 @@ public class PlayerTurn : NetworkBehaviour
     {
         if (Runner.IsServer) ApplyTurn(0);
     }
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void PlayerTurnStart_Rpc()
     {
-        if (!Runner.IsServer) return;
+        Debug.Log($"[RPC] PlayerTurnStart_Rpc 실행됨! Local: {PlayerControll.Local}"); // ← 추가
 
-
-        foreach (var pc in FindObjectsByType<PlayerControll>(FindObjectsSortMode.None))
+        if (PlayerControll.Local == null)
         {
-            pc.InitializeTargetMap();
+            Debug.LogError("[RPC] PlayerControll.Local이 null임!");
+            return;
         }
-        IsTurnOn = true;
+
+        PlayerControll.Local.InitializeTargetMap();
+
+        if (Runner.IsServer)
+            IsTurnOn = true;
     }
 
     // [리모컨 아이템에서 호출할 함수]

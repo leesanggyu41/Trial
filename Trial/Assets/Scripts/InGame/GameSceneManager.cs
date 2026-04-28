@@ -48,13 +48,7 @@ public class GameSceneManager : NetworkBehaviour
             index++;
 
         }
-        int count = 0;
-        foreach (var play in Runner.ActivePlayers)
-        {
-
-            count++;
-
-        }
+        int count = Runner.ActivePlayers.Count();
 
         Transform spawnPoint = SpawnPoint[index % SpawnPoint.Length];
         GameObject tv = TVPoint[index % SpawnPoint.Length];
@@ -79,13 +73,10 @@ public class GameSceneManager : NetworkBehaviour
 
         GameTurnManager.Instance.Pt_T.RegisterPlayer(Playerobj.GetComponent<PlayerControll>());
 
-        int countt = Runner.ActivePlayers.Count(); // LINQ 사용
-
-        // [수정] 모든 인원이 들어왔을 때만 실행
-        if (count == Runner.SessionInfo.PlayerCount)
+        if (count == Runner.SessionInfo.MaxPlayers // 혹은 아래처럼 스폰된 수로 비교
+        || _spawnedPlayers.Count == Runner.SessionInfo.MaxPlayers)
         {
-            Debug.Log("모든 인원 스폰 확인! 1초 뒤 모든 클라이언트의 타겟 맵을 초기화합니다.");
-            // 서버에서만 코루틴을 돌려 약간의 지연 후 RPC를 날립니다.
+            Debug.Log("모든 인원 스폰 확인! 타겟 맵 초기화 시작.");
             StartCoroutine(DelayedRPC());
         }
 
