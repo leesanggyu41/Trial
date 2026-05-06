@@ -33,6 +33,7 @@ public class Mammer : NetworkBehaviour, ReactionObject
 
             // 4. 서버에서 주사기 오브젝트를 물리적으로 파괴(Despawn)합니다.이 코드는 데모이며 나중에 파괴되는 애니메이션과 함께 구현할 것
             Runner.Despawn(targetObj);
+            Runner.Despawn(Object); // 망치도 제거
         }
     }
 }

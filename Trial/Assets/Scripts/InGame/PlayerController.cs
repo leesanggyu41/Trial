@@ -45,8 +45,12 @@ public class PlayerControll : NetworkBehaviour
     private Dictionary<Vector2, PlayerControll> _targetMap = new Dictionary<Vector2, PlayerControll>();
 
     [Header("하이라이트 설정")]
-    private GameObject lastHighlightedObject;
+    private GameObject lastHighlightedObject; // 현재 하이라이트된 오브젝트
+
+    private GameObject selectedHighlightedObject; // 선택된 아이템에 대한 하이라이트 오브젝트
     private int defaultLayer;
+
+    private int selectedDefaultLayer;
     private const int OUTLINE_LAYER = 8;
 
     //private Camera _camera;
@@ -100,7 +104,7 @@ public class PlayerControll : NetworkBehaviour
         {
 
             if (selectedSyringe == null) return;
-
+            GameObject selectedObj = (selectedSyringe as MonoBehaviour).gameObject;
             // 타겟팅 불필요 → 즉시 실행
             if (!selectedSyringe.NeedsTargeting)
             {
@@ -118,10 +122,11 @@ public class PlayerControll : NetworkBehaviour
                 return;
             }
 
-            // 주사기 타겟팅 → 탑뷰 방식
+            // 주사기 타겟팅 → ??방식
             if (selectedSyringe.DesiredTarget == TargetType.Syringe)
             {
-                //HandleSyringeTargeting();
+                HandleSyringeTargeting();
+                HandleHighlightUpdate();
                 return;
             }
         }
@@ -291,6 +296,28 @@ public class PlayerControll : NetworkBehaviour
 
     #endregion
 
+    #region [주사기 타겟팅 시스템]
+    private void HandleSyringeTargeting()
+    {
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            Ray ray = isTopView
+                ? PlayerCamera.ScreenPointToRay(Mouse.current.position.ReadValue())
+                : PlayerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+
+            if (Physics.Raycast(ray, out RaycastHit hit, 200f))
+            {
+                // SyringeItem만 타겟으로 인정
+                SyringeItem syringe = hit.collider.GetComponentInParent<SyringeItem>();
+                if (syringe != null)
+                {
+                    ConfirmUse(false, syringe.GetComponent<NetworkObject>());
+                }
+            }
+        }
+    }
+    #endregion
+
     #region [아이템 상호작용 및 하이라이트]
 
     public void CanPlayerTouch(InputAction.CallbackContext context)
@@ -318,6 +345,13 @@ public class PlayerControll : NetworkBehaviour
                 selectedSyringe = interactable;
                 //InitializeTargetMap();
                 currentState = PlayerState.DecidingTarget;
+                GameObject selectedObj = (selectedSyringe as MonoBehaviour)?.gameObject;
+                if (selectedObj != null)
+                {
+                    selectedHighlightedObject = selectedObj;
+                    selectedDefaultLayer = selectedObj.layer;
+                    SetLayerRecursively(selectedObj, OUTLINE_LAYER);
+                }
                 // Debug.Log($"[Click] {interactable.gameObject.name} 선택됨!");
             }
         }
@@ -335,6 +369,9 @@ public class PlayerControll : NetworkBehaviour
             if (reactionObj != null)
             {
                 GameObject currentObj = (reactionObj as MonoBehaviour).gameObject;
+
+                if (currentObj == selectedHighlightedObject) return;
+                
                 if (lastHighlightedObject != currentObj)
                 {
                     ResetHighlight();
@@ -386,6 +423,12 @@ public class PlayerControll : NetworkBehaviour
     {
         if (selectedSyringe != null)
         {
+
+            if (selectedHighlightedObject != null)
+            {
+                SetLayerRecursively(selectedHighlightedObject, selectedDefaultLayer);
+                selectedHighlightedObject = null;
+            }
             NetworkId targetId = isSelf ? Object.Id : (targetObj != null ? targetObj.Id : default);
             selectedSyringe.OnEvent(isSelf, targetId);
             selectedSyringe = null;
