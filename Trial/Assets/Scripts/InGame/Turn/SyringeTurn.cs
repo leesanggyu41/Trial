@@ -177,9 +177,7 @@ public class SyringeTurn : NetworkBehaviour
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_PlayBoxAnimation(bool isDown)
     {
-        var anim = SyringeBox.GetComponent<Animator>();
-        if (anim != null)
-            anim.SetTrigger(isDown ? "Down" : "Up");
+            SyringeBoxAnim.SetTrigger(isDown ? "Down" : "Up");
     }
 }
 
