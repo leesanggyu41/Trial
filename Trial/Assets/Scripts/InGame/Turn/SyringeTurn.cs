@@ -16,10 +16,10 @@ public class SyringeTurn : NetworkBehaviour
     public Animator SyringeBoxAnim;
 
     // 주사기 리스트
-    [Networked, Capacity(10)]
+    [Networked, Capacity(100)]
     public NetworkLinkedList<NetworkId> So { get; }
 
-    [Networked, Capacity(10)]
+    [Networked, Capacity(100)]
     public NetworkLinkedList<SyringeType> St { get; }
 
     public TextMeshPro[] Toxin_Text;
@@ -106,6 +106,8 @@ public class SyringeTurn : NetworkBehaviour
     public void UpBox()
     {
         SyringeBoxAnim.SetTrigger("Up");
+        Toxin_Text[0].text = "";
+        NS_Text[0].text = "";
         GTM.GamesTurnChange();
     }
 
@@ -139,7 +141,48 @@ public class SyringeTurn : NetworkBehaviour
             GTM.GamesTurnChange();
         }
     }
+
+    public void AddSyringes(int count)
+    {
+        if (!Runner.IsServer) return;
+        StartCoroutine(AddSyringesCoroutine(count));
+    }
+
+    private IEnumerator AddSyringesCoroutine(int count)
+    {
+
+        RPC_PlayBoxAnimation(true); // 박스 내려가는 애니메이션 재생
+
+        // 애니메이션 끝날 때까지 대기
+        yield return new WaitForSeconds(3f);
+
+        // 주사기 생성
+        for (int i = 0; i < count; i++)
+        {
+            SyringeType randomType = (SyringeType)(Random.Range(0, 10) % 2);
+            NetworkObject sy = Runner.Spawn(SyringePrefab, SyringeBox.transform.position, Quaternion.identity);
+            So.Add(sy.Id);
+            St.Add(randomType);
+
+            if (sy.TryGetComponent(out SyringeItem syringeScript))
+            {
+                syringeScript.MyType = randomType;
+            }
+        }
+
+        // 박스 올라가는 애니메이션
+        RPC_PlayBoxAnimation(false);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlayBoxAnimation(bool isDown)
+    {
+        var anim = SyringeBox.GetComponent<Animator>();
+        if (anim != null)
+            anim.SetTrigger(isDown ? "Down" : "Up");
+    }
 }
+
 
 public enum SyringeType
 {
