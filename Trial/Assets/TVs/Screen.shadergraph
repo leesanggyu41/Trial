@@ -1298,8 +1298,8 @@
     "m_ObjectId": "08da1f141dbd4cea839b3eeb3bbf434a",
     "m_Title": "줄무늬 노드",
     "m_Position": {
-        "x": -3137.0,
-        "y": -508.0
+        "x": -3137.60009765625,
+        "y": -509.5998229980469
     }
 }
 
@@ -2650,7 +2650,7 @@
     "m_Title": "지지직 노드",
     "m_Position": {
         "x": -2328.0,
-        "y": 341.0
+        "y": 340.0
     }
 }
 
@@ -3367,7 +3367,7 @@
     "m_DefaultRefNameVersion": 1,
     "m_RefNameGeneratedByDisplayName": "Image",
     "m_DefaultReferenceName": "_Image",
-    "m_OverrideReferenceName": "",
+    "m_OverrideReferenceName": "_Image",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",
@@ -4486,8 +4486,8 @@
     "m_ObjectId": "89a4e8dd863942798d85d39d82cea3fd",
     "m_Title": "노이즈 노드",
     "m_Position": {
-        "x": -3132.0,
-        "y": -1034.0
+        "x": -3132.000244140625,
+        "y": -1035.2001953125
     }
 }
 
@@ -7284,8 +7284,8 @@
     "m_ObjectId": "f38740dd553c44bb95e16d77209247c1",
     "m_Title": "점멸 노드",
     "m_Position": {
-        "x": -2268.0,
-        "y": -1018.0
+        "x": -2268.000244140625,
+        "y": -1019.2000732421875
     }
 }
 
