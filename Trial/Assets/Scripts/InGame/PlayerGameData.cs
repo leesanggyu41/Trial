@@ -14,10 +14,11 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
 
     [Networked] public bool IsStunned { get; set; } = false; // 스턴 상태
 
-    [Networked] public bool IsDead { get; set; } = false; // 사망 상태
+    [Networked, OnChangedRender(nameof(OnIsDeadChanged))]
+    public bool IsDead { get; set; } = false; // 사망 상태
 
     [Networked, OnChangedRender(nameof(OnHPChanged))]
-    public int HP { get; set; } 
+    public int HP { get; set; }
 
     public override void Spawned()
     {
@@ -35,12 +36,17 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
             Debug.Log($"{gameObject.name} 탈락!");
             IsDead = true;
         }
-            
+
+    }
+
+    void OnIsDeadChanged()
+    {
+        GetComponent<PlayerControll>().NameText.text = "";
     }
 
     void Update()
     {
-        if(HP <= 0)
+        if (HP <= 0)
         {
             IsDead = true;
         }

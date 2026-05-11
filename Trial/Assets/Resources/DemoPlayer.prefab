@@ -147,10 +147,10 @@ GameObject:
   m_Component:
   - component: {fileID: 760114812995454037}
   - component: {fileID: 6984693768515926403}
+  - component: {fileID: 7810111254709352513}
   - component: {fileID: -7036155347277358006}
   - component: {fileID: 3485994599022493227}
   - component: {fileID: -6193320690357500488}
-  - component: {fileID: 7810111254709352513}
   - component: {fileID: 5517022818228603993}
   - component: {fileID: 2658898219430251723}
   - component: {fileID: 3201149987544829826}
@@ -195,6 +195,23 @@ MonoBehaviour:
     _length: 0
     _data:
       Data: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+--- !u!114 &7810111254709352513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3890996208925137358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2eac946ab7b81444878a60cc645f07a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerGameData
+  _BonusItemCount: 0
+  _IsAwakening: 0
+  _IsStunned: 0
+  _IsDead: 0
+  _HP: 4
 --- !u!114 &-7036155347277358006
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,9 +224,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0051b898cdf7ba84bad011b063143da3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  playerGameData: {fileID: 0}
   HeadCameraPoint: {fileID: 2064062101518808712}
+  TopCameraPoint: {fileID: 0}
   PlayerCamera: {fileID: 0}
-  TopCamera: {fileID: 0}
   mouseSensitivity: 2
   Xlimit: 70
   MinYlimit: -30
@@ -239,9 +257,9 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 6984693768515926403}
+  - {fileID: 7810111254709352513}
   - {fileID: -7036155347277358006}
   - {fileID: -6193320690357500488}
-  - {fileID: 7810111254709352513}
   - {fileID: 5517022818228603993}
   - {fileID: 2658898219430251723}
   ForceRemoteRenderTimeframe: 0
@@ -258,23 +276,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerObject
   _PlayerIndex: 0
---- !u!114 &7810111254709352513
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3890996208925137358}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2eac946ab7b81444878a60cc645f07a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerGameData
-  _BonusItemCount: 0
-  _IsAwakening: 0
-  _IsStunned: 0
-  _IsDead: 0
-  _HP: 4
 --- !u!114 &5517022818228603993
 MonoBehaviour:
   m_ObjectHideFlags: 0
