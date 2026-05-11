@@ -12,6 +12,8 @@ public class PlayerControll : NetworkBehaviour
 {
     public static PlayerControll Local { get; private set; }
 
+    public PlayerGameData playerGameData;
+
     [Header("카메라 설정")]
     public Transform HeadCameraPoint;
     public Transform TopCameraPoint;
@@ -68,6 +70,7 @@ public class PlayerControll : NetworkBehaviour
         {
             PlayerCamera = Camera.main;
             TopCameraPoint = GameObject.FindGameObjectWithTag("TopCameraPoint").transform;
+            playerGameData = GetComponent<PlayerGameData>();
 
             // 시작할 때 HeadCameraPoint에 붙이기
             PlayerCamera.transform.SetParent(HeadCameraPoint);
@@ -93,6 +96,12 @@ public class PlayerControll : NetworkBehaviour
     private void Update()
     {
         if (!HasInputAuthority || PlayerCamera == null) return;
+
+        if(playerGameData != null && playerGameData.IsDead)
+        {
+            NameText.text = "";
+            return;
+        }
 
         if (Mouse.current.rightButton.wasPressedThisFrame)
         {

@@ -38,6 +38,14 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
             
     }
 
+    void Update()
+    {
+        if(HP <= 0)
+        {
+            IsDead = true;
+        }
+    }
+
     public void Heal(int amount)
     {
         if (!Runner.IsServer) return;
