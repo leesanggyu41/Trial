@@ -461,6 +461,7 @@ GameObject:
   - component: {fileID: 3644290782931773100}
   - component: {fileID: -3962539484352978850}
   - component: {fileID: 2632913254833262026}
+  - component: {fileID: 1628072215847735950}
   m_Layer: 0
   m_Name: Syringe
   m_TagString: Untagged
@@ -570,6 +571,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SyringeItem
   _MyType: 0
+--- !u!65 &1628072215847735950
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5743306241839007399}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.017504776, y: 0.0945483, z: 0.07049288}
+  m_Center: {x: 0.00012312544, y: 0.001851173, z: 0.0023418667}
 --- !u!1 &7060458479359843552
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,13 +5,32 @@ public class ItemBase : NetworkBehaviour
 {
     [Networked] public PlayerRef OwnerRef { get; set; }
 
+    private RobotArmFixer _armController;
+
+    public override void Spawned()
+    {
+        _armController = FindFirstObjectByType<RobotArmFixer>();
+    }
+
     public bool CanUse()
     {
         return OwnerRef == Runner.LocalPlayer;
     }
 
-    public void DestroyItem()
+    public void GrabAndDespawn()
     {
+        NetworkId id = Object.Id;
+
+        if (_armController != null)
+            _armController.GrabAndReturn(transform, Object.Id, () => RPC_Despawn());
+        else
+            RPC_Despawn();
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    private void RPC_Despawn()
+    {
+        Debug.Log($"[Despawn] 호출됨: {Object.Id}");
         Runner.Despawn(Object);
     }
 }

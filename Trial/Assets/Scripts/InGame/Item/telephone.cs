@@ -1,7 +1,7 @@
 using UnityEngine;
 using Fusion;
 
-public class telephone : NetworkBehaviour, ReactionObject
+public class telephone : ItemBase, ReactionObject
 {
     public bool NeedsTargeting => false;
 
@@ -10,6 +10,7 @@ public class telephone : NetworkBehaviour, ReactionObject
 
     public void OnEvent(bool myself, NetworkId targetId)
     {
+        GrabAndDespawn();
         RPC_UseTelephone(Object.InputAuthority, targetId);
     }
 
@@ -20,6 +21,6 @@ public class telephone : NetworkBehaviour, ReactionObject
 
         SyringeTurn.ins.AddSyringes(3); // 예시로 2개의 주사기 생성
 
-        Runner.Despawn(Object); // 성공 시에만 아이템 삭제
+        //Runner.Despawn(Object); // 성공 시에만 아이템 삭제
     }
 }

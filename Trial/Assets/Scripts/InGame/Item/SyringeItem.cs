@@ -1,7 +1,7 @@
 using UnityEngine;
 using Fusion;
 
-public class SyringeItem : NetworkBehaviour, ReactionObject
+public class SyringeItem : ItemBase, ReactionObject
 {
 
     public bool NeedsTargeting => true;
@@ -14,8 +14,9 @@ public class SyringeItem : NetworkBehaviour, ReactionObject
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
 
+        
         RPC_UseSyringe(isSelfTarget, targetId);
-
+        GrabAndDespawn();
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -89,7 +90,7 @@ public class SyringeItem : NetworkBehaviour, ReactionObject
         // 3. 주사기 오브젝트 삭제
         if (Object != null)
         {
-            Runner.Despawn(Object);
+            //Runner.Despawn(Object);
         }
     }
 }

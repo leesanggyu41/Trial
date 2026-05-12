@@ -1,7 +1,7 @@
 using UnityEngine;
 using Fusion;
 
-public class StunGun : NetworkBehaviour, ReactionObject
+public class StunGun : ItemBase, ReactionObject
 {
     public bool NeedsTargeting => true;
 
@@ -9,6 +9,7 @@ public class StunGun : NetworkBehaviour, ReactionObject
 
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
+        GrabAndDespawn();   
         RPC_UseStunGun(targetId);
     }
 
@@ -23,7 +24,7 @@ public class StunGun : NetworkBehaviour, ReactionObject
             // 1. 플레이어의 행동을 1턴 동안 스턴 상태로 만듭니다.
             playerData.IsStunned = true; 
 
-            Runner.Despawn(Object); // 아이템 사용 후 삭제
+            //Runner.Despawn(Object); // 아이템 사용 후 삭제
 
         }
     }

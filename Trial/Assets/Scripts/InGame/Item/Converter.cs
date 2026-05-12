@@ -1,7 +1,7 @@
 using UnityEngine;
 using Fusion;
 
-public class Converter : NetworkBehaviour, ReactionObject
+public class Converter : ItemBase, ReactionObject
 {
     public bool NeedsTargeting => true;
 
@@ -9,6 +9,7 @@ public class Converter : NetworkBehaviour, ReactionObject
 
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
+        GrabAndDespawn();
         RPC_UseConverter(targetId);
     }
 
@@ -26,6 +27,6 @@ public class Converter : NetworkBehaviour, ReactionObject
             syringeScript.MyType = syringeScript.MyType == SyringeType.Toxin ? SyringeType.NS : SyringeType.Toxin;
 
         }
-        Runner.Despawn(Object); // 변환기도 제거
+        //Runner.Despawn(Object); // 변환기도 제거
     }
 }

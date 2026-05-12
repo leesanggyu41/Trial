@@ -1,7 +1,7 @@
 using UnityEngine;
 using Fusion;
 
-public class Remote : NetworkBehaviour, ReactionObject
+public class Remote : ItemBase, ReactionObject
 {
 
     public bool NeedsTargeting => false;
@@ -10,6 +10,7 @@ public class Remote : NetworkBehaviour, ReactionObject
     
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
+        GrabAndDespawn();
         RPC_UseRemote();
     }
 
@@ -26,6 +27,6 @@ public class Remote : NetworkBehaviour, ReactionObject
         }
 
         // 사용한 리모컨 오브젝트 삭제
-        Runner.Despawn(Object);
+        //Runner.Despawn(Object);
     }
 }

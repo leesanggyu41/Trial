@@ -12,7 +12,7 @@ public class PlayerControll : NetworkBehaviour
 {
     public static PlayerControll Local { get; private set; }
 
-    
+
 
     [Header("카메라 설정")]
     public Transform HeadCameraPoint;
@@ -40,6 +40,9 @@ public class PlayerControll : NetworkBehaviour
     [Header("플레이어 TV")]
     [Networked] public int tvnumder { get; set; }
     public GameObject my_TV;
+
+    [Header("로봇팔")]
+    private RobotArmFixer _armController;
 
     public enum PlayerState { Idle, DecidingTarget }
     public PlayerState currentState = PlayerState.Idle;
@@ -70,7 +73,8 @@ public class PlayerControll : NetworkBehaviour
         {
             PlayerCamera = Camera.main;
             TopCameraPoint = GameObject.FindGameObjectWithTag("TopCameraPoint").transform;
-            
+            _armController = FindFirstObjectByType<RobotArmFixer>();
+
 
             // 시작할 때 HeadCameraPoint에 붙이기
             PlayerCamera.transform.SetParent(HeadCameraPoint);
@@ -121,7 +125,11 @@ public class PlayerControll : NetworkBehaviour
             if (selectedSyringe.DesiredTarget == TargetType.Player)
             {
                 HandleTVState();
-                if (Mouse.current.leftButton.wasPressedThisFrame) HandleTVClick();
+                var anim = my_TV.GetComponent<Animator>();
+                if (anim != null && anim.GetBool("open"))
+                {
+                    if (Mouse.current.leftButton.wasPressedThisFrame) HandleTVClick();
+                }
                 HandleKeyboardSelection();
                 return;
             }
@@ -341,10 +349,10 @@ public class PlayerControll : NetworkBehaviour
             if (interactable != null)
             {
                 ItemBase item = hitInfo.collider.GetComponentInParent<ItemBase>();
-                if (item != null && item.OwnerRef != Runner.LocalPlayer)
-                {
-                    return;
-                }
+                // if (item != null && item.OwnerRef != Runner.LocalPlayer)
+                // {
+                //     return;
+                // }
 
                 selectedSyringe = interactable;
                 //InitializeTargetMap();
@@ -356,6 +364,8 @@ public class PlayerControll : NetworkBehaviour
                     selectedDefaultLayer = selectedObj.layer;
                     SetLayerRecursively(selectedObj, OUTLINE_LAYER);
                 }
+                if (_armController != null)
+                    _armController.MoveToItem(hitInfo.transform);
                 // Debug.Log($"[Click] {interactable.gameObject.name} 선택됨!");
             }
         }
@@ -375,7 +385,7 @@ public class PlayerControll : NetworkBehaviour
                 GameObject currentObj = (reactionObj as MonoBehaviour).gameObject;
 
                 if (currentObj == selectedHighlightedObject) return;
-                
+
                 if (lastHighlightedObject != currentObj)
                 {
                     ResetHighlight();

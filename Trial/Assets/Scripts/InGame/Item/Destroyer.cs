@@ -2,13 +2,14 @@ using UnityEngine;
 using Fusion;
 using System.Linq;
 
-public class Destroyer : NetworkBehaviour, ReactionObject
+public class Destroyer : ItemBase, ReactionObject
 {
     public bool NeedsTargeting => true;
     public TargetType DesiredTarget => TargetType.Player;
 
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
+        GrabAndDespawn();
         RPC_UseDestroyer(targetId);
     }
 
@@ -39,6 +40,6 @@ public class Destroyer : NetworkBehaviour, ReactionObject
             }
         }
 
-        Runner.Despawn(Object);
+        //Runner.Despawn(Object);
     }
 }

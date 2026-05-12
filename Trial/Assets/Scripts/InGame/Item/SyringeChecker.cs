@@ -1,13 +1,14 @@
 using UnityEngine;
 using Fusion;
 
-public class SyringeChecker : NetworkBehaviour, ReactionObject
+public class SyringeChecker : ItemBase, ReactionObject
 {
     public bool NeedsTargeting => false;
     public TargetType DesiredTarget => TargetType.None;
 
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
+        GrabAndDespawn();
         RPC_UseChecker();
     }
 
@@ -30,7 +31,7 @@ public class SyringeChecker : NetworkBehaviour, ReactionObject
 
         // 사용한 플레이어에게만 결과 전송
         RPC_ShowResult(toxinCount, nsCount);
-        Runner.Despawn(Object);
+        //Runner.Despawn(Object);
     }
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_ShowResult(int toxin, int ns)

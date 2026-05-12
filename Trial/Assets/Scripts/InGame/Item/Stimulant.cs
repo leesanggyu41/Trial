@@ -1,13 +1,14 @@
 using UnityEngine;
 using Fusion;
 
-public class Stimulant : NetworkBehaviour, ReactionObject
+public class Stimulant : ItemBase, ReactionObject
 {
     public bool NeedsTargeting => false;
     public TargetType DesiredTarget => TargetType.None;
 
     public void OnEvent(bool myself, NetworkId targetId)
     {
+        GrabAndDespawn();
         RPC_UseStimulant(Object.InputAuthority, targetId);
     }
 
@@ -25,7 +26,7 @@ public class Stimulant : NetworkBehaviour, ReactionObject
         {
             targetData.IsAwakening = true;
             Debug.Log($"[성공] {player.PlayerId}님 각성 완료.");
-            Runner.Despawn(Object); // 성공 시에만 아이템 삭제
+            //Runner.Despawn(Object); // 성공 시에만 아이템 삭제
         }
     }
 }
