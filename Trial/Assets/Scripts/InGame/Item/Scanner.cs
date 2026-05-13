@@ -1,15 +1,19 @@
 using UnityEngine;
+using DG.Tweening;
+using Fusion;
 
-public class Scanner : MonoBehaviour
+public class Scanner : ItemBase, ReactionObject
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public bool NeedsTargeting => true;
+    public TargetType DesiredTarget => TargetType.Syringe;
+
+    public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
         
+        RPC_UseScanner(isSelfTarget, targetId);
     }
-
-    // Update is called once per frame
-    void Update()
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_UseScanner(bool isSelfTarget, NetworkId targetId)
     {
         
     }
