@@ -1,10 +1,13 @@
 using JetBrains.Annotations;
 using UnityEngine;
+using Fusion;
 
-public class BBBScript : MonoBehaviour
+public class BBBScript : NetworkBehaviour
 {
     public Material mat;
     public Material mat2;
+
+    public int type = 0;
 
     void Start()
     {
@@ -36,10 +39,17 @@ public class BBBScript : MonoBehaviour
         
     }
 
+    public void UseResult()
+    {
+        Result(type);
+    }
+
     public void Result(int v)
     {
        mat2.SetFloat("_waiting", 0);   // 비기다리기 활성화
        mat2.SetFloat("_Save", v);      // 안전한 주사
     }
+
+
     
 }

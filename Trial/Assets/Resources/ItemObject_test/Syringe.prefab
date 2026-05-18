@@ -46,7 +46,9 @@ GameObject:
   - component: {fileID: 2107394726817234942}
   - component: {fileID: -6081862382485329183}
   - component: {fileID: 4004366787708912195}
-  - component: {fileID: 5294848110281920932}
+  - component: {fileID: 8247979181593855716}
+  - component: {fileID: 7227233951456397910}
+  - component: {fileID: -5210645132705022307}
   m_Layer: 0
   m_Name: Syringe
   m_TagString: Untagged
@@ -102,6 +104,8 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 1375836740517679409}
   - {fileID: 2107394726817234942}
+  - {fileID: 7227233951456397910}
+  - {fileID: -5210645132705022307}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &2107394726817234942
 MonoBehaviour:
@@ -162,7 +166,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.4070387, y: 0.17915273, z: 0.369591}
   m_Center: {x: 0.023813725, y: -0.07607448, z: -0.020917535}
---- !u!95 &5294848110281920932
+--- !u!95 &8247979181593855716
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
@@ -184,6 +188,34 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7227233951456397910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483878213882902029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a61a64eb857daa345815fd47ff4c4b38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BBBScript
+  mat: {fileID: 0}
+  mat2: {fileID: 0}
+  type: 0
+--- !u!114 &-5210645132705022307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483878213882902029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cfbc5ca6aaf8ab469d7f87991ace221, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Scanner
+  animator: {fileID: 8247979181593855716}
 --- !u!1 &2526817133272121744
 GameObject:
   m_ObjectHideFlags: 0
@@ -334,7 +366,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5700516713741596259}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0.7071068, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
@@ -345,7 +377,7 @@ Transform:
   - {fileID: 7935495826475121671}
   - {fileID: 3458441249852307342}
   m_Father: {fileID: 2968807563172392119}
-  m_LocalEulerAnglesHint: {x: -89.98021, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: -180}
 --- !u!1 &6228364228982999884
 GameObject:
   m_ObjectHideFlags: 0
@@ -404,10 +436,10 @@ SkinnedMeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 20e01c46e3011e04ca11b60d1f36efa7, type: 2}
-  - {fileID: 3589333493158463532, guid: c4f0072bd7dfdff4f859adc01b263672, type: 3}
-  - {fileID: -5945839997906739697, guid: c4f0072bd7dfdff4f859adc01b263672, type: 3}
+  - {fileID: 2100000, guid: 4353731338e2a4d41a41baa17d65c1bc, type: 2}
+  - {fileID: 2100000, guid: 0158ad7818d1ee74f851035b9625a6a6, type: 2}
   - {fileID: 2100000, guid: d100b8dd3fb818a498d7a4ef607f6344, type: 2}
-  - {fileID: -9168358436561947159, guid: c4f0072bd7dfdff4f859adc01b263672, type: 3}
+  - {fileID: 2100000, guid: f55a45f67a98e174e981613dee21518b, type: 2}
   - {fileID: 2100000, guid: f7b41c2773576cc4f95e6f45dafb73fb, type: 2}
   - {fileID: 2100000, guid: 33ba71bba4ca6c746a0973eefc112726, type: 2}
   - {fileID: -6478536213147159724, guid: c4f0072bd7dfdff4f859adc01b263672, type: 3}
@@ -511,7 +543,7 @@ Transform:
   m_LocalRotation: {x: -0.7071061, y: -0.00041268955, z: 0.7071073, w: 0.00043105017}
   m_LocalPosition: {x: 0.0011675584, y: 0.00067898125, z: -0.0013649365}
   m_LocalScale: {x: 1, y: 0.99999994, z: 1.0000001}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2609755318556278795}
   m_Father: {fileID: 6161918167817518121}

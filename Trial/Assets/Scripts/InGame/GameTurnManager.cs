@@ -11,8 +11,8 @@ public enum GameTurn
 {
     Player,      // 플레이어 턴 시작
     Syringe,        // 주사기 지급
-    Item        // 아이템 지급
-
+    Item,        // 아이템 지급
+    Animation        // 애니메이션 턴
 
 
 }
@@ -92,7 +92,8 @@ public class GameTurnManager : NetworkBehaviour
     public void GameTurns_Rpc()
     {
         Debug.LogWarning("주사기");
-        Sy_T.SyringeSpawner_Rpc(10);
+        int randomValue = Random.Range(5, 10); // 0 또는 1을 랜덤으로 생성
+        Sy_T.SyringeSpawner_Rpc(randomValue);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
@@ -133,7 +134,7 @@ public class GameTurnManager : NetworkBehaviour
         if (!Runner.IsServer) return;
 
         int turn = (int)NowTurn;
-        NowTurn = (GameTurn)((turn + 1) % (System.Enum.GetNames(typeof(GameTurn)).Length));
+        NowTurn = (GameTurn)((turn + 1) % 3);
         GameTurns();
 
     }
