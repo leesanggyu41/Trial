@@ -224,7 +224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0051b898cdf7ba84bad011b063143da3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  playerGameData: {fileID: 0}
+  wideOutlineSettings: {fileID: 11400000, guid: 47d0a31817af68b4abb6495a54cd2509, type: 2}
   HeadCameraPoint: {fileID: 2064062101518808712}
   TopCameraPoint: {fileID: 0}
   PlayerCamera: {fileID: 0}

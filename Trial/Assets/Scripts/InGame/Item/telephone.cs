@@ -10,6 +10,7 @@ public class telephone : ItemBase, ReactionObject
 
     public void OnEvent(bool myself, NetworkId targetId)
     {
+        OnUse();
         GrabAndDespawn();
         RPC_UseTelephone(Object.InputAuthority, targetId);
     }

@@ -84,5 +84,8 @@ public class RobotArmFixer : NetworkBehaviour
         }
         GetComponent<Animator>().SetTrigger("UnGrab");
         onComplete?.Invoke();
+
+        if (Runner.IsServer)
+        GameTurnManager.Instance.NowTurn = GameTurn.Player;
     }
 }

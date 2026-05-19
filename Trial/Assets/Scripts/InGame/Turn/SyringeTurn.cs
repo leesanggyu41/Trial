@@ -36,7 +36,7 @@ public class SyringeTurn : NetworkBehaviour
         GTM = FindFirstObjectByType<GameTurnManager>();
 
     }
-
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void SyringeSpawner_Rpc(int spawnCount)
     {
         int toxin = 0;
@@ -159,7 +159,9 @@ public class SyringeTurn : NetworkBehaviour
         // 주사기 생성
         for (int i = 0; i < count; i++)
         {
-            SyringeType randomType = (SyringeType)(Random.Range(0, 10) % 2);
+            SyringeType randomType = Runner.IsServer 
+            ? (SyringeType)(Random.Range(0, 10) % 2) 
+            : SyringeType.NS;
             NetworkObject sy = Runner.Spawn(SyringePrefab, SyringeBox.transform.position, Quaternion.identity);
             So.Add(sy.Id);
             St.Add(randomType);

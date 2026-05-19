@@ -8,6 +8,7 @@ public class SyringeChecker : ItemBase, ReactionObject
 
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
+        OnUse();
         GrabAndDespawn();
         RPC_UseChecker();
     }

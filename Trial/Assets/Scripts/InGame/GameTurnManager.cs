@@ -78,6 +78,7 @@ public class GameTurnManager : NetworkBehaviour
         // 중요: 오직 서버(방장)만 다음 RPC를 실행할 타이머를 돌립니다.
         if (Object.HasStateAuthority)
         {
+            if (Runner.IsServer)
             StartCoroutine(WaitAndCallGameTurns(3f));
         }
     }
@@ -92,8 +93,11 @@ public class GameTurnManager : NetworkBehaviour
     public void GameTurns_Rpc()
     {
         Debug.LogWarning("주사기");
-        int randomValue = Random.Range(5, 10); // 0 또는 1을 랜덤으로 생성
-        Sy_T.SyringeSpawner_Rpc(randomValue);
+        if(Runner.IsServer)
+        {
+            int randomValue = Random.Range(5, 10); // 0 또는 1을 랜덤으로 생성
+            Sy_T.SyringeSpawner_Rpc(randomValue);
+        }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

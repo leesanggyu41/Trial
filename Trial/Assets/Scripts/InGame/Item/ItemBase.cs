@@ -22,7 +22,7 @@ public class ItemBase : NetworkBehaviour
         NetworkId id = Object.Id;
 
         if (Runner.IsServer)
-        GameTurnManager.Instance.NowTurn = GameTurn.Animation;
+            GameTurnManager.Instance.NowTurn = GameTurn.Animation;
         if (_armController != null)
             _armController.GrabAndReturn(transform, Object.Id, () => RPC_Despawn());
         else
@@ -35,5 +35,11 @@ public class ItemBase : NetworkBehaviour
         Debug.Log($"[Despawn] 호출됨: {Object.Id}");
         GameTurnManager.Instance.NowTurn = GameTurn.Player;
         Runner.Despawn(Object);
+    }
+
+    public void OnUse()
+    {
+        if (Runner.IsServer)
+            GameTurnManager.Instance.NowTurn = GameTurn.Animation;
     }
 }

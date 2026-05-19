@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 8247979181593855716}
   - component: {fileID: 7227233951456397910}
   - component: {fileID: -5210645132705022307}
+  - component: {fileID: -1656323761061340410}
   m_Layer: 0
   m_Name: Syringe
   m_TagString: Untagged
@@ -106,6 +107,7 @@ MonoBehaviour:
   - {fileID: 2107394726817234942}
   - {fileID: 7227233951456397910}
   - {fileID: -5210645132705022307}
+  - {fileID: -1656323761061340410}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &2107394726817234942
 MonoBehaviour:
@@ -216,6 +218,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Scanner
   animator: {fileID: 8247979181593855716}
+--- !u!114 &-1656323761061340410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483878213882902029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkMecanimAnimator
+  Animator: {fileID: 8247979181593855716}
+  ApplyTiming: 2
+  SyncSettings: 79
+  StateHashes: 000000007f06a30f94c52bf2958341e27e40c91f
+  TriggerHashes: 00000000ab8afcac
+  TotalWords: 1
 --- !u!1 &2526817133272121744
 GameObject:
   m_ObjectHideFlags: 0

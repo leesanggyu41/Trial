@@ -7,11 +7,15 @@ using System.Linq;
 using System.Collections;
 using UnityEngine.UI;
 using Unity.Cinemachine;
+using Linework.WideOutline;
 
 public class PlayerControll : NetworkBehaviour
 {
     public static PlayerControll Local { get; private set; }
 
+    [SerializeField] private WideOutlineSettings wideOutlineSettings;
+
+  
 
 
     [Header("카메라 설정")]
@@ -74,6 +78,7 @@ public class PlayerControll : NetworkBehaviour
             PlayerCamera = Camera.main;
             TopCameraPoint = GameObject.FindGameObjectWithTag("TopCameraPoint").transform;
             _armController = FindFirstObjectByType<RobotArmFixer>();
+
 
 
             // 시작할 때 HeadCameraPoint에 붙이기
@@ -364,8 +369,8 @@ public class PlayerControll : NetworkBehaviour
                     selectedDefaultLayer = selectedObj.layer;
                     SetLayerRecursively(selectedObj, OUTLINE_LAYER);
                 }
-                if (_armController != null)
-                    _armController.MoveToItem(hitInfo.transform);
+                // if (_armController != null)
+                //     _armController.MoveToItem(hitInfo.transform);
                 // Debug.Log($"[Click] {interactable.gameObject.name} 선택됨!");
             }
         }
@@ -392,6 +397,25 @@ public class PlayerControll : NetworkBehaviour
                     lastHighlightedObject = currentObj;
                     defaultLayer = currentObj.layer;
                     SetLayerRecursively(currentObj, OUTLINE_LAYER);
+                    SyringeItem syringe = hitInfo.collider.GetComponentInParent<SyringeItem>();
+                    Color outlineColor = Color.white;
+                    if (syringe != null && syringe.IsScanned)
+                    {
+                        outlineColor = syringe.MyType == SyringeType.Toxin ? Color.red : Color.green;
+                    }
+
+                    // 2. [수정] 사진에 나온 개별 Outline 리스트의 Color 변경하기
+                    if (wideOutlineSettings.Outlines != null && wideOutlineSettings.Outlines.Count > 0)
+                    {
+                        foreach (var outline in wideOutlineSettings.Outlines)
+                        {
+                            // Linework 에셋의 내부 함수인 SetColor를 사용하여 색상을 주입합니다.
+                            outline.color = outlineColor;
+                        }
+                    }
+                    
+                    // 3. 변경 사항 동기화 및 렌더러 새로고침
+                    wideOutlineSettings.Changed();
                 }
             }
             else { ResetHighlight(); }

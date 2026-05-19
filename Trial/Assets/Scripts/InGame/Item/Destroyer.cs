@@ -9,6 +9,7 @@ public class Destroyer : ItemBase, ReactionObject
 
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
+        OnUse();
         GrabAndDespawn();
         RPC_UseDestroyer(targetId);
     }

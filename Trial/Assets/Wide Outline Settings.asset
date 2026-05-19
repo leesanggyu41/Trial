@@ -35,7 +35,7 @@ MonoBehaviour:
   alphaCutoutUVTransform: {x: 0, y: 0, z: 0, w: 0}
   gpuInstancing: 0
   vertexAnimation: 0
-  color: {r: 4, g: 4, b: 4, a: 1}
+  color: {r: 5.3403144, g: 5.3403144, b: 5.3403144, a: 1}
   width: 20
 --- !u!114 &11400000
 MonoBehaviour:
@@ -60,7 +60,7 @@ MonoBehaviour:
   gap: 0
   blendMode: 0
   customDepthBuffer: 0
-  occludedColor: {r: 1, g: 0, b: 0, a: 1}
+  occludedColor: {r: 1, g: 1, b: 1, a: 1}
   clearStencil: 0
   scaleWithResolution: 1
   referenceResolution: 2

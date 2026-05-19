@@ -9,6 +9,7 @@ public class Converter : ItemBase, ReactionObject
 
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
+        OnUse();
         GrabAndDespawn();
         RPC_UseConverter(targetId);
     }

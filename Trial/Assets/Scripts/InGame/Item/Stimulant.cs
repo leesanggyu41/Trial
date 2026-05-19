@@ -8,6 +8,7 @@ public class Stimulant : ItemBase, ReactionObject
 
     public void OnEvent(bool myself, NetworkId targetId)
     {
+        OnUse();
         GrabAndDespawn();
         RPC_UseStimulant(Object.InputAuthority, targetId);
     }
