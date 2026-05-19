@@ -10,7 +10,7 @@ public class SyringeItem : ItemBase, ReactionObject
     // 네트워크를 통해 동기화되는 주사기 타입
     [Networked] public SyringeType MyType { get; set; }
 
-    [Networked] public bool IsScanned { get; set; } = false;
+     public bool IsScanned { get; set; } = false;
 
     // 인터페이스 구현: 클릭 시 실행
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
