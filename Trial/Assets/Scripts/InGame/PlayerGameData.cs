@@ -39,9 +39,18 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
 
     }
 
-    void OnIsDeadChanged()
+    void OnIsDeadChanged()//이게 사망처리 맞지? - 재원
     {
         GetComponent<PlayerControll>().NameText.text = "";
+
+
+        // 본인(로컬) 플레이어만 사망 UI 표시<추가됨>
+        if (GetComponent<NetworkObject>().HasInputAuthority && IsDead)
+        {
+            var deathUI = DeathUIManager.Instance;
+            if (deathUI != null)
+                deathUI.ShowDeathUI();
+        }
     }
 
     void Update()
