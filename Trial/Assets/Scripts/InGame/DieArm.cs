@@ -21,6 +21,7 @@ public class DieArm : MonoBehaviour
     public void Die()
     {
         animator.SetTrigger("Die");
+        
     }
 
     public void chPlayer()
