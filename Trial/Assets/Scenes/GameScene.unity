@@ -8981,6 +8981,10 @@ PrefabInstance:
       value: RodotArm
       objectReference: {fileID: 0}
     - target: {fileID: 2416658377157748085, guid: 407449d4f13a43c488d79fb45c0ff6a7, type: 3}
+      propertyPath: m_Data.m_Tip
+      value: 
+      objectReference: {fileID: 1198633008}
+    - target: {fileID: 2416658377157748085, guid: 407449d4f13a43c488d79fb45c0ff6a7, type: 3}
       propertyPath: m_Data.m_MaintainTargetRotationOffset
       value: 1
       objectReference: {fileID: 0}
@@ -9014,6 +9018,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1260523227}
   m_SourcePrefab: {fileID: 100100000, guid: 407449d4f13a43c488d79fb45c0ff6a7, type: 3}
+--- !u!4 &1198633008 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5674576019085101190, guid: 407449d4f13a43c488d79fb45c0ff6a7, type: 3}
+  m_PrefabInstance: {fileID: 1198633007}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1204543628
 PrefabInstance:
   m_ObjectHideFlags: 0
