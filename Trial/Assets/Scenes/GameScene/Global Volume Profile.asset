@@ -159,6 +159,136 @@ MonoBehaviour:
   dirtIntensity:
     m_OverrideState: 0
     m_Value: 0
+--- !u!114 &-2984602244938496642
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 131898ddd2747c84381b87ad09e47c5f, type: 3}
+  m_Name: HackedVolume
+  m_EditorClassIdentifier: FronkonGames.Glitches.Hacked::FronkonGames.Glitches.Hacked.HackedVolume
+  active: 1
+  intensity:
+    m_OverrideState: 1
+    m_Value: 0
+    min: 0
+    max: 1
+  strength:
+    m_OverrideState: 1
+    m_Value: 2
+    min: 0
+    max: 2
+  frameJump:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+    max: 1
+  frameJumpSpeed:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+    max: 10
+  jitter:
+    m_OverrideState: 1
+    m_Value: 5
+    min: 0
+    max: 5
+  jitterSpeed:
+    m_OverrideState: 0
+    m_Value: 0.2
+    min: 0
+    max: 10
+  jitterDensity:
+    m_OverrideState: 0
+    m_Value: 15
+    min: 0
+    max: 50
+  blocks:
+    m_OverrideState: 0
+    m_Value: 0.5
+    min: 0
+    max: 1
+  blockDensity:
+    m_OverrideState: 0
+    m_Value: 10
+    min: 0
+    max: 50
+  blockAberration:
+    m_OverrideState: 0
+    m_Value: {x: 1, y: 1}
+  blockNoise:
+    m_OverrideState: 0
+    m_Value: {x: 0.5, y: 0.5}
+  waves:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+    max: 1
+  waveSpeed:
+    m_OverrideState: 0
+    m_Value: 10
+    min: 0
+    max: 25
+  waveRGBSplit:
+    m_OverrideState: 0
+    m_Value: 30
+    min: 0
+    max: 50
+  scanlines:
+    m_OverrideState: 0
+    m_Value: 0.2
+    min: 0
+    max: 1
+  scanlinesThreshold:
+    m_OverrideState: 0
+    m_Value: 0.8
+    min: 0
+    max: 1
+  noise:
+    m_OverrideState: 0
+    m_Value: 0.1
+    min: 0
+    max: 1
+  noiseSpeed:
+    m_OverrideState: 0
+    m_Value: 0.1
+    min: 0
+    max: 1
+  brightness:
+    m_OverrideState: 0
+    m_Value: 0
+    min: -1
+    max: 1
+  contrast:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+    max: 10
+  gamma:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0.1
+    max: 10
+  hue:
+    m_OverrideState: 0
+    m_Value: 0
+    min: 0
+    max: 1
+  saturation:
+    m_OverrideState: 0
+    m_Value: 1
+    min: 0
+    max: 2
+  affectSceneView:
+    m_OverrideState: 0
+    m_Value: 0
+  useScaledTime:
+    m_OverrideState: 0
+    m_Value: 1
 --- !u!114 &-2853418424155629742
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -235,6 +365,7 @@ MonoBehaviour:
   - {fileID: -8362983084606304645}
   - {fileID: -3463488963435831749}
   - {fileID: -6642186069020888195}
+  - {fileID: -2984602244938496642}
 --- !u!114 &3074328739773535042
 MonoBehaviour:
   m_ObjectHideFlags: 3

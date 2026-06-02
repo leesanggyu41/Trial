@@ -15,7 +15,7 @@ public class PlayerControll : NetworkBehaviour
 
     [SerializeField] private WideOutlineSettings wideOutlineSettings;
 
-  
+
 
 
     [Header("카메라 설정")]
@@ -417,7 +417,7 @@ public class PlayerControll : NetworkBehaviour
                             outline.color = outlineColor;
                         }
                     }
-                    
+
                     // 3. 변경 사항 동기화 및 렌더러 새로고침
                     wideOutlineSettings.Changed();
                 }
@@ -461,7 +461,13 @@ public class PlayerControll : NetworkBehaviour
         CameraY = Mathf.Clamp(CameraY, MinYlimit, MaxYlimit);
         HeadCameraPoint.localRotation = Quaternion.Euler(CameraY, CameraX, 0f);
 
-        NetworkedHeadRotation = HeadCameraPoint.localRotation;
+        RPC_SyncHeadRotation(HeadCameraPoint.localRotation);
+    }
+    
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_SyncHeadRotation(Quaternion rotation)
+    {
+        NetworkedHeadRotation = rotation;
     }
 
     private void ConfirmUse(bool isSelf, NetworkObject targetObj = null)

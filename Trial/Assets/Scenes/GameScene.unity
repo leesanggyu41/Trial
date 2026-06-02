@@ -3366,6 +3366,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpectatorManager
   spectatorUI: {fileID: 728962596}
   nicknameText: {fileID: 1143000136}
+  glitchVolume: {fileID: 1920333816}
 --- !u!4 &496440086
 Transform:
   m_ObjectHideFlags: 0

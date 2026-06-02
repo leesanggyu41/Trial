@@ -5,6 +5,8 @@ using System.Linq;
 using System.Collections;
 using DG.Tweening;
 using TMPro;
+using UnityEngine.Rendering;
+using FronkonGames.Glitches.Hacked;
 
 public class SpectatorManager : MonoBehaviour
 {
@@ -13,6 +15,9 @@ public class SpectatorManager : MonoBehaviour
     [Header("UI")]
     public GameObject spectatorUI;
     public TMP_Text nicknameText;
+
+    public Volume glitchVolume;
+    private HackedVolume _hackedVolume;
     //public CanvasGroup noisePanel;
 
     private List<PlayerControll> _alivePlayers = new List<PlayerControll>();
@@ -20,6 +25,16 @@ public class SpectatorManager : MonoBehaviour
     public bool IsSpectating { get; private set; } = false;
 
     private void Awake() => Instance = this;
+
+    private void Start()
+    {
+        // HackedVolume 가져오기
+        glitchVolume.profile.TryGet(out _hackedVolume);
+        
+        // 시작할 때 꺼두기
+        if (_hackedVolume != null)
+            _hackedVolume.intensity.value = 0f;
+    }
 
     public void StartSpectating()
     {
@@ -55,10 +70,14 @@ public class SpectatorManager : MonoBehaviour
 
     private IEnumerator SwitchWithNoise(int direction)
     {
-        // 노이즈 효과
-        //noisePanel.alpha = 1f;
-        //noisePanel.DOFade(0f, 0.3f);
-        yield return new WaitForSeconds(0.1f);
+        if (_hackedVolume != null)
+            _hackedVolume.intensity.value = 1f;
+
+        yield return new WaitForSeconds(0.3f);
+
+        
+        if (_hackedVolume != null)
+            _hackedVolume.intensity.value = 0f;
 
         RefreshAlivePlayers();
         if (_alivePlayers.Count == 0) yield break;
