@@ -90,6 +90,10 @@ public class DeathUIManager : MonoBehaviour
         // 입력 제한 (선택)
         if (EventSystem.current != null)
             EventSystem.current.sendNavigationEvents = false;
+
+        yield return new WaitForSecondsRealtime(2f);
+        HideDeathUI();
+        SpectatorManager.Instance?.StartSpectating();
     }
 
 

@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 8cfb7ab7cb09c6c47ae7d604077137d4
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  preprocessorOverride: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293724
+  packageName: 'Glitches: Hacked'
+  packageVersion: 3.0.2
+  assetPath: Assets/FronkonGames/Glitches/Hacked/Resources/Shaders/GlitchesHacked_URP.shader
+  uploadId: 867604
