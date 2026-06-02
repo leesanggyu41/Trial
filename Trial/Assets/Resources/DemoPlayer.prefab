@@ -262,6 +262,7 @@ MonoBehaviour:
   - {fileID: -6193320690357500488}
   - {fileID: 5517022818228603993}
   - {fileID: 2658898219430251723}
+  - {fileID: 1164254420206879195}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &-6193320690357500488
 MonoBehaviour:
@@ -380,6 +381,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2064062101518808712}
   - component: {fileID: 5657230728440538017}
+  - component: {fileID: 1164254420206879195}
   m_Layer: 0
   m_Name: CamaraPoint
   m_TagString: Untagged
@@ -445,6 +447,23 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!114 &1164254420206879195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5350754238406524278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &5908233729853214979
 GameObject:
   m_ObjectHideFlags: 0

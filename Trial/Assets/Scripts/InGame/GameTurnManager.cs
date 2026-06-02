@@ -110,9 +110,9 @@ public class GameTurnManager : NetworkBehaviour
     public void PlayerTurn_Rpc()
     {
         Debug.LogWarning("플레이어");
+
+        if (Runner.IsServer)
         Pt_T.PlayerTurnStart_Rpc();
-
-
     }
 
     IEnumerator WaitTurnManager()

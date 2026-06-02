@@ -24,6 +24,8 @@ public class PlayerControll : NetworkBehaviour
     public Camera PlayerCamera;
     private bool isTopView = false;
 
+    [Networked] public Quaternion NetworkedHeadRotation { get; set; }
+
     public float mouseSensitivity = 1f;
     [Header("카메라 제한")]
     public float Xlimit = 60f;
@@ -109,6 +111,7 @@ public class PlayerControll : NetworkBehaviour
 
         if (Mouse.current.rightButton.wasPressedThisFrame)
         {
+            if (SpectatorManager.Instance != null && SpectatorManager.Instance.IsSpectating) return;
             OnTopViewButtonClick();
         }
 
@@ -343,6 +346,7 @@ public class PlayerControll : NetworkBehaviour
         if (GameTurnManager.Instance == null || GameTurnManager.Instance.NowTurn != GameTurn.Player) return;
         if (!context.started || !playerTurn) return;
         if (currentState == PlayerState.DecidingTarget) return;
+        if (SpectatorManager.Instance != null && SpectatorManager.Instance.IsSpectating) return;
 
         Ray ray = isTopView
             ? PlayerCamera.ScreenPointToRay(Mouse.current.position.ReadValue())
@@ -446,6 +450,7 @@ public class PlayerControll : NetworkBehaviour
     {
         if (!HasInputAuthority) return;
         if (isTopView) return; // 탑뷰일 때 시야 이동 막기
+        if (SpectatorManager.Instance != null && SpectatorManager.Instance.IsSpectating) return;
 
         var mouse = Mouse.current;
         if (mouse == null) return;
@@ -455,6 +460,8 @@ public class PlayerControll : NetworkBehaviour
         CameraX = Mathf.Clamp(CameraX, -Xlimit, Xlimit);
         CameraY = Mathf.Clamp(CameraY, MinYlimit, MaxYlimit);
         HeadCameraPoint.localRotation = Quaternion.Euler(CameraY, CameraX, 0f);
+
+        NetworkedHeadRotation = HeadCameraPoint.localRotation;
     }
 
     private void ConfirmUse(bool isSelf, NetworkObject targetObj = null)
