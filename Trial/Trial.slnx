@@ -4,8 +4,10 @@
   <Project Path="Linework.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Linework.Editor.csproj" />
+  <Project Path="FronkonGames.Glitches.Hacked.Editor.csproj" />
   <Project Path="Fusion.Unity.csproj" />
   <Project Path="AudioClipEditor.csproj" />
+  <Project Path="FronkonGames.Glitches.Hacked.csproj" />
   <Project Path="Unity.Fusion.CodeGen.csproj" />
   <Project Path="FullSceenFXAutoInstall.csproj" />
 </Solution>

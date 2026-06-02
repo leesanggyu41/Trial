@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 22c141bed3f42fd4cbdd683cae711ff9
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293724
+  packageName: 'Glitches: Hacked'
+  packageVersion: 3.0.2
+  assetPath: Assets/FronkonGames/Glitches/Hacked/Demo/Scripts/Swing.cs
+  uploadId: 867604
