@@ -6,6 +6,7 @@ public class BBBScript : NetworkBehaviour
 {
     public Material mat;
     public Material mat2;
+    private AudioSource audio;
 
     public int type = 0;
 
@@ -13,11 +14,17 @@ public class BBBScript : NetworkBehaviour
     {
         mat = GetComponentInChildren<SkinnedMeshRenderer>().materials[4];
         mat2 = GetComponentInChildren<SkinnedMeshRenderer>().materials[1];
+        audio = GetComponent<AudioSource>();
     }
 
     public void MatChaing(float v)
     {
         mat.SetFloat("_Speed", v);
+    }
+
+    public void Audio()
+    {
+        audio.Play();
     }
 
     public void SSS(int v)

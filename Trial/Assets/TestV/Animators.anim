@@ -9477,6 +9477,13 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0.041666668
+    functionName: Audio
+    data: 
+    objectReferenceParameter: {fileID: 2483878213882902029, guid: 4edb850ca79067340a6bef834cc61b35, type: 3}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 2.6666667
     functionName: MatChaing
     data: 
