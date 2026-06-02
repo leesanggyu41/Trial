@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 39d7edbfbd4ba8c4ab6658e112e57483
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293724
+  packageName: 'Glitches: Hacked'
+  packageVersion: 3.0.2
+  assetPath: Assets/FronkonGames/Glitches/Hacked/Demo/Scripts/Rotate.cs
+  uploadId: 867604

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 05ebecc0de6f9c742961a2645e087260
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 293724
+  packageName: 'Glitches: Hacked'
+  packageVersion: 3.0.2
+  assetPath: Assets/FronkonGames/Glitches/Hacked/Runtime/Internal/Log.cs
+  uploadId: 867604
