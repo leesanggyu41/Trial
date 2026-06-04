@@ -6,13 +6,15 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public enum GameTurn
 {
     Player,      // 플레이어 턴 시작
     Syringe,        // 주사기 지급
     Item,        // 아이템 지급
-    Animation        // 애니메이션 턴
+    Animation,        // 애니메이션 턴]
+    Win        // 승리 턴
 
 
 }
@@ -79,7 +81,7 @@ public class GameTurnManager : NetworkBehaviour
         if (Object.HasStateAuthority)
         {
             if (Runner.IsServer)
-            StartCoroutine(WaitAndCallGameTurns(3f));
+                StartCoroutine(WaitAndCallGameTurns(3f));
         }
     }
     private IEnumerator WaitAndCallGameTurns(float waitTime)
@@ -93,7 +95,7 @@ public class GameTurnManager : NetworkBehaviour
     public void GameTurns_Rpc()
     {
         Debug.LogWarning("주사기");
-        if(Runner.IsServer)
+        if (Runner.IsServer)
         {
             int randomValue = Random.Range(5, 10); // 0 또는 1을 랜덤으로 생성
             Sy_T.SyringeSpawner_Rpc(randomValue);
@@ -112,7 +114,7 @@ public class GameTurnManager : NetworkBehaviour
         Debug.LogWarning("플레이어");
 
         if (Runner.IsServer)
-        Pt_T.PlayerTurnStart_Rpc();
+            Pt_T.PlayerTurnStart_Rpc();
     }
 
     IEnumerator WaitTurnManager()
@@ -142,6 +144,38 @@ public class GameTurnManager : NetworkBehaviour
         GameTurns();
 
     }
+
+    public void SetWinTurn(NetworkId winnerId)
+    {
+        if (!Runner.IsServer) return;
+        NowTurn = GameTurn.Win;
+        RPC_WinTurn(winnerId);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_WinTurn(NetworkId winnerId)
+    {
+        StopAllCoroutines();
+        if (Runner.TryFindObject(winnerId, out var winnerObj))
+        {
+            PlayerControll winner = winnerObj.GetComponent<PlayerControll>();
+            WinUIManager.Instance?.ShowWinUI(winner.NameText.text);
+        }
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_QuitAll()
+    {
+        StartCoroutine(QuitCoroutine());
+    }
+
+    private IEnumerator QuitCoroutine()
+    {
+        yield return Runner.Shutdown(destroyGameObject: false);
+        SceneManager.LoadScene("LobbyScene");
+    }
+
+
 }
 
 

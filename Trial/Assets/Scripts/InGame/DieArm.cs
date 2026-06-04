@@ -10,18 +10,18 @@ public class DieArm : MonoBehaviour
     public Transform ArmTransform;
     [SerializeField] private Transform playerTransform;
     [SerializeField] private PlayerGameData playerGameData;
-    
+
 
 
     private void Start()
     {
-        Invoke("chPlayer", 2f); 
+        Invoke("chPlayer", 2f);
     }
 
     public void Die()
     {
         animator.SetTrigger("Die");
-        
+
     }
 
     public void chPlayer()
@@ -36,7 +36,12 @@ public class DieArm : MonoBehaviour
             playerGameData = playerTransform.GetComponent<PlayerGameData>();
     }
 
-    private void Update() {
+    private void Update()
+    {
+        if (playerGameData == null) return;
+        if (playerGameData.Object == null || !playerGameData.Object.IsValid) return;
+        if (!playerGameData.Object.IsInSimulation) return;
+        
         if (playerGameData != null && playerGameData.IsDead)
         {
             Die();
@@ -47,5 +52,5 @@ public class DieArm : MonoBehaviour
         if (playerTransform != null)
             playerTransform.SetParent(ArmTransform);
     }
-    
+
 }

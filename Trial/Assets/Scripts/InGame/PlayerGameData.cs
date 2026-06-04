@@ -3,6 +3,7 @@
 // 체력 변화에 따른 UI 업데이트를 처리합니다. 또한, IDamageable 인터페이스를 구현하여 다른 오브젝트로부터 피해를 받을 수 있도록 합니다.
 using Fusion;
 using UnityEngine;
+using System.Linq;
 
 public class PlayerGameData : NetworkBehaviour, IDamageable
 {
@@ -51,6 +52,18 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
             if (deathUI != null)
                 deathUI.ShowDeathUI();
         }
+        if (Runner.IsServer && IsDead)
+    {
+        var allPlayers = FindObjectsByType<PlayerGameData>(FindObjectsSortMode.None).ToList();
+        var alivePlayers = allPlayers.Where(p => !p.IsDead).ToList();
+
+        // 전체 플레이어 중 1명만 살아있으면 승리
+        if (alivePlayers.Count == 1 && allPlayers.Count > 1)
+        {
+            PlayerControll winner = alivePlayers[0].GetComponent<PlayerControll>();
+            GameTurnManager.Instance.SetWinTurn(winner.Object.Id);
+        }
+    }
     }
 
     void Update()

@@ -198,8 +198,8 @@ MonoBehaviour:
     min: 0
     max: 5
   jitterSpeed:
-    m_OverrideState: 0
-    m_Value: 0.2
+    m_OverrideState: 1
+    m_Value: 0
     min: 0
     max: 10
   jitterDensity:
