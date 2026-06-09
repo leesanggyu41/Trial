@@ -188,6 +188,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7906227254bc845a1b7bd5dee3227a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
+  ItemName: "\uB300\uD3EC\uD3F0"
+  Explanation: "\uD604\uC7AC \uC804\uCCB4 \uC8FC\uC0AC\uAE30\uC758 \uC0C1\uD669\uB97C
+    \uD655\uC778\uD55C\uB2E4."
 --- !u!114 &2339276167007541475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,3 +203,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c00f84568318e7488680b770ce7ef72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SyringeChecker
+  ItemName: "\uB300\uD3EC\uD3F0"
+  Explanation: "\uD604\uC7AC \uC804\uCCB4 \uC8FC\uC0AC\uAE30\uC758 \uC0C1\uD669\uB97C
+    \uD655\uC778\uD55C\uB2E4."

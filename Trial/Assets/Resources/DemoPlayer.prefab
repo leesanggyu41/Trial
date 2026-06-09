@@ -228,8 +228,9 @@ MonoBehaviour:
   HeadCameraPoint: {fileID: 2064062101518808712}
   TopCameraPoint: {fileID: 0}
   PlayerCamera: {fileID: 0}
+  _NetworkedHeadRotation: {x: 0, y: 0, z: 0, w: 0}
   mouseSensitivity: 2
-  Xlimit: 70
+  Xlimit: 90
   MinYlimit: -30
   MaxYlimit: 70
   NameText: {fileID: 1279286960750095752}

@@ -188,6 +188,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7906227254bc845a1b7bd5dee3227a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
+  ItemName: "\uD30C\uC1C4\uAE30"
+  Explanation: "\uC120\uD0DD\uD55C \uC0C1\uB300\uBC29\uC758 \uC544\uC774\uD15C\uC744
+    \uB79C\uB364\uC73C\uB85C \uD558\uB098 \uD30C\uAD34\uD55C\uB2E4."
 --- !u!114 &664745256084104854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,3 +203,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a133bbd32e30fc04db2ed2dbbf1ad96d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Destroyer
+  ItemName: "\uD30C\uC1C4\uAE30"
+  Explanation: "\uC120\uD0DD\uD55C \uC0C1\uB300\uBC29\uC758 \uC544\uC774\uD15C\uC744
+    \uB79C\uB364\uC73C\uB85C \uD558\uB098 \uD30C\uAD34\uD55C\uB2E4."

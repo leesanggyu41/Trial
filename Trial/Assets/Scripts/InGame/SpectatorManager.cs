@@ -97,6 +97,6 @@ public class SpectatorManager : MonoBehaviour
         cam.transform.localPosition = Vector3.zero;
         cam.transform.localRotation = Quaternion.identity;
 
-        nicknameText.text = target.NameText.text;
+        nicknameText.text = "<" + target.NameText.text + ">";
     }
 }

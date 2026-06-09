@@ -43,9 +43,14 @@ public class PlayerControll : NetworkBehaviour
     public List<Transform> mySlot = new List<Transform>();
     private List<GameObject> heldItems = new List<GameObject>();
 
+    [Header("아이템 설명 UI")]
+    private GameObject itemNameUI;
+    private GameObject itemExplanationUI;
+
     [Header("플레이어 TV")]
     [Networked] public int tvnumder { get; set; }
     public GameObject my_TV;
+
 
     [Header("로봇팔")]
     private RobotArmFixer _armController;
@@ -80,6 +85,9 @@ public class PlayerControll : NetworkBehaviour
             PlayerCamera = Camera.main;
             TopCameraPoint = GameObject.FindGameObjectWithTag("TopCameraPoint").transform;
             _armController = FindFirstObjectByType<RobotArmFixer>();
+
+            itemNameUI = GameObject.FindGameObjectWithTag("ItemNameUI");
+            itemExplanationUI = GameObject.FindGameObjectWithTag("ItemExplanationUI");
 
 
 
@@ -382,10 +390,10 @@ public class PlayerControll : NetworkBehaviour
 
     private void HandleHighlightUpdate()
     {
-
         Ray ray = isTopView
             ? PlayerCamera.ScreenPointToRay(Mouse.current.position.ReadValue())
             : PlayerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+
         if (Physics.Raycast(ray, out RaycastHit hitInfo, 200f))
         {
             ReactionObject reactionObj = hitInfo.collider.GetComponentInParent<ReactionObject>();
@@ -401,6 +409,7 @@ public class PlayerControll : NetworkBehaviour
                     lastHighlightedObject = currentObj;
                     defaultLayer = currentObj.layer;
                     SetLayerRecursively(currentObj, OUTLINE_LAYER);
+
                     SyringeItem syringe = hitInfo.collider.GetComponentInParent<SyringeItem>();
                     Color outlineColor = Color.white;
                     if (syringe != null && syringe.IsScanned)
@@ -408,23 +417,50 @@ public class PlayerControll : NetworkBehaviour
                         outlineColor = syringe.MyType == SyringeType.Toxin ? Color.red : Color.green;
                     }
 
-                    // 2. [수정] 사진에 나온 개별 Outline 리스트의 Color 변경하기
                     if (wideOutlineSettings.Outlines != null && wideOutlineSettings.Outlines.Count > 0)
                     {
                         foreach (var outline in wideOutlineSettings.Outlines)
-                        {
-                            // Linework 에셋의 내부 함수인 SetColor를 사용하여 색상을 주입합니다.
                             outline.color = outlineColor;
-                        }
                     }
 
-                    // 3. 변경 사항 동기화 및 렌더러 새로고침
                     wideOutlineSettings.Changed();
+
+                    // ↓ 추가: ItemBase가 있으면 이름/설명 UI 갱신
+                    ItemBase itemBase = hitInfo.collider.GetComponentInParent<ItemBase>();
+                    ShowItemInfo(itemBase);
                 }
             }
-            else { ResetHighlight(); }
+            else
+            {
+                ResetHighlight();
+                ShowItemInfo(null); // ↓ 추가: 아무것도 없으면 UI 숨김
+            }
         }
-        else { ResetHighlight(); }
+        else
+        {
+            ResetHighlight();
+            ShowItemInfo(null); // ↓ 추가: 레이 안 닿으면 UI 숨김
+        }
+    }
+
+
+    private void ShowItemInfo(ItemBase itemBase)
+    {
+        if (itemNameUI != null)
+        {
+            bool hasItem = itemBase != null;
+            itemNameUI.SetActive(hasItem);
+            itemExplanationUI?.SetActive(hasItem);
+
+            if (hasItem)
+            {
+                var nameTmp = itemNameUI.GetComponentInChildren<TMP_Text>();
+                var expTmp = itemExplanationUI?.GetComponentInChildren<TMP_Text>();
+
+                if (nameTmp != null) nameTmp.text = itemBase.ItemName;
+                if (expTmp != null) expTmp.text = itemBase.Explanation;
+            }
+        }
     }
 
     private void ResetHighlight()
@@ -433,6 +469,7 @@ public class PlayerControll : NetworkBehaviour
         {
             SetLayerRecursively(lastHighlightedObject, defaultLayer);
             lastHighlightedObject = null;
+            ShowItemInfo(null);
         }
     }
 
@@ -463,7 +500,7 @@ public class PlayerControll : NetworkBehaviour
 
         RPC_SyncHeadRotation(HeadCameraPoint.localRotation);
     }
-    
+
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     private void RPC_SyncHeadRotation(Quaternion rotation)
     {

@@ -168,6 +168,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1171009550da8354faa9431cf58e3edf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Remote
+  ItemName: "\uB9AC\uBAA8\uCEE8"
+  Explanation: "\uC9C4\uD589\uBC29\uD5A5\uC744 \uBC18\uB300\uB85C \uB3CC\uB9B0\uB2E4."
 --- !u!114 &-355058540319210821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,6 +203,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7906227254bc845a1b7bd5dee3227a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
+  ItemName: "\uB9AC\uBAA8\uCEE8"
+  Explanation: "\uC9C4\uD589\uBC29\uD5A5\uC744 \uBC18\uB300\uB85C \uB3CC\uB9B0\uB2E4."
 --- !u!1001 &3073497185114582889
 PrefabInstance:
   m_ObjectHideFlags: 0

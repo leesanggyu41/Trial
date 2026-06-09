@@ -87,6 +87,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7906227254bc845a1b7bd5dee3227a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
+  ItemName: "\uAC10\uBCC4\uAE30"
+  Explanation: "\uC8FC\uC0AC\uAE30 \uD558\uB098\uC758 \uC0C1\uD0DC\uB97C \uCCB4\uD06C\uD55C\uB2E4."
 --- !u!114 &-4440205555109287331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,6 +220,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cfbc5ca6aaf8ab469d7f87991ace221, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Scanner
+  ItemName: "\uAC10\uBCC4\uAE30"
+  Explanation: "\uC8FC\uC0AC\uAE30 \uD558\uB098\uC758 \uC0C1\uD0DC\uB97C \uCCB4\uD06C\uD55C\uB2E4."
   animator: {fileID: 8247979181593855716}
 --- !u!114 &-1656323761061340410
 MonoBehaviour:

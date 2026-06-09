@@ -147,6 +147,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5136148268e3467488eea415ebab6e9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StunGun
+  ItemName: "\uC804\uAE30\uCDA9\uACA9\uAE30"
+  Explanation: "\uC0C1\uB300\uBC29\uC744 \uAC10\uC804\uC2DC\uCF1C 1\uD134\uB3D9\uC548
+    \uD589\uB3D9\uD560 \uC218 \uC5C6\uAC8C \uD55C\uB2E4."
 --- !u!65 &4938221937649687278
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -201,6 +204,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7906227254bc845a1b7bd5dee3227a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
+  ItemName: "\uC804\uAE30\uCDA9\uACA9\uAE30"
+  Explanation: "\uC0C1\uB300\uBC29\uC744 \uAC10\uC804\uC2DC\uCF1C 1\uD134\uB3D9\uC548
+    \uD589\uB3D9\uD560 \uC218 \uC5C6\uAC8C \uD55C\uB2E4."
 --- !u!1001 &8231826699151117538
 PrefabInstance:
   m_ObjectHideFlags: 0

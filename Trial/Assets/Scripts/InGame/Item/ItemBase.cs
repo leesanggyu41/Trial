@@ -5,6 +5,9 @@ public class ItemBase : NetworkBehaviour
 {
     [Networked] public PlayerRef OwnerRef { get; set; }
 
+    public string ItemName;
+    public string Explanation;
+
     private RobotArmFixer _armController;
 
     public override void Spawned()

@@ -188,6 +188,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7906227254bc845a1b7bd5dee3227a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
+  ItemName: "\uBB34\uC804\uAE30"
+  Explanation: "\uC8FC\uC0AC\uAE30\uB97C 3\uAC1C \uCD94\uAC00\uD55C\uB2E4."
 --- !u!114 &7749225803632725097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -200,3 +202,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcfa917452ae5644aa56b9d69ba5069d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::telephone
+  ItemName: "\uBB34\uC804\uAE30"
+  Explanation: "\uC8FC\uC0AC\uAE30\uB97C 3\uAC1C \uCD94\uAC00\uD55C\uB2E4."

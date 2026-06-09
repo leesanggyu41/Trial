@@ -13,6 +13,8 @@ TagManager:
   - TopViewButton
   - VCam
   - TopCameraPoint
+  - ItemExplanationUI
+  - ItemNameUI
   layers:
   - Default
   - TransparentFX

@@ -130,6 +130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7906227254bc845a1b7bd5dee3227a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
+  ItemName: "\uB9DD\uCE58"
+  Explanation: "\uC8FC\uC0AC\uAE30 \uD558\uB098\uB97C \uD30C\uAD34\uD55C\uB2E4."
 --- !u!114 &1302641416691586930
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,6 +144,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d77246738e274d4aabcd6a38eb64fd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Mammer
+  ItemName: "\uB9DD\uCE58"
+  Explanation: "\uC8FC\uC0AC\uAE30 \uD558\uB098\uB97C \uD30C\uAD34\uD55C\uB2E4."
 --- !u!1001 &720598585816161090
 PrefabInstance:
   m_ObjectHideFlags: 0
