@@ -228,6 +228,7 @@ MonoBehaviour:
   HeadCameraPoint: {fileID: 2064062101518808712}
   TopCameraPoint: {fileID: 0}
   PlayerCamera: {fileID: 0}
+  neckBone: {fileID: 3167554398620209311}
   _NetworkedHeadRotation: {x: 0, y: 0, z: 0, w: 0}
   mouseSensitivity: 2
   Xlimit: 90
@@ -580,6 +581,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2228046216705171042, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2228046216705171042, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 3a0a2f07d87857444a5c0de7ed156c3a, type: 2}
@@ -851,5 +856,10 @@ PrefabInstance:
 --- !u!4 &1767496879075923294 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5191437532740486168, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
+  m_PrefabInstance: {fileID: 5804253585504866630}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3167554398620209311 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8897336135810138585, guid: 2280c1f907222444e9e71a5145e28480, type: 3}
   m_PrefabInstance: {fileID: 5804253585504866630}
   m_PrefabAsset: {fileID: 0}

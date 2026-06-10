@@ -101,6 +101,16 @@ public class PlayerTurn : NetworkBehaviour
         CurrentTurnIndex = index;
         foreach (var (player, playerIndex) in _playerIndex)
             player.playerTurn = (playerIndex == index);
+
+        if (HPUIManager.Instance != null)
+            RPC_RefreshTurn(index);
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_RefreshTurn(int index)
+    {
+        if (HPUIManager.Instance != null)
+            HPUIManager.Instance.RefreshTurn(index);
     }
 
     // 해당 플레이어 턴 삭제

@@ -24,6 +24,8 @@ public class PlayerControll : NetworkBehaviour
     public Camera PlayerCamera;
     private bool isTopView = false;
 
+    public Transform neckBone;
+
     [Networked] public Quaternion NetworkedHeadRotation { get; set; }
 
     public float mouseSensitivity = 1f;
@@ -31,6 +33,9 @@ public class PlayerControll : NetworkBehaviour
     public float Xlimit = 60f;
     public float MinYlimit = -120f;
     public float MaxYlimit = 30f;
+
+    [Networked] public float NetworkedCameraX { get; set; }
+    [Networked] public float NetworkedCameraY { get; set; }
 
     [Header("닉네임")]
     public TMP_Text NameText;
@@ -110,11 +115,27 @@ public class PlayerControll : NetworkBehaviour
         //InitializeTargetMap();
     }
 
+    private void LateUpdate()
+    {
+        if (neckBone == null) return;
 
+        if (HasInputAuthority)
+        {
+            // 로컬 플레이어는 직접 계산
+            neckBone.localRotation = Quaternion.Euler(CameraX * -0.5f, 0f, CameraY * -0.5f);
+        }
+        else
+        {
+            // 다른 플레이어는 NetworkedHeadRotation 사용
+            neckBone.localRotation = Quaternion.Euler(NetworkedCameraX * -0.5f, 0f, NetworkedCameraY * -0.5f);
+        }
+    }
 
     private void Update()
     {
         if (!HasInputAuthority || PlayerCamera == null) return;
+
+
 
 
         if (Mouse.current.rightButton.wasPressedThisFrame)
@@ -366,10 +387,10 @@ public class PlayerControll : NetworkBehaviour
             if (interactable != null)
             {
                 ItemBase item = hitInfo.collider.GetComponentInParent<ItemBase>();
-                // if (item != null && item.OwnerRef != Runner.LocalPlayer)
-                // {
-                //     return;
-                // }
+                if (item != null && item.OwnerRef != default && item.OwnerRef != Runner.LocalPlayer)
+                {
+                    return;
+                }
 
                 selectedSyringe = interactable;
                 //InitializeTargetMap();
@@ -499,6 +520,9 @@ public class PlayerControll : NetworkBehaviour
         HeadCameraPoint.localRotation = Quaternion.Euler(CameraY, CameraX, 0f);
 
         RPC_SyncHeadRotation(HeadCameraPoint.localRotation);
+
+        NetworkedCameraX = CameraX;
+        NetworkedCameraY = CameraY;
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
