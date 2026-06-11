@@ -519,16 +519,16 @@ public class PlayerControll : NetworkBehaviour
         CameraY = Mathf.Clamp(CameraY, MinYlimit, MaxYlimit);
         HeadCameraPoint.localRotation = Quaternion.Euler(CameraY, CameraX, 0f);
 
-        RPC_SyncHeadRotation(HeadCameraPoint.localRotation);
+        RPC_SyncCameraRotation(CameraX, CameraY);
 
-        NetworkedCameraX = CameraX;
-        NetworkedCameraY = CameraY;
+
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-    private void RPC_SyncHeadRotation(Quaternion rotation)
+    private void RPC_SyncCameraRotation(float camX, float camY)
     {
-        NetworkedHeadRotation = rotation;
+        NetworkedCameraX = camX;
+        NetworkedCameraY = camY;
     }
 
     private void ConfirmUse(bool isSelf, NetworkObject targetObj = null)
