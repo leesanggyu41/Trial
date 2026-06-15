@@ -5538,14 +5538,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemTurn
   itemPrefeb:
-  - {fileID: 8943900783984118589, guid: 28abceb5f95d28049b246ce59ef03d17, type: 3}
-  - {fileID: 2260769501537111346, guid: 4e4cd895929dd5e45a8facbbc1ed5048, type: 3}
-  - {fileID: 6301567081564861904, guid: 09dd94f155c7d9c4b811e46e8ffd8c01, type: 3}
-  - {fileID: 4052712063053005659, guid: e65b0213a2881964e8d1aedb157b73c8, type: 3}
-  - {fileID: 6993736407491565739, guid: 29c36859fee745541bfe4af178f5066c, type: 3}
-  - {fileID: 7115254592560947801, guid: ae1d69b6a8e41cd41bd540a24ff7034c, type: 3}
-  - {fileID: 2483878213882902029, guid: 4edb850ca79067340a6bef834cc61b35, type: 3}
-  - {fileID: 6660963835079812469, guid: 11d187c0c8f09a84186a00024515516c, type: 3}
   - {fileID: 8292703308648211790, guid: 5263b1f19bdc80f4f9553c9c6300e12c, type: 3}
   PI:
   - spawnPoint: {fileID: 1591100168}
@@ -8918,10 +8910,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameTurnManager
   syringeboxAnim: {fileID: 1910172577}
-  _NowTurn: 0
   Sy_T: {fileID: 2029370531}
   It_T: {fileID: 684756746}
   Pt_T: {fileID: 1900792082}
+  _NowTurn: 0
   _CurrentTurnIndex: 0
 --- !u!1001 &1007564967
 PrefabInstance:

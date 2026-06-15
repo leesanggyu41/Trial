@@ -11,11 +11,11 @@ public class SyringeChecker : ItemBase, ReactionObject
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
         OnUse();
-        RPC_UseChecker();
+        RPC_UseChecker(Runner.LocalPlayer);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    private void RPC_UseChecker()
+    private void RPC_UseChecker(PlayerRef user)
     {
         if (!Runner.IsServer) return;
 
@@ -34,7 +34,7 @@ public class SyringeChecker : ItemBase, ReactionObject
         }
 
         // 사용한 플레이어에게만 결과 전송
-        RPC_ShowResult(toxinCount, nsCount, OwnerRef);
+        RPC_ShowResult(toxinCount, nsCount, user);
     }
 
     
