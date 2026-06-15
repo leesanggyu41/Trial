@@ -5546,7 +5546,7 @@ MonoBehaviour:
   - {fileID: 7115254592560947801, guid: ae1d69b6a8e41cd41bd540a24ff7034c, type: 3}
   - {fileID: 2483878213882902029, guid: 4edb850ca79067340a6bef834cc61b35, type: 3}
   - {fileID: 6660963835079812469, guid: 11d187c0c8f09a84186a00024515516c, type: 3}
-  - {fileID: 6563986180672370141, guid: ec65dc29572fb314f96db83c5326640f, type: 3}
+  - {fileID: 8292703308648211790, guid: 5263b1f19bdc80f4f9553c9c6300e12c, type: 3}
   PI:
   - spawnPoint: {fileID: 1591100168}
     sapwnitemNum: 2

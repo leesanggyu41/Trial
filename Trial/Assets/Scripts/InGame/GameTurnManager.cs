@@ -1,148 +1,95 @@
 using Fusion;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public enum GameTurn
-{
-    Player,      // 플레이어 턴 시작
-    Syringe,        // 주사기 지급
-    Item,        // 아이템 지급
-    Animation,        // 애니메이션 턴]
-    Win        // 승리 턴
-
-
-}
+public enum GameTurn { Player, Syringe, Item, Animation, Win }
 
 [DefaultExecutionOrder(-50)]
 public class GameTurnManager : NetworkBehaviour
-
 {
     public static GameTurnManager Instance;
 
-    // 애니메이션 ----------------------------------------
-
+    [Header("Components & UI")]
     public Animator syringeboxAnim;
-    // 게임 턴 관리 부분 -----------------------------------------------------------------------------------------------------
-    [Networked] public GameTurn NowTurn { get; set; }
     public SyringeTurn Sy_T;
     public ItemTurn It_T;
     public PlayerTurn Pt_T;
 
-
-    // 플레이어 턴 관리 부분 -------------------------------------------------------------------------------------------------
+    // 💡 핵심: 턴이 바뀌면 모든 클라이언트가 자동으로 OnTurnChanged를 실행합니다. (RPC 대폭 제거 가능)
+    [Networked, OnChangedRender(nameof(OnTurnChanged))] 
+    public GameTurn NowTurn { get; set; }
     [Networked] public int CurrentTurnIndex { get; set; }
 
     private Dictionary<PlayerControll, int> _playerIndex = new Dictionary<PlayerControll, int>();
-
+    private Coroutine _turnTimerCoroutine;
 
     private void Awake() => Instance = this;
 
-    // 게임 턴 관련 메서드 ---------------------------------------------------------------------------------------------------
-
-    private void Start()
+    public override void Spawned()
+{
+    if (HasStateAuthority) 
     {
-        StartCoroutine(WaitTurnManager());
+        StartCoroutine(WaitAndChangeTurn(3f));
     }
+}
 
-    public void GameTurns()
+    /// <summary>
+    /// [핵심 최적화] NowTurn이 바뀔 때마다 모든 피어(서버+클라)에서 자동 호출되는 네트워크 콜백
+    /// </summary>
+    private void OnTurnChanged()
     {
-        Debug.LogWarning("턴을 골라 볼까요잉!!!");
-        if (!Runner.IsServer) return;
+        Debug.LogWarning($"[턴 변경] 현재 턴은? -> {NowTurn}");
 
         switch (NowTurn)
         {
             case GameTurn.Syringe:
-                SyringeTurn_Rpc();
+                if (syringeboxAnim != null) syringeboxAnim.SetTrigger("Down");
+                // 3초 뒤 주사기 스폰하는 타이머 가동 (서버 전용)
+                if (Runner.IsServer) ResetAndStartCoroutine(WaitAndSpawnSyringe(3f));
                 break;
 
             case GameTurn.Item:
-                ItemTurn_Rpc();
+                if (Runner.IsServer && It_T != null) It_T.ItemSpawner_Rpc();
                 break;
 
             case GameTurn.Player:
-                PlayerTurn_Rpc();
+                if (Runner.IsServer && Pt_T != null) Pt_T.PlayerTurnStart_Rpc();
                 break;
         }
     }
 
-
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)] // 방장이 실행하고 다른 플레이어에게 결과를 똑같이 전달
-    public void SyringeTurn_Rpc()
-    {
-        syringeboxAnim.SetTrigger("Down");
-
-        // 중요: 오직 서버(방장)만 다음 RPC를 실행할 타이머를 돌립니다.
-        if (Object.HasStateAuthority)
-        {
-            if (Runner.IsServer)
-                StartCoroutine(WaitAndCallGameTurns(3f));
-        }
-    }
-    private IEnumerator WaitAndCallGameTurns(float waitTime)
+    private IEnumerator WaitAndSpawnSyringe(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
-
-        // 이제 서버권한이 있는 곳에서만 호출하므로 에러가 나지 않습니다.
-        GameTurns_Rpc();
-    }
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void GameTurns_Rpc()
-    {
-        Debug.LogWarning("주사기");
-        if (Runner.IsServer)
+        if (Runner.IsServer && Sy_T != null)
         {
-            int randomValue = Random.Range(5, 10); // 0 또는 1을 랜덤으로 생성
-            Sy_T.SyringeSpawner_Rpc(randomValue);
+            Sy_T.SyringeSpawner_Rpc(Random.Range(5, 10));
         }
     }
 
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void ItemTurn_Rpc()
+    private IEnumerator WaitAndChangeTurn(float waitTime)
     {
-        Debug.LogWarning("아이템");
-        It_T.ItemSpawner_Rpc();
-    }
-    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void PlayerTurn_Rpc()
-    {
-        Debug.LogWarning("플레이어");
-
-        if (Runner.IsServer)
-            Pt_T.PlayerTurnStart_Rpc();
-    }
-
-    IEnumerator WaitTurnManager()
-    {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(waitTime);
         GamesTurnChange();
     }
-
-
-    // 주사기 턴 -> 아이템 턴 -> 플레이어 턴 -> 주사기 턴 ...
-    IEnumerator NextGameTurn(float waitTime)
-    {
-
-        yield return new WaitForSeconds(waitTime);
-        int turn = (int)NowTurn;
-        NowTurn = (GameTurn)((turn + 1) % (System.Enum.GetNames(typeof(GameTurn)).Length - 1));
-    }
-
 
     [ContextMenu("게임 턴 전환")]
     public void GamesTurnChange()
     {
         if (!Runner.IsServer) return;
+        // Player(0) -> Syringe(1) -> Item(2) 순환
+        NowTurn = (GameTurn)(((int)NowTurn + 1) % 3); 
+    }
 
-        int turn = (int)NowTurn;
-        NowTurn = (GameTurn)((turn + 1) % 3);
-        GameTurns();
+    #region 🌐 RPC 영역 (꼭 필요한 RPC만 남김)
 
+    // 외부(ItemBase 등)에서 누구나 안전하게 서버의 턴을 바꿀 수 있는 통합 RPC
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_SetTurn(GameTurn nextTurn)
+    {
+        if (Object.HasStateAuthority) NowTurn = nextTurn;
     }
 
     public void SetWinTurn(NetworkId winnerId)
@@ -156,18 +103,14 @@ public class GameTurnManager : NetworkBehaviour
     public void RPC_WinTurn(NetworkId winnerId)
     {
         StopAllCoroutines();
-        if (Runner.TryFindObject(winnerId, out var winnerObj))
+        if (Runner.TryFindObject(winnerId, out var winnerObj) && winnerObj.TryGetComponent<PlayerControll>(out var winner))
         {
-            PlayerControll winner = winnerObj.GetComponent<PlayerControll>();
             WinUIManager.Instance?.ShowWinUI(winner.NameText.text);
         }
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_QuitAll()
-    {
-        StartCoroutine(QuitCoroutine());
-    }
+    public void RPC_QuitAll() => StartCoroutine(QuitCoroutine());
 
     private IEnumerator QuitCoroutine()
     {
@@ -175,7 +118,11 @@ public class GameTurnManager : NetworkBehaviour
         SceneManager.LoadScene("LobbyScene");
     }
 
+    #endregion
 
+    private void ResetAndStartCoroutine(IEnumerator routine)
+    {
+        if (_turnTimerCoroutine != null) StopCoroutine(_turnTimerCoroutine);
+        _turnTimerCoroutine = StartCoroutine(routine);
+    }
 }
-
-

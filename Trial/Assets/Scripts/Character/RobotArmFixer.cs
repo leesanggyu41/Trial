@@ -43,18 +43,22 @@ public class RobotArmFixer : NetworkBehaviour
         ikTarget.DOMove(targetPosition, moveSpeed)
             .SetEase(Ease.InOutSine);
     }
-    public void GrabAndReturn(Transform itemTransform, NetworkId itemId, System.Action onComplete)
-    {
-        StopAllCoroutines();
-        StartCoroutine(GrabSequence(itemTransform.position, itemId, onComplete));
-        RPC_GrabAndReturn(itemTransform.position, itemId); // 다른 클라이언트에도 실행
-    }
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    private void RPC_GrabAndReturn(Vector3 itemPosition, NetworkId itemId)
-    {
-        StopAllCoroutines();
-        StartCoroutine(GrabSequence(itemPosition, itemId, null));
-    }
+   public void GrabAndReturn(Transform itemTransform, NetworkId itemId, System.Action onComplete)
+{
+    StopAllCoroutines();
+    // 자기 자신은 직접 실행, 다른 클라이언트에만 RPC
+    StartCoroutine(GrabSequence(itemTransform.position, itemId, onComplete));
+    RPC_GrabAndReturn(itemTransform.position, itemId);
+}
+
+[Rpc(RpcSources.All, RpcTargets.All)]
+private void RPC_GrabAndReturn(Vector3 itemPosition, NetworkId itemId)
+{
+    StopAllCoroutines();
+    // RPC 호출한 본인은 제외
+    if (Object.HasInputAuthority) return;
+    StartCoroutine(GrabSequence(itemPosition, itemId, null));
+}
 
     private IEnumerator GrabSequence(Vector3 itemPosition, NetworkId itemId, System.Action onComplete)
     {
@@ -71,13 +75,13 @@ public class RobotArmFixer : NetworkBehaviour
         GetComponent<Animator>().SetTrigger("Grab");
         yield return new WaitForSeconds(grabAnimDuration);
 
-        
+
 
         yield return ikTarget.DOMove(homePosition.position, moveSpeed)
             .SetEase(Ease.InOutSine)
             .WaitForCompletion();
 
-            if (_grabbedItem != null)
+        if (_grabbedItem != null)
         {
             _grabbedItem.SetParent(null);
             _grabbedItem = null;
@@ -85,7 +89,7 @@ public class RobotArmFixer : NetworkBehaviour
         GetComponent<Animator>().SetTrigger("UnGrab");
         onComplete?.Invoke();
 
-        if (Runner.IsServer)
-        GameTurnManager.Instance.NowTurn = GameTurn.Player;
+        
+            GameTurnManager.Instance.RPC_SetTurn(GameTurn.Player);
     }
 }
