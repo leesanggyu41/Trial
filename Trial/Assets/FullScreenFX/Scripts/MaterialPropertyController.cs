@@ -26,14 +26,36 @@ public class MaterialPropertyController : MonoBehaviour
         }
     }
 
+    // Runtime registry of all controllers in the scene for global access
+    public static readonly System.Collections.Generic.List<MaterialPropertyController> Instances = new System.Collections.Generic.List<MaterialPropertyController>();
+
+    /// <summary>
+    /// Set a float property on all materials managed by all MaterialPropertyController instances.
+    /// Useful for runtime-driven full-screen effect values.
+    /// </summary>
+    public static void SetFloatOnAll(string propertyName, float value)
+    {
+        foreach (var ctrl in Instances)
+        {
+            if (ctrl == null || ctrl.materials == null) continue;
+            foreach (var mat in ctrl.materials)
+            {
+                if (mat == null) continue;
+                mat.SetFloat(propertyName, value);
+            }
+        }
+    }
+
     private void OnEnable()
     {
+        if (!Instances.Contains(this)) Instances.Add(this);
         isEnabled = true;
         UpdateShaderProperties();
     }
 
     private void OnDisable()
     {
+        Instances.Remove(this);
         isEnabled = false;
         UpdateShaderProperties();
     }
