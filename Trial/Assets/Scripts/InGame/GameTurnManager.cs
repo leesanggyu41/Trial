@@ -18,7 +18,7 @@ public class GameTurnManager : NetworkBehaviour
     public PlayerTurn Pt_T;
 
     // 💡 핵심: 턴이 바뀌면 모든 클라이언트가 자동으로 OnTurnChanged를 실행합니다. (RPC 대폭 제거 가능)
-    [Networked, OnChangedRender(nameof(OnTurnChanged))] 
+    [Networked, OnChangedRender(nameof(OnTurnChanged))]
     public GameTurn NowTurn { get; set; }
     [Networked] public int CurrentTurnIndex { get; set; }
 
@@ -28,12 +28,12 @@ public class GameTurnManager : NetworkBehaviour
     private void Awake() => Instance = this;
 
     public override void Spawned()
-{
-    if (HasStateAuthority) 
     {
-        StartCoroutine(WaitAndChangeTurn(3f));
+        if (HasStateAuthority)
+        {
+            StartCoroutine(WaitAndChangeTurn(3f));
+        }
     }
-}
 
     /// <summary>
     /// [핵심 최적화] NowTurn이 바뀔 때마다 모든 피어(서버+클라)에서 자동 호출되는 네트워크 콜백
@@ -45,17 +45,26 @@ public class GameTurnManager : NetworkBehaviour
         switch (NowTurn)
         {
             case GameTurn.Syringe:
+                // 박스 내려가는 애니메이션은 모든 피어가 실행
                 if (syringeboxAnim != null) syringeboxAnim.SetTrigger("Down");
-                // 3초 뒤 주사기 스폰하는 타이머 가동 (서버 전용)
+
+                // 주사기 생성을 요청하는 핵심 타이머는 '서버'만 가동합니다.
                 if (Runner.IsServer) ResetAndStartCoroutine(WaitAndSpawnSyringe(3f));
                 break;
 
             case GameTurn.Item:
+                // 아이템 보급은 서버만 연산합니다.
                 if (Runner.IsServer && It_T != null) It_T.ItemSpawner_Rpc();
                 break;
 
             case GameTurn.Player:
+                // 플레이어 턴 시작 알림
                 if (Runner.IsServer && Pt_T != null) Pt_T.PlayerTurnStart_Rpc();
+                if (Runner.IsServer && Sy_T != null && Sy_T.So.Count == 0)
+                {
+                    Debug.Log("주사기 0개! 주사기 턴으로 전환");
+                    GamesTurnChange();
+                }
                 break;
         }
     }
@@ -65,7 +74,8 @@ public class GameTurnManager : NetworkBehaviour
         yield return new WaitForSeconds(waitTime);
         if (Runner.IsServer && Sy_T != null)
         {
-            Sy_T.SyringeSpawner_Rpc(Random.Range(5, 10));
+
+            Sy_T.SpawnSyringeWithGuarantee(Random.Range(5, 10));
         }
     }
 
@@ -79,8 +89,11 @@ public class GameTurnManager : NetworkBehaviour
     public void GamesTurnChange()
     {
         if (!Runner.IsServer) return;
-        // Player(0) -> Syringe(1) -> Item(2) 순환
-        NowTurn = (GameTurn)(((int)NowTurn + 1) % 3); 
+
+        // 현재 턴에 따라 확실하게 다음 목적지를 지정 (순환 구조 명시)
+        if (NowTurn == GameTurn.Player) NowTurn = GameTurn.Syringe;
+        else if (NowTurn == GameTurn.Syringe) NowTurn = GameTurn.Item;
+        else if (NowTurn == GameTurn.Item) NowTurn = GameTurn.Player;
     }
 
     #region 🌐 RPC 영역 (꼭 필요한 RPC만 남김)

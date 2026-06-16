@@ -75,6 +75,6 @@ public class ItemTurn : NetworkBehaviour
             data.BonusItemCount = 0; // 보너스 초기화
         }
 
-        GTM.GamesTurnChange(); // 아이템 지급 완료 후 턴 전환
+        GTM.RPC_SetTurn(GameTurn.Player);
     }
 }

@@ -23,8 +23,8 @@ public class ItemBase : NetworkBehaviour
     public void GrabAndDespawn()
     {
         NetworkId id = Object.Id;
+        if (GameTurnManager.Instance.NowTurn == GameTurn.Syringe) return;
 
-        
         GameTurnManager.Instance.RPC_SetTurn(GameTurn.Animation);
         if (_armController != null)
             _armController.GrabAndReturn(transform, Object.Id, () => RPC_Despawn());
@@ -36,13 +36,13 @@ public class ItemBase : NetworkBehaviour
     private void RPC_Despawn()
     {
         Debug.Log($"[Despawn] 호출됨: {Object.Id}");
-        GameTurnManager.Instance.RPC_SetTurn(GameTurn.Player);
+        //GameTurnManager.Instance.RPC_SetTurn(GameTurn.Player);
         Runner.Despawn(Object);
     }
 
     public void OnUse()
     {
-        
-            GameTurnManager.Instance.RPC_SetTurn(GameTurn.Animation);
+
+        GameTurnManager.Instance.RPC_SetTurn(GameTurn.Animation);
     }
 }

@@ -13,6 +13,8 @@ public class RobotArmFixer : NetworkBehaviour
 
     private Transform _grabbedItem;
 
+    private NetworkObject _grabbedNetworkObject;
+
 
 
     public Transform Bak;
@@ -43,22 +45,22 @@ public class RobotArmFixer : NetworkBehaviour
         ikTarget.DOMove(targetPosition, moveSpeed)
             .SetEase(Ease.InOutSine);
     }
-   public void GrabAndReturn(Transform itemTransform, NetworkId itemId, System.Action onComplete)
-{
-    StopAllCoroutines();
-    // 자기 자신은 직접 실행, 다른 클라이언트에만 RPC
-    StartCoroutine(GrabSequence(itemTransform.position, itemId, onComplete));
-    RPC_GrabAndReturn(itemTransform.position, itemId);
-}
+    public void GrabAndReturn(Transform itemTransform, NetworkId itemId, System.Action onComplete)
+    {
+        StopAllCoroutines();
+        // 자기 자신은 직접 실행, 다른 클라이언트에만 RPC
+        StartCoroutine(GrabSequence(itemTransform.position, itemId, onComplete));
+        RPC_GrabAndReturn(itemTransform.position, itemId);
+    }
 
-[Rpc(RpcSources.All, RpcTargets.All)]
-private void RPC_GrabAndReturn(Vector3 itemPosition, NetworkId itemId)
-{
-    StopAllCoroutines();
-    // RPC 호출한 본인은 제외
-    if (Object.HasInputAuthority) return;
-    StartCoroutine(GrabSequence(itemPosition, itemId, null));
-}
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    private void RPC_GrabAndReturn(Vector3 itemPosition, NetworkId itemId)
+    {
+        StopAllCoroutines();
+        // RPC 호출한 본인은 제외
+        if (Object.HasInputAuthority) return;
+        StartCoroutine(GrabSequence(itemPosition, itemId, null));
+    }
 
     private IEnumerator GrabSequence(Vector3 itemPosition, NetworkId itemId, System.Action onComplete)
     {
@@ -72,6 +74,8 @@ private void RPC_GrabAndReturn(Vector3 itemPosition, NetworkId itemId)
         if (Runner.TryFindObject(itemId, out var itemObj))
             _grabbedItem = itemObj.transform;
 
+        _grabbedNetworkObject = itemObj;
+
         GetComponent<Animator>().SetTrigger("Grab");
         yield return new WaitForSeconds(grabAnimDuration);
 
@@ -81,6 +85,11 @@ private void RPC_GrabAndReturn(Vector3 itemPosition, NetworkId itemId)
             .SetEase(Ease.InOutSine)
             .WaitForCompletion();
 
+        if (_grabbedNetworkObject != null && Runner.IsServer)
+        {
+            Runner.Despawn(_grabbedNetworkObject);
+        }
+
         if (_grabbedItem != null)
         {
             _grabbedItem.SetParent(null);
@@ -89,7 +98,8 @@ private void RPC_GrabAndReturn(Vector3 itemPosition, NetworkId itemId)
         GetComponent<Animator>().SetTrigger("UnGrab");
         onComplete?.Invoke();
 
-        
+        if (Runner.IsServer)
             GameTurnManager.Instance.RPC_SetTurn(GameTurn.Player);
+
     }
 }
