@@ -27,14 +27,48 @@ public class HPScreenEffect : MonoBehaviour
     private void Update()
     {
         if (localPlayer == null) FindLocalPlayer();
-        if (localPlayer == null || screenMaterial == null) return;
+        if (screenMaterial == null)
+        {
+            if (lastHp != int.MinValue)
+            {
+                ResetScreenEffect();
+                lastHp = int.MinValue;
+            }
+            return;
+        }
+
+        if (localPlayer == null)
+        {
+            ResetScreenEffect();
+            lastHp = int.MinValue;
+            return;
+        }
 
         int hp = localPlayer.HP;
-        if (hp == lastHp) return;
+        if (hp == lastHp && !IsGameInactive()) return;
         lastHp = hp;
 
-        float alpha = Mathf.Clamp01(Mathf.InverseLerp(maxHp, minHp, hp));
+        float alpha;
+        if (localPlayer.IsDead || IsGameInactive())
+        {
+            alpha = 0f;
+        }
+        else
+        {
+            alpha = Mathf.Clamp01(Mathf.InverseLerp(maxHp, minHp, hp));
+        }
 
+        ApplyAlpha(alpha);
+        Debug.Log($"HPScreenEffect: HP {hp} -> Alpha {alpha:F2}");
+    }
+
+    private bool IsGameInactive()
+    {
+        return GameTurnManager.Instance != null && GameTurnManager.Instance.NowTurn == GameTurn.Win;
+    }
+
+    private void ApplyAlpha(float alpha)
+    {
         if (screenMaterial != null)
         {
             foreach (var prop in alphaPropertyNames)
@@ -43,7 +77,6 @@ public class HPScreenEffect : MonoBehaviour
                 {
                     screenMaterial.SetFloat(prop, alpha);
                     Debug.Log($"HPScreenEffect: screenMaterial.SetFloat('{prop}', {alpha:F2})");
-                    Debug.Log($"HPScreenEffect: screenMaterial.GetFloat('{prop}') = {screenMaterial.GetFloat(prop):F2}");
                 }
             }
 
@@ -60,29 +93,16 @@ public class HPScreenEffect : MonoBehaviour
                 MaterialPropertyController.SetFloatOnAll(prop, alpha);
                 Shader.SetGlobalFloat(prop, alpha);
             }
-
-            foreach (var ctrl in MaterialPropertyController.Instances)
-            {
-                if (ctrl == null || ctrl.materials == null) continue;
-                foreach (var mat in ctrl.materials)
-                {
-                    if (mat == null) continue;
-                    foreach (var prop in alphaPropertyNames)
-                    {
-                        if (mat.HasProperty(prop))
-                        {
-                            Debug.Log($"HPScreenEffect: controller material '{mat.name}' has '{prop}' = {mat.GetFloat(prop):F2}");
-                        }
-                    }
-                }
-            }
         }
         else
         {
             Debug.LogWarning("HPScreenEffect: MaterialPropertyController 인스턴스가 씬에 없습니다. FS_LowHP 메테리얼을 FullScreenFX 컨트롤러에 등록했는지 확인하세요.");
         }
+    }
 
-        Debug.Log($"HPScreenEffect: HP {hp} -> Alpha {alpha:F2}");
+    private void ResetScreenEffect()
+    {
+        ApplyAlpha(0f);
     }
 
     private void FindLocalPlayer()
