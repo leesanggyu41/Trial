@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 2439349941424186058}
   - component: {fileID: 2951300811158618707}
   - component: {fileID: 664745256084104854}
+  - component: {fileID: -7307073016175604484}
+  - component: {fileID: 8758985527710742218}
   m_Layer: 0
   m_Name: Destroyer
   m_TagString: Untagged
@@ -206,3 +208,37 @@ MonoBehaviour:
   ItemName: "\uD30C\uC1C4\uAE30"
   Explanation: "\uC120\uD0DD\uD55C \uC0C1\uB300\uBC29\uC758 \uC544\uC774\uD15C\uC744
     \uB79C\uB364\uC73C\uB85C \uD558\uB098 \uD30C\uAD34\uD55C\uB2E4."
+--- !u!114 &-7307073016175604484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2260769501537111346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dded09a74d857b642a040d2d130eaf65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemMoveAnimation
+  targetPoint: {fileID: 0}
+  playerItemPositions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  targetEulerRotation: {x: 0, y: 0, z: 0}
+  moveDuration: 1.5
+--- !u!114 &8758985527710742218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2260769501537111346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1541381998, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObjectPrefabData
+  Guid:
+    RawGuidValue: 4e4cd895929dd5e45a8facbbc1ed5048
