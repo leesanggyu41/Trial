@@ -77,6 +77,18 @@ public class ItemBase : NetworkBehaviour
 
     public void OnUse()
     {
-        GameTurnManager.Instance.RPC_SetTurn(GameTurn.Animation);
+        if (GameTurnManager.Instance == null)
+        {
+            Debug.LogError("GameTurnManager.Instance가 null입니다!");
+            return;
+        }
+        if (move == null)
+        {
+            //Debug.LogError("move가 null입니다! ItemMoveAnimation 컴포넌트 확인하세요.");
+            move = GetComponent<ItemMoveAnimation>();
+            return;
+        }
+        move.MoveToTarget();
+        Debug.LogWarning("아이템 사용해 볼까용?");
     }
 }

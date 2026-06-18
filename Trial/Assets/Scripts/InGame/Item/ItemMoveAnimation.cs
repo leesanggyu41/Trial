@@ -27,6 +27,7 @@ public class ItemMoveAnimation : MonoBehaviour
             Debug.LogWarning("Target Point가 지정되지 않았습니다.");
             return;
         }
+        Debug.Log("이동해요용요요용요요요요요요ㅛ요요요요요요요요요요요용");
 
         startPosition = transform.position;
         startRotation = transform.rotation;

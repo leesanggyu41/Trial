@@ -78,6 +78,7 @@ GameObject:
   - component: {fileID: 2227029617396014474}
   - component: {fileID: 894872345448577625}
   - component: {fileID: 2007809773494721698}
+  - component: {fileID: -6976903534453972980}
   m_Layer: 0
   m_Name: st
   m_TagString: Untagged
@@ -307,6 +308,21 @@ MonoBehaviour:
   Explanation: "1\uD68C\uB9CC \uC8FC\uC0AC\uAE30\uB97C \uC0AC\uC6A9\uD558\uBA74 \uCCB4\uB825\uC744
     1\uD68C\uBCF5\uD55C\uB2E4 "
   animator: {fileID: 7553255537194287605}
+--- !u!114 &-6976903534453972980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2062597459656177555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dded09a74d857b642a040d2d130eaf65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemMoveAnimation
+  targetPoint: {fileID: 0}
+  targetEulerRotation: {x: 0, y: 0, z: 0}
+  moveDuration: 1.5
 --- !u!1 &2515140814484260034
 GameObject:
   m_ObjectHideFlags: 0
