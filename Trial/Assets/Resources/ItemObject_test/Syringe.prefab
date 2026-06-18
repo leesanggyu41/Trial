@@ -51,6 +51,8 @@ GameObject:
   - component: {fileID: -5210645132705022307}
   - component: {fileID: -1656323761061340410}
   - component: {fileID: -1346008420630016765}
+  - component: {fileID: -4267647393437841031}
+  - component: {fileID: -1927440770588048257}
   m_Layer: 0
   m_Name: Syringe
   m_TagString: Untagged
@@ -338,6 +340,40 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-4267647393437841031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483878213882902029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dded09a74d857b642a040d2d130eaf65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemMoveAnimation
+  targetPoint: {fileID: 0}
+  playerItemPositions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  targetEulerRotation: {x: 0, y: 0, z: 0}
+  moveDuration: 1.5
+--- !u!114 &-1927440770588048257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2483878213882902029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1541381998, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObjectPrefabData
+  Guid:
+    RawGuidValue: 4edb850ca79067340a6bef834cc61b35
 --- !u!1 &2526817133272121744
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 8461057439650123268}
   - component: {fileID: 3459840063968568384}
   - component: {fileID: 2339276167007541475}
+  - component: {fileID: 1647622936034665655}
+  - component: {fileID: -2420562869442565811}
   m_Layer: 0
   m_Name: Transceiver
   m_TagString: Untagged
@@ -208,6 +210,41 @@ MonoBehaviour:
   ItemName: "\uB300\uD3EC\uD3F0"
   Explanation: "\uD604\uC7AC \uC804\uCCB4 \uC8FC\uC0AC\uAE30\uC758 \uC0C1\uD669\uB97C
     \uD655\uC778\uD55C\uB2E4."
+  powerPhone: {fileID: 0}
+--- !u!114 &1647622936034665655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6563986180672370141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dded09a74d857b642a040d2d130eaf65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemMoveAnimation
+  targetPoint: {fileID: 0}
+  playerItemPositions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  targetEulerRotation: {x: 0, y: 0, z: 0}
+  moveDuration: 1.5
+--- !u!114 &-2420562869442565811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6563986180672370141}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1541381998, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObjectPrefabData
+  Guid:
+    RawGuidValue: ec65dc29572fb314f96db83c5326640f
 --- !u!1001 &6323815254175083374
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -216,6 +253,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3339951904923073066}
     m_Modifications:
+    - target: {fileID: -1898226555477511404, guid: 5263b1f19bdc80f4f9553c9c6300e12c, type: 3}
+      propertyPath: playerItemPositions.Array.size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 6476997350096225367, guid: 5263b1f19bdc80f4f9553c9c6300e12c, type: 3}
       propertyPath: Flags
       value: 262145

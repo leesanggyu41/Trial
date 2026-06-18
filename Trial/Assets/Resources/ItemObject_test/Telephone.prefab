@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 3013379574798482252}
   - component: {fileID: 8878810840226712921}
   - component: {fileID: 7749225803632725097}
+  - component: {fileID: -6164907221866258427}
+  - component: {fileID: 6648588834277751356}
   m_Layer: 0
   m_Name: Telephone
   m_TagString: Untagged
@@ -204,3 +206,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::telephone
   ItemName: "\uBB34\uC804\uAE30"
   Explanation: "\uC8FC\uC0AC\uAE30\uB97C 3\uAC1C \uCD94\uAC00\uD55C\uB2E4."
+--- !u!114 &-6164907221866258427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6660963835079812469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dded09a74d857b642a040d2d130eaf65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemMoveAnimation
+  targetPoint: {fileID: 0}
+  playerItemPositions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  targetEulerRotation: {x: 0, y: 0, z: 0}
+  moveDuration: 1.5
+--- !u!114 &6648588834277751356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6660963835079812469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1541381998, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObjectPrefabData
+  Guid:
+    RawGuidValue: 11d187c0c8f09a84186a00024515516c

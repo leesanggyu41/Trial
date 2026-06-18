@@ -18,6 +18,9 @@ public class GameSceneManager : NetworkBehaviour
     [Header("캐릭터 프리팹")]
     public GameObject PlayerPrefab;
     // 플레이어 참조와 네트워크 객체를 관리하는 딕셔너리입니다.
+
+    [Header("아이템 포인트")]
+    public Transform[] playerItemPositions;
     public Dictionary<PlayerRef, NetworkObject> _spawnedPlayers = new Dictionary<PlayerRef, NetworkObject>();
 
     private void Awake()

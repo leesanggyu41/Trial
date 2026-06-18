@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: -5039709473874877462}
   - component: {fileID: -355058540319210821}
   - component: {fileID: -686909955853998197}
+  - component: {fileID: 1889720129592608821}
+  - component: {fileID: -3734071168562410371}
   m_Layer: 0
   m_Name: Remote
   m_TagString: Untagged
@@ -205,6 +207,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemBase
   ItemName: "\uB9AC\uBAA8\uCEE8"
   Explanation: "\uC9C4\uD589\uBC29\uD5A5\uC744 \uBC18\uB300\uB85C \uB3CC\uB9B0\uB2E4."
+--- !u!114 &1889720129592608821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4052712063053005659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dded09a74d857b642a040d2d130eaf65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemMoveAnimation
+  targetPoint: {fileID: 0}
+  playerItemPositions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  targetEulerRotation: {x: 0, y: 0, z: 0}
+  moveDuration: 1.5
+--- !u!114 &-3734071168562410371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4052712063053005659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1541381998, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObjectPrefabData
+  Guid:
+    RawGuidValue: e65b0213a2881964e8d1aedb157b73c8
 --- !u!1001 &3073497185114582889
 PrefabInstance:
   m_ObjectHideFlags: 0

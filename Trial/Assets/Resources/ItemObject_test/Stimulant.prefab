@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 4705047535798370115}
   - component: {fileID: -8310234607106511484}
   - component: {fileID: 6677568192225492784}
+  - component: {fileID: -9014934403274890741}
+  - component: {fileID: -1992308093357303399}
   m_Layer: 0
   m_Name: Stimulant
   m_TagString: Untagged
@@ -206,3 +208,37 @@ MonoBehaviour:
   ItemName: "\uAC01\uC131\uC81C"
   Explanation: "1\uD68C\uB9CC \uC8FC\uC0AC\uAE30\uB97C \uC0AC\uC6A9\uD558\uBA74 \uCCB4\uB825\uC744
     1\uD68C\uBCF5\uD55C\uB2E4 "
+--- !u!114 &-9014934403274890741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6993736407491565739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dded09a74d857b642a040d2d130eaf65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemMoveAnimation
+  targetPoint: {fileID: 0}
+  playerItemPositions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  targetEulerRotation: {x: 0, y: 0, z: 0}
+  moveDuration: 1.5
+--- !u!114 &-1992308093357303399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6993736407491565739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1541381998, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObjectPrefabData
+  Guid:
+    RawGuidValue: 29c36859fee745541bfe4af178f5066c
