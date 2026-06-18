@@ -240,7 +240,6 @@ GameObject:
   - component: {fileID: 875977481176720184}
   - component: {fileID: 8555852316947078818}
   - component: {fileID: -1898226555477511404}
-  - component: {fileID: -3084364115902179013}
   m_Layer: 0
   m_Name: powerphone
   m_TagString: Untagged
@@ -467,8 +466,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.54427993, y: 0.14684916, z: 0.26359177}
-  m_Center: {x: -0.22786003, y: -0.031037092, z: 0.009119034}
+  m_Size: {x: 0.27107513, y: 0.14684916, z: 0.615248}
+  m_Center: {x: -0.44163704, y: -0.031037098, z: 0.21018846}
 --- !u!114 &8555852316947078818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -499,24 +498,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemMoveAnimation
   targetPoint: {fileID: 0}
-  playerItemPositions:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   targetEulerRotation: {x: 0, y: 0, z: 0}
   moveDuration: 1.5
---- !u!114 &-3084364115902179013
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8292703308648211790}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1541381998, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObjectPrefabData
-  Guid:
-    RawGuidValue: 5263b1f19bdc80f4f9553c9c6300e12c
