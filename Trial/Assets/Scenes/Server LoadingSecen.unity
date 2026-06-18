@@ -1477,8 +1477,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScreenEffectInitializer
   screenMaterial: {fileID: 2100000, guid: dec27e3fe0b68a3408d416786e660f26, type: 2}
-  alphaPropertyNames:
-  - Alpha
+  alphaPropertyName: _Alpha
 --- !u!4 &1754385790
 Transform:
   m_ObjectHideFlags: 0

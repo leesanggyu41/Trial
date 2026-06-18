@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 4947673486768853025}
   - component: {fileID: -6483800231718978141}
   - component: {fileID: -7977130240104356001}
+  - component: {fileID: 7103348023309718700}
   m_Layer: 0
   m_Name: converter 1
   m_TagString: Untagged
@@ -203,3 +204,18 @@ MonoBehaviour:
   ItemName: "\uCEE8\uBC84\uD130"
   Explanation: "\uC8FC\uC0AC\uAE30\uC758 \uD0C0\uC785\uC744 \uBC18\uB300\uB85C \uB3CC\uB9B0\uB2E4."
   timeGauge: {fileID: 0}
+--- !u!114 &7103348023309718700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1643152167180185722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dded09a74d857b642a040d2d130eaf65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemMoveAnimation
+  targetPoint: {fileID: 0}
+  targetEulerRotation: {x: 0, y: 0, z: 0}
+  moveDuration: 1.5
