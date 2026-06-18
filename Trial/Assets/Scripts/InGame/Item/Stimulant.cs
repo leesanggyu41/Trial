@@ -6,10 +6,12 @@ public class Stimulant : ItemBase, ReactionObject
     public bool NeedsTargeting => false;
     public TargetType DesiredTarget => TargetType.None;
 
+    public Animator animator;
+
     public void OnEvent(bool myself, NetworkId targetId)
     {
         OnUse();
-        GrabAndDespawn();
+        
         RPC_UseStimulant(Object.InputAuthority, targetId);
     }
 
@@ -28,7 +30,18 @@ public class Stimulant : ItemBase, ReactionObject
             targetData.IsAwakening = true;
             Debug.Log($"[성공] {player.PlayerId}님 각성 완료.");
             //Runner.Despawn(Object); // 성공 시에만 아이템 삭제
+            RPC_PlayAnimation();
         }
+    }
+    [Rpc(RpcSources.All, RpcTargets.All)]
+    public void RPC_PlayAnimation()
+    {
+        animator.SetTrigger("eat");
+    }
+
+    public void robot()
+    {
+        GrabAndDespawn();
     }
 }
 
