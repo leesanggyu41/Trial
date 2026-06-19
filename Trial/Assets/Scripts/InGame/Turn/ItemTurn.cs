@@ -52,7 +52,7 @@ public class ItemTurn : NetworkBehaviour
             for (int pp = 0; pp < finalSpawnCount; pp++)
             {
                 int randIndex = UnityEngine.Random.Range(0, itemPrefeb.Length);
-                NetworkObject ob = Runner.Spawn(itemPrefeb[randIndex], PI[i].spawnPoint.position, Quaternion.identity);
+                NetworkObject ob = Runner.Spawn(itemPrefeb[randIndex], PI[i].spawnPoint.position, itemPrefeb[randIndex].transform.rotation);
                 ItemBase ibase = ob.GetComponent<ItemBase>();
 
                 if(ibase != null)
