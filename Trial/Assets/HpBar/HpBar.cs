@@ -13,6 +13,8 @@ public class HpBar : NetworkBehaviour
     private AudioSource audio;
     public AudioClip LightChange;
 
+    public AudioClip TurnChangeSound;
+
     public void Start()
     {
         Hpbar = MaxHp;
@@ -36,14 +38,14 @@ public class HpBar : NetworkBehaviour
     public void IsMyTurn()
     {
         GreenLight.EnableKeyword("_EMISSION");
-        //audio.PlayOneShot(LightChange);
+        audio.PlayOneShot(TurnChangeSound);
     }
 
     [ContextMenu("내턴이 아니야!")]
     public void TurnEnd()
     {
         GreenLight.DisableKeyword("_EMISSION");
-        //audio.PlayOneShot(LightChange);
+        //audio.PlayOneShot(TurnChangeSound);
     }
 
 

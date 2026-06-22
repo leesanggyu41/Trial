@@ -72,17 +72,19 @@ public void UpdateSFXVolume(float value)
     public void UpdateSensitivity(float value)
     {
         currentSettings.mouseSensitivity = value;
-        IngameSettingManager.Instance.ApplySettings();
+        if (PlayerControll.Local != null)
+        PlayerControll.Local.mouseSensitivity = value;
+        IngameSettingManager.Instance?.ApplySettings();
     }
     public void UpdateGamma(float value)
     {
         currentSettings.gamma = value;
-        IngameSettingManager.Instance.ApplySettings();
+        IngameSettingManager.Instance?.ApplySettings();
     }
     public void UpdateMotionBlur(float value)
     {
         currentSettings.motionBlur = value;
-        IngameSettingManager.Instance.ApplySettings();
+        IngameSettingManager.Instance?.ApplySettings();
     }
     public void UpdateResolution(int index) 
     {
@@ -97,7 +99,8 @@ public void UpdateSFXVolume(float value)
     {
         SaveSystem.SaveSettings(currentSettings);
         Debug.Log("설정이 JSON 파일로 저장되었습니다!");
-        settingPanal.SetActive(false); // 설정창 닫기
+        if (settingPanal != null)
+        settingPanal.SetActive(false);
     }
 
     void ApplySettingsToUI()
