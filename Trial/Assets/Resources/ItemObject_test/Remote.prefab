@@ -18,7 +18,6 @@ GameObject:
   - component: {fileID: -355058540319210821}
   - component: {fileID: -686909955853998197}
   - component: {fileID: 1889720129592608821}
-  - component: {fileID: -3734071168562410371}
   m_Layer: 0
   m_Name: Remote
   m_TagString: Untagged
@@ -118,7 +117,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 0.404579, z: 1}
+  m_Size: {x: 2, y: 0.5, z: 3}
   m_Center: {x: 0, y: -0.29771057, z: 0}
 --- !u!114 &-366165702173687508
 MonoBehaviour:
@@ -140,6 +139,7 @@ MonoBehaviour:
   - {fileID: 1411036247216937747}
   - {fileID: -5039709473874877462}
   - {fileID: -686909955853998197}
+  - {fileID: 1889720129592608821}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &1411036247216937747
 MonoBehaviour:
@@ -220,27 +220,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemMoveAnimation
   targetPoint: {fileID: 0}
-  playerItemPositions:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   targetEulerRotation: {x: 0, y: 0, z: 0}
-  moveDuration: 1.5
---- !u!114 &-3734071168562410371
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4052712063053005659}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1541381998, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObjectPrefabData
-  Guid:
-    RawGuidValue: e65b0213a2881964e8d1aedb157b73c8
+  moveDuration: 0.5
 --- !u!1001 &3073497185114582889
 PrefabInstance:
   m_ObjectHideFlags: 0

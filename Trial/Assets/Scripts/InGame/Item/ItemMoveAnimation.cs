@@ -1,72 +1,76 @@
 using UnityEngine;
+using Fusion;
 
-
-public class ItemMoveAnimation : MonoBehaviour
+public class ItemMoveAnimation : NetworkBehaviour
 {
     [Header("목표")]
     public Transform targetPoint;
     public Vector3 targetEulerRotation;
+    public System.Action onMoveComplete;
 
     [Header("애니메이션 시간")]
     public float moveDuration = 1.5f;
 
-    private bool isMoving;
-    private float timer;
+    [Networked] private Vector3 NetworkedStartPosition { get; set; }
+    [Networked] private Vector3 NetworkedTargetPosition { get; set; } // targetPoint 위치 동기화
+    [Networked] private NetworkBool IsMoving { get; set; }
+    [Networked] private float Timer { get; set; }
 
-    private Vector3 startPosition;
+    private NetworkBool _prevIsMoving;
     private Quaternion startRotation;
     private Quaternion targetRotation;
 
-
-
-    [ContextMenu("타깃으로 이동")]
     public void MoveToTarget()
     {
-        if (targetPoint == null)
+        // StateAuthority만 targetPoint 필요
+        if (Object.HasStateAuthority)
         {
-            Debug.LogWarning("Target Point가 지정되지 않았습니다.");
-            return;
+            if (targetPoint == null)
+            {
+                Debug.LogWarning("Target Point가 지정되지 않았습니다.");
+                return;
+            }
+
+            NetworkedStartPosition = transform.position;
+            NetworkedTargetPosition = targetPoint.position;
+            Timer = 0f;
+            IsMoving = true;
         }
-        Debug.Log("이동해요용요요용요요요요요요ㅛ요요요요요요요요요요요용");
 
-        startPosition = transform.position;
         startRotation = transform.rotation;
-
-        targetRotation = Quaternion.Euler(targetEulerRotation);
-
-        timer = 0f;
-        isMoving = true;
+          targetRotation = targetPoint != null 
+        ? targetPoint.rotation  // targetPoint의 회전값을 목표로
+        : Quaternion.Euler(targetEulerRotation);
     }
 
-    private void Update()
+    public override void FixedUpdateNetwork()
     {
-        if (!isMoving)
-            return;
+         if (!Object.HasStateAuthority) return;
+    if (!IsMoving) return;
 
-        timer += Time.deltaTime;
+    Timer += Runner.DeltaTime;
 
-        float t = Mathf.Clamp01(timer / moveDuration);
+    float t = Mathf.Clamp01(Timer / moveDuration);
+    t = Mathf.SmoothStep(0f, 1f, t);
 
-        // 부드러운 가속/감속
-        t = Mathf.SmoothStep(0f, 1f, t);
+    transform.position = Vector3.Lerp(NetworkedStartPosition, NetworkedTargetPosition, t);
 
-        // 위치 보간
-        transform.position = Vector3.Lerp(
-            startPosition,
-            targetPoint.position,
-            t);
+    if (Timer >= moveDuration)
+    {
+        transform.position = NetworkedTargetPosition;
+        transform.rotation = targetPoint != null ? targetPoint.rotation : Quaternion.Euler(targetEulerRotation);
+        IsMoving = false;
+        onMoveComplete?.Invoke();
+    }
+    }
 
-        // 회전 보간
-        transform.rotation = Quaternion.Slerp(
-            startRotation,
-            targetRotation,
-            t);
+    public override void Render()
+    {
+        if (!IsMoving) return;
 
-        if (timer >= moveDuration)
-        {
-            transform.position = targetPoint.position;
-            transform.rotation = targetRotation;
-            isMoving = false;
-        }
+    float t = Mathf.Clamp01(Timer / moveDuration);
+    t = Mathf.SmoothStep(0f, 1f, t);
+
+    transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
     }
 }

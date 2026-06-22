@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 5902844968109568886}
   - component: {fileID: 1302641416691586930}
   - component: {fileID: -3067095108242830186}
-  - component: {fileID: 7737312357639516312}
   m_Layer: 0
   m_Name: Hammer
   m_TagString: Untagged
@@ -81,6 +80,7 @@ MonoBehaviour:
   - {fileID: 3192996505898500656}
   - {fileID: 5902844968109568886}
   - {fileID: 1302641416691586930}
+  - {fileID: -3067095108242830186}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &3192996505898500656
 MonoBehaviour:
@@ -161,27 +161,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemMoveAnimation
   targetPoint: {fileID: 0}
-  playerItemPositions:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  targetEulerRotation: {x: 0, y: 0, z: 0}
-  moveDuration: 1.5
---- !u!114 &7737312357639516312
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6301567081564861904}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1541381998, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObjectPrefabData
-  Guid:
-    RawGuidValue: 09dd94f155c7d9c4b811e46e8ffd8c01
+  targetEulerRotation: {x: 0, y: 0, z: -90}
+  moveDuration: 0.5
 --- !u!1001 &720598585816161090
 PrefabInstance:
   m_ObjectHideFlags: 0

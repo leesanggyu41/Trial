@@ -66,7 +66,7 @@ public class HpBar : NetworkBehaviour
 
     public void Heal()
     {
-        Hpbar = Mathf.Clamp(0, MaxHp, Hpbar + 1);
+        Hpbar = Mathf.Clamp(Hpbar + 1, 0, MaxHp);
         Screen.SetFloat("_HP", Hpbar);
     }
 

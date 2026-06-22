@@ -10,8 +10,8 @@ public class SyringeChecker : ItemBase, ReactionObject
 
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
-        OnUse();
-        RPC_UseChecker(Runner.LocalPlayer);
+        BaseOnEvent(() =>  RPC_UseChecker(Runner.LocalPlayer));
+       
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]

@@ -15,9 +15,6 @@ public class PlayerControll : NetworkBehaviour
 
     [SerializeField] private WideOutlineSettings wideOutlineSettings;
 
-
-
-
     [Header("카메라 설정")]
     public Transform HeadCameraPoint;
     public Transform TopCameraPoint;
@@ -56,7 +53,6 @@ public class PlayerControll : NetworkBehaviour
     [Networked] public int tvnumder { get; set; }
     public GameObject my_TV;
 
-
     [Header("로봇팔")]
     private RobotArmFixer _armController;
 
@@ -66,15 +62,12 @@ public class PlayerControll : NetworkBehaviour
     private Dictionary<Vector2, PlayerControll> _targetMap = new Dictionary<Vector2, PlayerControll>();
 
     [Header("하이라이트 설정")]
-    private GameObject lastHighlightedObject; // 현재 하이라이트된 오브젝트
-
-    private GameObject selectedHighlightedObject; // 선택된 아이템에 대한 하이라이트 오브젝트
+    private GameObject lastHighlightedObject;
+    private GameObject selectedHighlightedObject;
     private int defaultLayer;
-
     private int selectedDefaultLayer;
     private const int OUTLINE_LAYER = 8;
 
-    //private Camera _camera;
     private float CameraX;
     private float CameraY;
 
@@ -94,9 +87,6 @@ public class PlayerControll : NetworkBehaviour
             itemNameUI = GameObject.FindGameObjectWithTag("ItemNameUI");
             itemExplanationUI = GameObject.FindGameObjectWithTag("ItemExplanationUI");
 
-
-
-            // 시작할 때 HeadCameraPoint에 붙이기
             PlayerCamera.transform.SetParent(HeadCameraPoint);
             PlayerCamera.transform.localPosition = Vector3.zero;
             PlayerCamera.transform.localRotation = Quaternion.identity;
@@ -104,7 +94,6 @@ public class PlayerControll : NetworkBehaviour
             Cursor.lockState = CursorLockMode.Locked;
         }
 
-        // TV 및 슬롯 초기화
         if (GameSceneManager.Instance != null && GameSceneManager.Instance.TVPoint.Length > tvnumder)
         {
             my_TV = GameSceneManager.Instance.TVPoint[tvnumder];
@@ -112,7 +101,6 @@ public class PlayerControll : NetworkBehaviour
 
         FindMyItemSlots();
         StartCoroutine(WaitForNickname());
-        //InitializeTargetMap();
     }
 
     private void LateUpdate()
@@ -120,23 +108,14 @@ public class PlayerControll : NetworkBehaviour
         if (neckBone == null) return;
 
         if (HasInputAuthority)
-        {
-            // 로컬 플레이어는 직접 계산
             neckBone.localRotation = Quaternion.Euler(CameraX * -0.5f, 0f, CameraY * -0.5f);
-        }
         else
-        {
-            // 다른 플레이어는 NetworkedHeadRotation 사용
             neckBone.localRotation = Quaternion.Euler(NetworkedCameraX * -0.5f, 0f, NetworkedCameraY * -0.5f);
-        }
     }
 
     private void Update()
     {
         if (!HasInputAuthority || PlayerCamera == null) return;
-
-
-
 
         if (Mouse.current.rightButton.wasPressedThisFrame)
         {
@@ -144,13 +123,10 @@ public class PlayerControll : NetworkBehaviour
             OnTopViewButtonClick();
         }
 
-        // 1. 타겟 결정 모드
         if (currentState == PlayerState.DecidingTarget)
         {
-
             if (selectedSyringe == null) return;
-            GameObject selectedObj = (selectedSyringe as MonoBehaviour).gameObject;
-            // 타겟팅 불필요 → 즉시 실행
+
             if (!selectedSyringe.NeedsTargeting)
             {
                 ConfirmUse(true);
@@ -158,7 +134,6 @@ public class PlayerControll : NetworkBehaviour
                 return;
             }
 
-            // 플레이어 타겟팅 → TV 방식
             if (selectedSyringe.DesiredTarget == TargetType.Player)
             {
                 HandleTVState();
@@ -171,7 +146,6 @@ public class PlayerControll : NetworkBehaviour
                 return;
             }
 
-            // 주사기 타겟팅 → ??방식
             if (selectedSyringe.DesiredTarget == TargetType.Syringe)
             {
                 HandleSyringeTargeting();
@@ -180,7 +154,6 @@ public class PlayerControll : NetworkBehaviour
             }
         }
 
-        // 2. 일반 모드 (아이템 조준 및 하이라이트)
         HandleHighlightUpdate();
     }
 
@@ -191,7 +164,6 @@ public class PlayerControll : NetworkBehaviour
 
         if (isTopView)
         {
-            // TopCameraPoint에 붙이기
             PlayerCamera.transform.SetParent(TopCameraPoint);
             PlayerCamera.transform.localPosition = Vector3.zero;
             PlayerCamera.transform.localRotation = Quaternion.identity;
@@ -200,7 +172,6 @@ public class PlayerControll : NetworkBehaviour
         }
         else
         {
-            // HeadCameraPoint에 다시 붙이기
             PlayerCamera.transform.SetParent(HeadCameraPoint);
             PlayerCamera.transform.localPosition = Vector3.zero;
             PlayerCamera.transform.localRotation = Quaternion.identity;
@@ -208,56 +179,41 @@ public class PlayerControll : NetworkBehaviour
             Cursor.visible = false;
         }
     }
-
     #endregion
 
     #region [TV 클릭 시스템]
-
     private void HandleTVState()
     {
         if (my_TV == null) return;
 
         var anim = my_TV.GetComponent<Animator>();
-        if (anim != null && !anim.GetBool("open")) // TV가 열리지 않았을 때
+        if (anim != null && !anim.GetBool("open"))
         {
             RPC_tvAnimation(true);
         }
-        else    // 마우스로 TV를 가리킬 때
+        else
         {
             Ray ray = PlayerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
             if (Physics.Raycast(ray, out RaycastHit hit, 10f))
             {
-                // TV_Script 구성 요소 확인
                 TV_Script tvScript = hit.collider.GetComponentInParent<TV_Script>();
-
                 if (tvScript != null && tvScript.gameObject == my_TV)
-                {
-                    // 클릭된 콜라이더의 인덱스 확인
                     tvScript.PointRotate(hit.collider);
-                }
             }
         }
-
-
     }
 
     private void HandleTVClick()
     {
-        // 화면 중앙에서 레이를 쏨
         Ray ray = PlayerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         if (Physics.Raycast(ray, out RaycastHit hit, 10f))
         {
-            // TV_Script 구성 요소 확인
             TV_Script tvScript = hit.collider.GetComponentInParent<TV_Script>();
-
             if (tvScript != null && tvScript.gameObject == my_TV)
             {
-                // 클릭된 콜라이더의 인덱스 확인
                 int clickedIdx = tvScript.GetClickedIndex(hit.collider);
                 if (clickedIdx != -1)
-                {
                     ProcessTVIndexSelection(clickedIdx);
-                }
             }
         }
     }
@@ -266,27 +222,21 @@ public class PlayerControll : NetworkBehaviour
     {
         if (selectedSyringe == null) return;
 
-        // 이미지로 제공해주신 Element 순서 기준
         switch (index)
         {
-            case 3: // Element 3: Down (YOU 영역)
+            case 3:
                 ConfirmUse(true);
                 RPC_tvAnimation(false);
                 break;
-
-            case 0: // Element 0: Up
-                Debug.Log("[TV] 위쪽 방향 선택");
+            case 0:
                 ExecuteTargetByDirection(Vector2.up);
                 break;
-
-            case 2: // Element 2: Left
+            case 2:
                 ExecuteTargetByDirection(Vector2.left);
                 break;
-
-            case 1: // Element 1: Right
+            case 1:
                 ExecuteTargetByDirection(Vector2.right);
                 break;
-
             default:
                 Debug.Log($"[TV] 기능이 할당되지 않은 영역: {index}");
                 break;
@@ -295,17 +245,8 @@ public class PlayerControll : NetworkBehaviour
 
     private void ExecuteTargetByDirection(Vector2 dir)
     {
-        Debug.Log($"[TV] 방향 선택: {dir}");
-
-        Debug.Log($"[TV] _targetMap 크기: {_targetMap.Count}");
-        foreach (var kvp in _targetMap)
-        {
-            Debug.Log($"  키: {kvp.Key} → 플레이어: {kvp.Value.NameText.text}");
-        }
-
         if (_targetMap.TryGetValue(dir, out PlayerControll target))
         {
-            Debug.Log($"[TV] 타겟 선택: {target.NameText.text}");
             RPC_tvAnimation(false);
             ConfirmUse(false, target.GetComponent<NetworkObject>());
         }
@@ -342,7 +283,6 @@ public class PlayerControll : NetworkBehaviour
             if (input != Vector2.zero) ExecuteTargetByDirection(input);
         }
     }
-
     #endregion
 
     #region [주사기 타겟팅 시스템]
@@ -356,22 +296,17 @@ public class PlayerControll : NetworkBehaviour
 
             if (Physics.Raycast(ray, out RaycastHit hit, 200f))
             {
-                // SyringeItem만 타겟으로 인정
                 SyringeItem syringe = hit.collider.GetComponentInParent<SyringeItem>();
                 if (syringe != null)
-                {
                     ConfirmUse(false, syringe.GetComponent<NetworkObject>());
-                }
             }
         }
     }
     #endregion
 
     #region [아이템 상호작용 및 하이라이트]
-
     public void CanPlayerTouch(InputAction.CallbackContext context)
     {
-        Debug.Log($"[Touch] NowTurn: {GameTurnManager.Instance.NowTurn}");
         if (PlayerCamera == null) return;
         if (GameTurnManager.Instance == null || GameTurnManager.Instance.NowTurn != GameTurn.Player) return;
         if (!context.started || !playerTurn) return;
@@ -389,13 +324,11 @@ public class PlayerControll : NetworkBehaviour
             {
                 ItemBase item = hitInfo.collider.GetComponentInParent<ItemBase>();
                 if (item != null && item.OwnerRef != default && item.OwnerRef != Runner.LocalPlayer)
-                {
                     return;
-                }
 
                 selectedSyringe = interactable;
-                //InitializeTargetMap();
                 currentState = PlayerState.DecidingTarget;
+
                 GameObject selectedObj = (selectedSyringe as MonoBehaviour)?.gameObject;
                 if (selectedObj != null)
                 {
@@ -403,9 +336,6 @@ public class PlayerControll : NetworkBehaviour
                     selectedDefaultLayer = selectedObj.layer;
                     SetLayerRecursively(selectedObj, OUTLINE_LAYER);
                 }
-                // if (_armController != null)
-                //     _armController.MoveToItem(hitInfo.transform);
-                // Debug.Log($"[Click] {interactable.gameObject.name} 선택됨!");
             }
         }
     }
@@ -422,7 +352,6 @@ public class PlayerControll : NetworkBehaviour
             if (reactionObj != null)
             {
                 GameObject currentObj = (reactionObj as MonoBehaviour).gameObject;
-
                 if (currentObj == selectedHighlightedObject) return;
 
                 if (lastHighlightedObject != currentObj)
@@ -435,19 +364,14 @@ public class PlayerControll : NetworkBehaviour
                     SyringeItem syringe = hitInfo.collider.GetComponentInParent<SyringeItem>();
                     Color outlineColor = Color.white;
                     if (syringe != null && syringe.IsScanned)
-                    {
                         outlineColor = syringe.MyType == SyringeType.Toxin ? Color.red : Color.green;
-                    }
 
                     if (wideOutlineSettings.Outlines != null && wideOutlineSettings.Outlines.Count > 0)
-                    {
                         foreach (var outline in wideOutlineSettings.Outlines)
                             outline.color = outlineColor;
-                    }
 
                     wideOutlineSettings.Changed();
 
-                    // ↓ 추가: ItemBase가 있으면 이름/설명 UI 갱신
                     ItemBase itemBase = hitInfo.collider.GetComponentInParent<ItemBase>();
                     ShowItemInfo(itemBase);
                 }
@@ -455,16 +379,15 @@ public class PlayerControll : NetworkBehaviour
             else
             {
                 ResetHighlight();
-                ShowItemInfo(null); // ↓ 추가: 아무것도 없으면 UI 숨김
+                ShowItemInfo(null);
             }
         }
         else
         {
             ResetHighlight();
-            ShowItemInfo(null); // ↓ 추가: 레이 안 닿으면 UI 숨김
+            ShowItemInfo(null);
         }
     }
-
 
     private void ShowItemInfo(ItemBase itemBase)
     {
@@ -478,7 +401,6 @@ public class PlayerControll : NetworkBehaviour
             {
                 var nameTmp = itemNameUI.GetComponentInChildren<TMP_Text>();
                 var expTmp = itemExplanationUI?.GetComponentInChildren<TMP_Text>();
-
                 if (nameTmp != null) nameTmp.text = itemBase.ItemName;
                 if (expTmp != null) expTmp.text = itemBase.Explanation;
             }
@@ -498,17 +420,16 @@ public class PlayerControll : NetworkBehaviour
     private void SetLayerRecursively(GameObject obj, int newLayer)
     {
         obj.layer = newLayer;
-        foreach (Transform child in obj.transform) SetLayerRecursively(child.gameObject, newLayer);
+        foreach (Transform child in obj.transform)
+            SetLayerRecursively(child.gameObject, newLayer);
     }
-
     #endregion
 
     #region [네트워크 및 유틸리티]
-
     public override void FixedUpdateNetwork()
     {
         if (!HasInputAuthority) return;
-        if (isTopView) return; // 탑뷰일 때 시야 이동 막기
+        if (isTopView) return;
         if (SpectatorManager.Instance != null && SpectatorManager.Instance.IsSpectating) return;
 
         var mouse = Mouse.current;
@@ -521,8 +442,6 @@ public class PlayerControll : NetworkBehaviour
         HeadCameraPoint.localRotation = Quaternion.Euler(CameraY, CameraX, 0f);
 
         RPC_SyncCameraRotation(CameraX, CameraY);
-
-
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
@@ -532,21 +451,50 @@ public class PlayerControll : NetworkBehaviour
         NetworkedCameraY = camY;
     }
 
+    // ★ 핵심 수정: ConfirmUse → RPC로 모든 클라이언트에 전파
     private void ConfirmUse(bool isSelf, NetworkObject targetObj = null)
     {
-        if (selectedSyringe != null)
-        {
+        if (selectedSyringe == null) return;
 
-            if (selectedHighlightedObject != null)
-            {
-                SetLayerRecursively(selectedHighlightedObject, selectedDefaultLayer);
-                selectedHighlightedObject = null;
-            }
-            NetworkId targetId = isSelf ? Object.Id : (targetObj != null ? targetObj.Id : default);
-            selectedSyringe.OnEvent(isSelf, targetId);
-            selectedSyringe = null;
-            currentState = PlayerState.Idle;
+        if (selectedHighlightedObject != null)
+        {
+            SetLayerRecursively(selectedHighlightedObject, selectedDefaultLayer);
+            selectedHighlightedObject = null;
         }
+
+        NetworkId targetId = isSelf ? Object.Id : (targetObj != null ? targetObj.Id : default);
+        NetworkObject itemNetObj = (selectedSyringe as MonoBehaviour).GetComponent<NetworkObject>();
+
+        if (itemNetObj == null)
+        {
+            Debug.LogError("아이템에 NetworkObject가 없음!");
+            return;
+        }
+
+        selectedSyringe = null;
+        currentState = PlayerState.Idle;
+
+        // 모든 클라이언트에서 OnEvent 실행
+        RPC_ConfirmUse(itemNetObj.Id, isSelf, targetId);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    private void RPC_ConfirmUse(NetworkId itemId, bool isSelf, NetworkId targetId)
+    {
+        if (!Runner.TryFindObject(itemId, out var itemObj))
+        {
+            Debug.LogError($"아이템을 찾을 수 없음: {itemId}");
+            return;
+        }
+
+        ReactionObject reaction = itemObj.GetComponent<ReactionObject>();
+        if (reaction == null)
+        {
+            Debug.LogError("ReactionObject 컴포넌트 없음!");
+            return;
+        }
+
+        reaction.OnEvent(isSelf, targetId);
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
@@ -563,7 +511,6 @@ public class PlayerControll : NetworkBehaviour
 
     public void InitializeTargetMap()
     {
-        // 코루틴으로 실행하여 인원이 다 찰 때까지 재시도합니다.
         StartCoroutine(RetryInitializeTargetMap());
     }
 
@@ -577,8 +524,8 @@ public class PlayerControll : NetworkBehaviour
         {
             _targetMap.Clear();
             var otherPlayers = FindObjectsByType<PlayerControll>(FindObjectsSortMode.None)
-                                .Where(p => p != this && p.Object != null && p.Object.IsValid)
-                                .ToList();
+                .Where(p => p != this && p.Object != null && p.Object.IsValid)
+                .ToList();
 
             if (otherPlayers.Count >= expectedCount)
             {
@@ -598,20 +545,14 @@ public class PlayerControll : NetworkBehaviour
 
                 if (Mathf.Abs(frontPlayer.angle) < 30f)
                 {
-                    // 앞에 플레이어가 있는 경우 → up/left/right 배정
                     _targetMap[Vector2.up] = frontPlayer.target;
                     foreach (var p in sorted.Where(x => x.target != frontPlayer.target))
-                    {
                         _targetMap[p.angle < 0 ? Vector2.left : Vector2.right] = p.target;
-                    }
                 }
                 else
                 {
-                    // 앞에 플레이어가 없는 경우 → left/right만 배정
                     foreach (var p in sorted)
-                    {
                         _targetMap[p.angle < 0 ? Vector2.left : Vector2.right] = p.target;
-                    }
                 }
 
                 Debug.Log($"[TargetMap] 맵 초기화 완료! 타겟 수: {_targetMap.Count}");
@@ -619,7 +560,6 @@ public class PlayerControll : NetworkBehaviour
             }
 
             retryCount++;
-            Debug.Log($"[TargetMap] 플레이어를 찾는 중... ({retryCount}/{maxRetries})");
             yield return new WaitForSeconds(0.2f);
         }
 
@@ -649,7 +589,8 @@ public class PlayerControll : NetworkBehaviour
         if (Runner.TryFindObject(itemID, out var itemNO))
         {
             if (!heldItems.Contains(itemNO.gameObject)) heldItems.Add(itemNO.gameObject);
-            if (slotIndex < mySlot.Count) StartCoroutine(MoveItemToSlot(itemNO.gameObject, mySlot[slotIndex]));
+            if (slotIndex < mySlot.Count)
+                StartCoroutine(MoveItemToSlot(itemNO.gameObject, mySlot[slotIndex]));
         }
     }
 
@@ -679,7 +620,8 @@ public class PlayerControll : NetworkBehaviour
     private void FixedUpdate()
     {
         if (HasInputAuthority || NamePoint == null || Camera.main == null) return;
-        NamePoint.LookAt(NamePoint.position + Camera.main.transform.rotation * Vector3.forward, Camera.main.transform.rotation * Vector3.up);
+        NamePoint.LookAt(NamePoint.position + Camera.main.transform.rotation * Vector3.forward,
+            Camera.main.transform.rotation * Vector3.up);
     }
     #endregion
 }

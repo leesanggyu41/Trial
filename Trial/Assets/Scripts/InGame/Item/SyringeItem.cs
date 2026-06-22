@@ -16,7 +16,7 @@ public class SyringeItem : ItemBase, ReactionObject
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
 
-        OnUse();
+        //OnUse();
         RPC_UseSyringe(isSelfTarget, targetId);
         GrabAndDespawn();
     }

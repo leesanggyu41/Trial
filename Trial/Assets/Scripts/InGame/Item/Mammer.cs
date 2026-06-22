@@ -9,9 +9,7 @@ public class Mammer : ItemBase, ReactionObject
 
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
-        OnUse();
-        GrabAndDespawn();
-        RPC_UseMammer(targetId);
+       BaseOnEvent(() => RPC_UseMammer(targetId));
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]

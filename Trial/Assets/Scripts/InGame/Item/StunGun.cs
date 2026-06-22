@@ -9,9 +9,7 @@ public class StunGun : ItemBase, ReactionObject
 
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
-        OnUse();
-        GrabAndDespawn();   
-        RPC_UseStunGun(targetId);
+       BaseOnEvent(() => RPC_UseStunGun(targetId));
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
