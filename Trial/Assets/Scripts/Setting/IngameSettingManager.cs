@@ -13,13 +13,13 @@ public class IngameSettingManager : MonoBehaviour
 
     private Volume postProcessVolume;
 
-     void Awake()
+    void Awake()
     {
-        if (Instance == null) 
-        { 
-            Instance = this; DontDestroyOnLoad(gameObject); 
+        if (Instance == null)
+        {
+            Instance = this; DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += OnSceneLoaded; // 씬이 로드될 때마다 OnSceneLoaded 호출하도록 등록
-        
+
         }
         else { Destroy(gameObject); }
     }
@@ -32,29 +32,31 @@ public class IngameSettingManager : MonoBehaviour
             postProcessVolume.profile.TryGet(out liftGammaGain);
             postProcessVolume.profile.TryGet(out motionBlur);
         }
-        if(SceneManager.GetActiveScene().name == "GameScene")
+        if (SceneManager.GetActiveScene().name == "GameScene")
         {
             Debug.Log("GameScene loaded, finding PlayerController...");
             Invoke(nameof(FindPlayerController), 0.5f); // 약간의 지연 후에 PlayerController 찾기
         }
 
-        
+
 
         ApplySettings();
     }
 
     void FindPlayerController()
     {
-        playerController = FindFirstObjectByType<PlayerControll>();
-        if (playerController != null)
+
+        playerController = PlayerControll.Local;
+
+        if (playerController == null)
         {
-            Debug.Log("PlayerController found!");
-            ApplySettings();
+            // Local이 아직 없으면 재시도
+            Invoke(nameof(FindPlayerController), 0.5f);
+            return;
         }
-        else
-        {
-            Debug.LogWarning("PlayerController not found in the scene.");
-        }
+
+        Debug.Log("PlayerController found!");
+        ApplySettings();
     }
 
     public void ApplySettings()
@@ -70,7 +72,7 @@ public class IngameSettingManager : MonoBehaviour
 
             motionBlur.active = SettingManager.Instance.currentSettings.motionBlur > 0.01f;
         }
-            
+
 
         if (playerController != null)
             playerController.mouseSensitivity = SettingManager.Instance.currentSettings.mouseSensitivity;

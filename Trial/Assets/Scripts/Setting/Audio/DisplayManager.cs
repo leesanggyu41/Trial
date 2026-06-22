@@ -2,9 +2,9 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 
-public class VideoManager : MonoBehaviour
+public class DisplayManager : MonoBehaviour
 {
-    public static VideoManager Instance;
+    public static DisplayManager Instance;
 
     public TMP_Dropdown resDropdown;
     private List<Resolution> filteredResolutions; // 필터링된 실제 해상도 데이터
@@ -116,4 +116,37 @@ public class VideoManager : MonoBehaviour
         
         Debug.Log($"화면 모드 변경: {mode} (Index: {index})");
     }
+
+    public void SetupDropdown(TMP_Dropdown targetDropdown)
+{
+    if (targetDropdown == null) return;
+
+    // 기존 옵션 삭제
+    targetDropdown.ClearOptions();
+
+    // 1. 이미 Awake에서 세팅된 filteredResolutions가 없다면 새로 만들어줍니다.
+    if (filteredResolutions == null || filteredResolutions.Count == 0)
+    {
+        InitResolutionDropdown(); // 내부 리스트 빌드용
+    }
+
+    // 2. 텍스트 옵션 목록 생성
+    List<string> options = new List<string>();
+    for (int i = 0; i < filteredResolutions.Count; i++)
+    {
+        int refreshRate = Mathf.RoundToInt((float)filteredResolutions[i].refreshRateRatio.value);
+        string optionText = filteredResolutions[i].width + " x " + filteredResolutions[i].height + " @ " + refreshRate + "Hz";
+        options.Add(optionText);
+    }
+
+    // 3. 대상 드롭다운에 적용
+    targetDropdown.AddOptions(options);
+
+    // 4. 현재 저장된 설정값 인덱스로 드롭다운 선택 변경
+    if (SettingManager.Instance != null)
+    {
+        targetDropdown.value = SettingManager.Instance.currentSettings.resolutionIndex;
+    }
+    targetDropdown.RefreshShownValue();
+}
 }

@@ -1,5 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Trial/Assets/Scenes/GameScene 2.unity.meta
 guid: 22fa7121095e29044a77bec511db5a84
+========
+guid: bb0c2875fc16b024d8e31fc2f92f04b2
+folderAsset: yes
+>>>>>>>> 635d9f021c9a67e75b46511b908c652b6a2356b5:Trial/Assets/Crusher.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
