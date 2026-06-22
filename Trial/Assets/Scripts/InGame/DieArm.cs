@@ -11,6 +11,15 @@ public class DieArm : MonoBehaviour
     [SerializeField] private Transform playerTransform;
     [SerializeField] private PlayerGameData playerGameData;
 
+    public AudioSource audio;
+    public AudioClip move;
+
+    public AudioClip crunch;
+    public AudioClip dieSound;
+
+
+
+
 
 
     private void Start()
@@ -21,7 +30,17 @@ public class DieArm : MonoBehaviour
     public void Die()
     {
         animator.SetTrigger("Die");
+        audio.PlayOneShot(move);
+    }
 
+    public void cer()
+    {
+        audio.PlayOneShot(crunch);
+    }
+
+    public void DieSound()
+    {
+        audio.PlayOneShot(dieSound);
     }
 
     public void chPlayer()
