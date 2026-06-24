@@ -13,6 +13,7 @@ public class GameTurnManager : NetworkBehaviour
 
     [Header("Components & UI")]
     public Animator syringeboxAnim;
+    public Animator tableAnim;
     public SyringeTurn Sy_T;
     public ItemTurn It_T;
     public PlayerTurn Pt_T;
@@ -54,7 +55,9 @@ public class GameTurnManager : NetworkBehaviour
 
             case GameTurn.Item:
                 // 아이템 보급은 서버만 연산합니다.
-                if (Runner.IsServer && It_T != null) It_T.ItemSpawner_Rpc();
+                StartCoroutine(StayItemTime());
+               // if (Runner.IsServer && It_T != null) It_T.ItemSpawner_Rpc();
+               // if (tableAnim != null) tableAnim.SetTrigger("open");
                 break;
 
             case GameTurn.Player:
@@ -67,6 +70,13 @@ public class GameTurnManager : NetworkBehaviour
                 }
                 break;
         }
+    }
+
+    IEnumerator StayItemTime()
+    {
+        if (tableAnim != null) tableAnim.SetTrigger("open");
+        yield return new WaitForSeconds(1.5f);
+         if (Runner.IsServer && It_T != null) It_T.ItemSpawner_Rpc();
     }
 
     private IEnumerator WaitAndSpawnSyringe(float waitTime)
