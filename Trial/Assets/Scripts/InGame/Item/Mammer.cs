@@ -51,18 +51,21 @@ public class Mammer : ItemBase, ReactionObject
 
     private IEnumerator HammerSequence(Vector3 targetPos, NetworkId syringeId)
     {
-        // 1. 망치가 주사기 위치로 이동
+        // NetworkTransform 비활성화 (있으면)
+        var netTransform = GetComponent<NetworkTransform>();
+        if (netTransform != null) netTransform.enabled = false;
+
         yield return transform.DOMove(targetPos, moveSpeed)
             .SetEase(Ease.InOutSine)
             .WaitForCompletion();
 
-        // 2. 망치 애니메이션 실행
         if (animator != null)
             animator.SetTrigger("Hit");
 
-        // 3. 애니메이션 중간에 주사기 삭제 (서버만)
-        // 애니메이션 이벤트로 OnHitComplete() 호출하면 더 정확함
-        yield return new WaitForSeconds(0.3f); // 애니메이션 길이에 맞게 조절
+        yield return new WaitForSeconds(0.8f);
+
+        // NetworkTransform 다시 활성화
+        if (netTransform != null) netTransform.enabled = true;
 
         if (Runner.IsServer)
         {
@@ -73,11 +76,8 @@ public class Mammer : ItemBase, ReactionObject
                     SyringeTurn.ins.OnSyringeUsed(syringeId, syringeScript.MyType);
                 Runner.Despawn(syringeObj);
             }
-        }
-
-        // 4. 로봇팔이 망치 가져가기
-        if (Runner.IsServer)
             GrabAndDespawn();
+        }
     }
 
     // 애니메이션 이벤트에서 호출 (선택사항)

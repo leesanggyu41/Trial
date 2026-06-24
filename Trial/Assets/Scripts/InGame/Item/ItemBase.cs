@@ -139,7 +139,7 @@ private void ArmGrabAndDespawn()
         return;
     }
 
-    if (Move == null) { Debug.LogError("Move 없음!"); return; }
+    if (Move == null) {  return; }
 
     // 모든 클라이언트에서 로컬로 targetPoint 설정
     Move.targetPoint = GameSceneManager.Instance.playerItemPositions[playerIndex];
