@@ -15,8 +15,7 @@ public class SyringeItem : ItemBase, ReactionObject
     // 인터페이스 구현: 클릭 시 실행
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
-
-        //OnUse();
+        OnUse();
         RPC_UseSyringe(isSelfTarget, targetId);
         GrabAndDespawn();
     }

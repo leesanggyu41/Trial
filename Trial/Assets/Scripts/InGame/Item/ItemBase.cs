@@ -23,7 +23,7 @@ public class ItemBase : NetworkBehaviour
         }
     }
 
-    private GameTurnManager TurnManager
+    public GameTurnManager TurnManager
     {
         get
         {

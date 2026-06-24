@@ -10,8 +10,10 @@ public class Destroyer : ItemBase, ReactionObject
 
     [Header("연동 컴포넌트")]
     public AudioChange audioChange;
-    [SerializeField] private Animator animator; 
-    
+    [SerializeField] private Animator animator;
+
+    private NetworkObject _targetItem;
+
     [Header("연출 설정")]
     [SerializeField] private Transform itemHolder; // 파쇄기 집게 사이 빈 공간 위치
     [SerializeField] private float delayBeforeDespawn = 0.5f; // Armature_Crach 애니메이션 중 아이템이 파괴되는 타이밍 (초)
@@ -51,6 +53,12 @@ public class Destroyer : ItemBase, ReactionObject
         }
     }
 
+    private void LateUpdate()
+    {
+        if (_targetItem != null && itemHolder != null)
+            _targetItem.transform.position = itemHolder.position;
+    }
+
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_PlayDestroySequence(NetworkId targetItemId)
     {
@@ -59,13 +67,13 @@ public class Destroyer : ItemBase, ReactionObject
 
     private IEnumerator DestroySequenceRoutine(NetworkId targetItemId)
     {
-        // 1. 맵에서 해당 아이템 오브젝트 탐색 및 집게 위치로 강제 이동
-        if (Runner.TryFindObject(targetItemId, out var itemObj))
+        //미리 변수 선언
+        NetworkObject itemObj = null;
+
+        if (Runner.TryFindObject(targetItemId, out itemObj))
         {
             if (itemObj.TryGetComponent<Rigidbody>(out var rb))
-            {
-                rb.isKinematic = true; // 물리 엔진 잠시 끄기
-            }
+                rb.isKinematic = true;
 
             if (itemHolder != null)
             {
@@ -74,29 +82,20 @@ public class Destroyer : ItemBase, ReactionObject
                 itemObj.transform.localRotation = Quaternion.identity;
             }
         }
-
-        // 2. 파쇄 시작 애니메이션 실행 및 소리 재생
-        if (animator != null) 
+        if (Runner.TryFindObject(targetItemId, out itemObj))
         {
-            animator.SetTrigger("Crash"); // 애니메이터의 'Crash' 트리거 작동
-        }
-        
-        if (audioChange != null) 
-        {
-            audioChange.Open(); // 작동 시작 사운드
+            _targetItem = itemObj; // LateUpdate에서 위치 강제 설정
         }
 
-        // 3. 집게가 마구 씹히는(Armature_Crach) 도중, 아이템이 파괴될 타이밍까지 대기
+        if (animator != null) animator.SetTrigger("Crash");
+        if (audioChange != null) audioChange.Open();
+
         yield return new WaitForSeconds(delayBeforeDespawn);
 
-        // 4. 파티클 펑! 터지고 와작하는 Crash 사운드 재생
-        if (audioChange != null) 
-        {
-            audioChange.Crash(); 
-        }
+        if (audioChange != null) audioChange.Crash();
 
-        // 5. 서버에서 최종적으로 아이템 Despawn (화면에서 제거)
-        if (Runner.IsServer && itemObj != null)
+        // itemObj가 유효한지 체크 후 Despawn
+        if (Runner.IsServer && itemObj != null && itemObj.IsValid)
         {
             Runner.Despawn(itemObj);
             Debug.Log("[파쇄장치] 아이템 파쇄 및 Despawn 완료");

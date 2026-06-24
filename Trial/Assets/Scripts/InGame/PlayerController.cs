@@ -478,7 +478,7 @@ public class PlayerControll : NetworkBehaviour
         RPC_ConfirmUse(itemNetObj.Id, isSelf, targetId);
     }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     private void RPC_ConfirmUse(NetworkId itemId, bool isSelf, NetworkId targetId)
     {
         if (!Runner.TryFindObject(itemId, out var itemObj))

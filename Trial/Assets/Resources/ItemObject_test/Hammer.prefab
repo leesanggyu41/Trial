@@ -9,13 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8966680176595571649}
-  - component: {fileID: 4536076862810839716}
   - component: {fileID: 6726603654739507219}
   - component: {fileID: 3192996505898500656}
   - component: {fileID: 3998842512312487880}
   - component: {fileID: 5902844968109568886}
   - component: {fileID: 1302641416691586930}
-  - component: {fileID: -3067095108242830186}
+  - component: {fileID: 2456278424819589936}
   m_Layer: 0
   m_Name: Hammer
   m_TagString: Untagged
@@ -39,27 +38,6 @@ Transform:
   - {fileID: 8760282767762878691}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &4536076862810839716
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6301567081564861904}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.4, y: 0.07, z: 0.23}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6726603654739507219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,7 +58,6 @@ MonoBehaviour:
   - {fileID: 3192996505898500656}
   - {fileID: 5902844968109568886}
   - {fileID: 1302641416691586930}
-  - {fileID: -3067095108242830186}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &3192996505898500656
 MonoBehaviour:
@@ -148,21 +125,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Mammer
   ItemName: "\uB9DD\uCE58"
   Explanation: "\uC8FC\uC0AC\uAE30 \uD558\uB098\uB97C \uD30C\uAD34\uD55C\uB2E4."
---- !u!114 &-3067095108242830186
-MonoBehaviour:
+  animator: {fileID: 2456278424819589936}
+  moveSpeed: 1
+  yOffset: 0.1
+--- !u!95 &2456278424819589936
+Animator:
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6301567081564861904}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dded09a74d857b642a040d2d130eaf65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemMoveAnimation
-  targetPoint: {fileID: 0}
-  targetEulerRotation: {x: 0, y: 0, z: -90}
-  moveDuration: 0.5
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b51d6f26f124e804aaf87a5d69a9dbdc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &720598585816161090
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -197,23 +184,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8327949953091759009, guid: f36816068226bd5489228e7144a07cdc, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8327949953091759009, guid: f36816068226bd5489228e7144a07cdc, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8327949953091759009, guid: f36816068226bd5489228e7144a07cdc, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8327949953091759009, guid: f36816068226bd5489228e7144a07cdc, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.7071068
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8327949953091759009, guid: f36816068226bd5489228e7144a07cdc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 8327949953091759009, guid: f36816068226bd5489228e7144a07cdc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -234,8 +221,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8707994616524419355, guid: f36816068226bd5489228e7144a07cdc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8688525938305486386}
   m_SourcePrefab: {fileID: 100100000, guid: f36816068226bd5489228e7144a07cdc, type: 3}
+--- !u!1 &8275670460340578905 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8707994616524419355, guid: f36816068226bd5489228e7144a07cdc, type: 3}
+  m_PrefabInstance: {fileID: 720598585816161090}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &8688525938305486386
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8275670460340578905}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.14073181, y: 0.99990845, z: 0.58703613}
+  m_Center: {x: -0.000015258789, y: -0.000015258789, z: -0.000030517578}
 --- !u!4 &8760282767762878691 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8327949953091759009, guid: f36816068226bd5489228e7144a07cdc, type: 3}
