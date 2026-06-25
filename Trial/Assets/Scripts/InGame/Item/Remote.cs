@@ -7,6 +7,9 @@ public class Remote : ItemBase, ReactionObject
     public bool NeedsTargeting => false;
 
     public TargetType DesiredTarget => TargetType.None;
+
+    public AudioSource audio;
+    public AudioClip remoteSound;
     
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
@@ -24,8 +27,16 @@ public class Remote : ItemBase, ReactionObject
         {
             pt.ToggleReverse();
         }
-
+        Invoke("PlayRemoteSound", 0.4f);
         // 사용한 리모컨 오브젝트 삭제
         //Runner.Despawn(Object);
+    }
+
+    public void PlayRemoteSound()
+    {
+        if (audio != null && remoteSound != null)
+        {
+            audio.PlayOneShot(remoteSound);
+        }
     }
 }
