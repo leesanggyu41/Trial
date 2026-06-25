@@ -17,6 +17,8 @@ public class DieArm : MonoBehaviour
     public AudioClip crunch;
     public AudioClip dieSound;
 
+    private bool _isDead = false;
+
 
 
 
@@ -60,9 +62,10 @@ public class DieArm : MonoBehaviour
         if (playerGameData == null) return;
         if (playerGameData.Object == null || !playerGameData.Object.IsValid) return;
         if (!playerGameData.Object.IsInSimulation) return;
-        
-        if (playerGameData != null && playerGameData.IsDead)
+
+        if (!_isDead && playerGameData.IsDead)
         {
+            _isDead = true;
             Die();
         }
     }
