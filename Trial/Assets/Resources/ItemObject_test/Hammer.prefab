@@ -128,6 +128,7 @@ MonoBehaviour:
   animator: {fileID: 2456278424819589936}
   moveSpeed: 1
   yOffset: 0.1
+  hammerEffectPrefab: {fileID: 1154416473694755109, guid: e31272e25fdfced4fa8411a509259ebb, type: 3}
 --- !u!95 &2456278424819589936
 Animator:
   serializedVersion: 7

@@ -11,8 +11,11 @@ public class Mammer : ItemBase, ReactionObject
     [SerializeField] private Animator animator;
     [SerializeField] private float moveSpeed = 1f;
     [SerializeField] private float yOffset = 0.1f;
+    [SerializeField] private GameObject hammerEffectPrefab;
 
     private NetworkId _targetSyringeId;
+
+    private bool _hitComplete = false;
 
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
@@ -51,7 +54,6 @@ public class Mammer : ItemBase, ReactionObject
 
     private IEnumerator HammerSequence(Vector3 targetPos, NetworkId syringeId)
     {
-        // NetworkTransform 비활성화 (있으면)
         var netTransform = GetComponent<NetworkTransform>();
         if (netTransform != null) netTransform.enabled = false;
 
@@ -62,9 +64,8 @@ public class Mammer : ItemBase, ReactionObject
         if (animator != null)
             animator.SetTrigger("Hit");
 
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitUntil(() => _hitComplete);
 
-        // NetworkTransform 다시 활성화
         if (netTransform != null) netTransform.enabled = true;
 
         if (Runner.IsServer)
@@ -74,10 +75,20 @@ public class Mammer : ItemBase, ReactionObject
                 var syringeScript = syringeObj.GetComponent<SyringeItem>();
                 if (syringeScript != null)
                     SyringeTurn.ins.OnSyringeUsed(syringeId, syringeScript.MyType);
+
+                Vector3 effectPos = syringeObj.transform.position;
+                var spawnedObj = Runner.Spawn(hammerEffectPrefab, effectPos, Quaternion.Euler(-90, 0, 0));
+                Debug.Log($"[이펙트] 스폰됨: {spawnedObj}");
+
                 Runner.Despawn(syringeObj);
             }
             GrabAndDespawn();
         }
+    }
+
+    public void OnHitPoint()
+    {
+        _hitComplete = true;
     }
 
     // 애니메이션 이벤트에서 호출 (선택사항)
@@ -90,7 +101,11 @@ public class Mammer : ItemBase, ReactionObject
                 var syringeScript = syringeObj.GetComponent<SyringeItem>();
                 if (syringeScript != null)
                     SyringeTurn.ins.OnSyringeUsed(_targetSyringeId, syringeScript.MyType);
+                Vector3 effectPos = syringeObj.transform.position;
+                var spawnedObj = Runner.Spawn(hammerEffectPrefab, syringeObj.transform.position, Quaternion.identity);
+                Debug.Log($"[이펙트] 스폰됨: {spawnedObj}");
                 Runner.Despawn(syringeObj);
+
             }
             GrabAndDespawn();
         }
