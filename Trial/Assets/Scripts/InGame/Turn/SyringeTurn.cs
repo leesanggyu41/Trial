@@ -21,8 +21,10 @@ public class SyringeTurn : NetworkBehaviour
     [Networked, Capacity(100)]
     public NetworkLinkedList<SyringeType> St { get; }
 
-    public TextMeshPro[] Toxin_Text;
-    public TextMeshPro[] NS_Text;
+    //public TextMeshPro[] Toxin_Text;
+    //public TextMeshPro[] NS_Text;
+
+    private Screen_MUI Syringe_Screen;
 
     public void Awake()
     {
@@ -33,6 +35,7 @@ public class SyringeTurn : NetworkBehaviour
     public void Start()
     {
         GTM = FindFirstObjectByType<GameTurnManager>();
+        Syringe_Screen = SyringeBoxAnim.gameObject.GetComponent<Screen_MUI>();
     }
 
 
@@ -106,11 +109,13 @@ public class SyringeTurn : NetworkBehaviour
             if (St.Get(i) == SyringeType.NS) ns++;
         }
 
-        for (int i = 0; i < Toxin_Text.Length; i++)
-        {
-            Toxin_Text[i].text = toxin.ToString();
-            NS_Text[i].text = ns.ToString();
-        }
+        Syringe_Screen.UpdateText(toxin, ns);
+        // for (int i = 0; i < Toxin_Text.Length; i++)
+        // {
+        //     Syringe_Screen.UpdateText(toxin, ns);
+        //     Toxin_Text[i].text = toxin.ToString();
+        //     NS_Text[i].text = ns.ToString();
+        // }
 
         Invoke("UpBox", 3f);
     }
@@ -125,8 +130,9 @@ public class SyringeTurn : NetworkBehaviour
     public void UpBox()
     {
         SyringeBoxAnim.SetTrigger("Up");
-        Toxin_Text[0].text = "";
-        NS_Text[0].text = "";
+        //Toxin_Text[0].text = "";
+        //NS_Text[0].text = "";
+        Syringe_Screen.NullChick();
         GTM.GamesTurnChange();
     }
 
