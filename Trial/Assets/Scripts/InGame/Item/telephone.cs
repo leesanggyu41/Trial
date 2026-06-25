@@ -1,5 +1,6 @@
 using UnityEngine;
 using Fusion;
+using System.Collections;
 
 public class telephone : ItemBase, ReactionObject
 {
@@ -7,20 +8,33 @@ public class telephone : ItemBase, ReactionObject
 
     public TargetType DesiredTarget => TargetType.None;
 
+    public AudioSource audio;
+    public AudioClip telephoneSound;
+
 
     public void OnEvent(bool myself, NetworkId targetId)
     {
-        BaseOnEvent(() =>  RPC_UseTelephone(Object.InputAuthority, targetId));
-       
+        BaseOnEvent(() => RPC_PlaySoundAndUse(Object.InputAuthority, targetId));
     }
 
-    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
-    public void RPC_UseTelephone(PlayerRef player, NetworkId targetId)
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlaySoundAndUse(PlayerRef player, NetworkId targetId)
     {
-        if (!Runner.IsServer) return;
+        //모든 클라이언트에서 사운드 재생
+        if (audio != null)
+            audio.PlayOneShot(telephoneSound);
 
-        SyringeTurn.ins.AddSyringes(3); // 예시로 2개의 주사기 생성
+        //서버만 사운드 길이만큼 기다렸다가 처리
+        if (Runner.IsServer)
+            StartCoroutine(WaitAndUse(player, targetId));
+    }
 
-        //Runner.Despawn(Object); // 성공 시에만 아이템 삭제
+    private IEnumerator WaitAndUse(PlayerRef player, NetworkId targetId)
+    {
+        // 사운드 길이만큼 대기
+        float soundLength = telephoneSound != null ? telephoneSound.length : 0f;
+        yield return new WaitForSeconds(soundLength);
+
+        SyringeTurn.ins.AddSyringes(3);
     }
 }
