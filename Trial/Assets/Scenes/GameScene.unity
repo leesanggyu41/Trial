@@ -8113,7 +8113,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemTurn
   itemPrefeb:
-  - {fileID: 6301567081564861904, guid: 09dd94f155c7d9c4b811e46e8ffd8c01, type: 3}
+  - {fileID: 4052712063053005659, guid: e65b0213a2881964e8d1aedb157b73c8, type: 3}
   PI:
   - spawnPoint: {fileID: 1591100168}
     sapwnitemNum: 2
