@@ -13,6 +13,9 @@ public class Mammer : ItemBase, ReactionObject
     [SerializeField] private float yOffset = 0.1f;
     [SerializeField] private GameObject hammerEffectPrefab;
 
+    public AudioSource audio;
+    public AudioClip hammerSound;
+
     private NetworkId _targetSyringeId;
 
     private bool _hitComplete = false;
@@ -79,7 +82,7 @@ public class Mammer : ItemBase, ReactionObject
                 Vector3 effectPos = syringeObj.transform.position;
                 var spawnedObj = Runner.Spawn(hammerEffectPrefab, effectPos, Quaternion.Euler(-90, 0, 0));
                 Debug.Log($"[이펙트] 스폰됨: {spawnedObj}");
-
+                audio.PlayOneShot(hammerSound);
                 Runner.Despawn(syringeObj);
             }
             GrabAndDespawn();
