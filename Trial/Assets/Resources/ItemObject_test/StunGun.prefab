@@ -153,6 +153,8 @@ MonoBehaviour:
   ItemName: "\uC804\uAE30\uCDA9\uACA9\uAE30"
   Explanation: "\uC0C1\uB300\uBC29\uC744 \uAC10\uC804\uC2DC\uCF1C 1\uD134\uB3D9\uC548
     \uD589\uB3D9\uD560 \uC218 \uC5C6\uAC8C \uD55C\uB2E4."
+  stunSound: {fileID: 8300000, guid: c3d52bac05944c6438e84ee82d7e8590, type: 3}
+  audioSource: {fileID: 7774326611960189849}
 --- !u!65 &4938221937649687278
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -237,7 +239,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: -9202821957108379376, guid: 31749ac2f25212349acce72d0315b3ec, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

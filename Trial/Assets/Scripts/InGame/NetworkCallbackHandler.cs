@@ -4,6 +4,7 @@ using Fusion;
 using Fusion.Sockets;
 using System.Collections.Generic;
 using System;
+using System.Collections;
 
 public class NetworkCallbackHandler : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -42,10 +43,14 @@ public class NetworkCallbackHandler : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
-{
-    if (PlayerPrefs.HasKey("WinnerName")) return;
-    SceneManager.LoadScene("LobbyScene");
-}
+    {
+        // Host Migration 중이면 무시
+        if (shutdownReason == ShutdownReason.HostMigration) return;
+
+        if (PlayerPrefs.HasKey("WinnerName")) return;
+
+        SceneManager.LoadScene("LobbyScene");
+    }
 
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
     {
@@ -69,7 +74,24 @@ public class NetworkCallbackHandler : MonoBehaviour, INetworkRunnerCallbacks
     public void OnUserSimulationMessage(NetworkRunner runner, SimulationMessagePtr message) { }
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList) { }
     public void OnCustomAuthenticationResponse(NetworkRunner runner, Dictionary<string, object> data) { }
-    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken) { }
+    public void OnHostMigration(NetworkRunner runner, HostMigrationToken hostMigrationToken)
+    {
+        Debug.Log("[HostMigration] 방장이 나갔습니다. 로비로 이동합니다.");
+        StartCoroutine(ReturnToLobbyOnHostLeft());
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    private IEnumerator ReturnToLobbyOnHostLeft()
+    {
+        yield return new WaitForSeconds(1f);
+        ServerConnectionManager.Instance.ReturnToLobby();
+    }
+    private void HostMigrationResume(NetworkRunner runner)
+    {
+        // Fusion2에서는 NetworkObject들이 자동으로 복구됨
+        Debug.Log("[HostMigration] 오브젝트 복구 완료");
+    }
     public void OnReliableDataReceived(NetworkRunner runner, PlayerRef player, ReliableKey key, ArraySegment<byte> data) { }
     public void OnReliableDataProgress(NetworkRunner runner, PlayerRef player, ReliableKey key, float progress) { }
     public void OnSceneLoadDone(NetworkRunner runner) { }

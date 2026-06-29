@@ -21,6 +21,8 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
     [Networked, OnChangedRender(nameof(OnHPChanged))]
     public int HP { get; set; }
 
+    public GameObject gamjaun; // 감전모션
+
     public override void Spawned()
     {
         if (Runner.IsServer)

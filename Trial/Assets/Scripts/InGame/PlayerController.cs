@@ -19,9 +19,13 @@ public class PlayerControll : NetworkBehaviour
     public Transform HeadCameraPoint;
     public Transform TopCameraPoint;
     public Camera PlayerCamera;
-    private bool isTopView = false;
+    public bool isTopView = false;
+
+    private bool _isSeizuring = false;
 
     public Transform neckBone;
+
+    public Animator animator;
 
     [Networked] public Quaternion NetworkedHeadRotation { get; set; }
 
@@ -90,6 +94,7 @@ public class PlayerControll : NetworkBehaviour
             PlayerCamera.transform.SetParent(HeadCameraPoint);
             PlayerCamera.transform.localPosition = Vector3.zero;
             PlayerCamera.transform.localRotation = Quaternion.identity;
+            animator = GetComponentInChildren<Animator>();
 
             Cursor.lockState = CursorLockMode.Locked;
         }
@@ -106,6 +111,7 @@ public class PlayerControll : NetworkBehaviour
     private void LateUpdate()
     {
         if (neckBone == null) return;
+        if (_isSeizuring) return;
 
         if (HasInputAuthority)
             neckBone.localRotation = Quaternion.Euler(CameraX * -0.5f, 0f, CameraY * -0.5f);
@@ -155,6 +161,26 @@ public class PlayerControll : NetworkBehaviour
         }
 
         HandleHighlightUpdate();
+    }
+    public void OnQuitButton()
+    {
+        if (Runner == null || !Runner.IsRunning) return;
+
+        // 본인 사망 처리 후 나가기
+        RPC_RequestLeave(Object.InputAuthority);
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    private void RPC_RequestLeave(PlayerRef leavingPlayer)
+    {
+        // 사망 처리
+        PlayerGameData myData = GetComponent<PlayerGameData>();
+        if (myData != null && !myData.IsDead)
+            myData.IsDead = true;
+
+        // 서버가 플레이어 정리 (OnPlayerLeft와 동일한 흐름)
+        PlayerTurn pt = FindFirstObjectByType<PlayerTurn>();
+        if (pt != null) pt.DeletePlayer(this);
     }
 
     #region [카메라]
@@ -512,6 +538,29 @@ public class PlayerControll : NetworkBehaviour
         }
     }
 
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_PlaySeizureAnimation()
+    {
+        Animator animator = GetComponentInChildren<Animator>();
+        if (animator != null)
+        {
+            StartCoroutine(SeizureDuration());
+            Debug.Log($"[Animator] 찾은 애니메이터: {(animator != null ? animator.gameObject.name : "없음")}");
+            Debug.Log($"[Seizure] 발작 애니메이션 시작됨: {gameObject.name}");
+        }
+    }
+
+    private IEnumerator SeizureDuration()
+    {
+        _isSeizuring = true;
+        yield return null; // 한 프레임 대기 후 애니메이션 길이 읽기
+        animator.SetTrigger("shock");
+        float length = GetComponentInChildren<Animator>()
+            .GetCurrentAnimatorStateInfo(0).length;
+        yield return new WaitForSeconds(length);
+        _isSeizuring = false;
+    }
+
     public void InitializeTargetMap()
     {
         StartCoroutine(RetryInitializeTargetMap());
@@ -622,6 +671,8 @@ public class PlayerControll : NetworkBehaviour
 
     private void FixedUpdate()
     {
+
+
         if (HasInputAuthority || NamePoint == null || Camera.main == null) return;
         NamePoint.LookAt(NamePoint.position + Camera.main.transform.rotation * Vector3.forward,
             Camera.main.transform.rotation * Vector3.up);

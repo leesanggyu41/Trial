@@ -3,12 +3,14 @@ using UnityEngine.UI;
 using TMPro;
 using Michsky.UI.Dark;
 using UnityEngine.InputSystem;
-
+using System.Collections;
 public class InGameSettingUI : MonoBehaviour
 {
 
 
     public GameObject settingPanal;
+
+    public GameObject settingButton; // 설정 버튼
     [Header("Audio UI")]
     public Slider masterVolumeSlider;
     public Slider musicVolumeSlider;
@@ -33,32 +35,39 @@ public class InGameSettingUI : MonoBehaviour
         }
 
     }
+
     void Update()
     {
-        // Keyboard.current가 null이 아닐 때, escapeKey가 이번 프레임에 눌렸는지 확인
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             TriggerMenu();
         }
+        // 커서 관련 코드 전부 제거
+    }
 
-        if (settingPanal.activeSelf)
+    public void TriggerMenu()
+    {
+        bool isOpen = !settingPanal.activeSelf;
+        settingPanal.SetActive(isOpen);
+
+        if (isOpen)
         {
-            // 설정창이 열려 있을 때, 마우스 커서를 보이도록 설정
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
         else
         {
-            // 설정창이 닫혀 있을 때, 마우스 커서를 잠그고 숨김
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            // 탑뷰나 스펙테이터면 커서 유지
+            bool isTopView = PlayerControll.Local != null && PlayerControll.Local.isTopView;
+            bool isSpectating = SpectatorManager.Instance != null && SpectatorManager.Instance.IsSpectating;
+
+            if (!isTopView && !isSpectating)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
         }
-
-    }
-
-    public void TriggerMenu()
-    {
-        settingPanal.SetActive(!settingPanal.activeSelf);
+        
     }
 
     void ApplySettingsToUI()
@@ -114,9 +123,25 @@ public class InGameSettingUI : MonoBehaviour
     {
 
         SettingManager.Instance.SaveAll();
-        if (settingPanal != null)
+        if (settingButton != null)
         {
-            settingPanal.SetActive(false);
+            settingButton.SetActive(false);
         }
+    }
+
+    public void OnIngameQuitButton()
+    {
+        PlayerControll local = PlayerControll.Local;
+        if (local != null)
+            local.OnQuitButton();
+
+        // 약간 딜레이 후 나가기 (RPC 전송 보장)
+        StartCoroutine(LeaveAfterDelay());
+    }
+
+    private IEnumerator LeaveAfterDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+        ServerConnectionManager.Instance.LeaveRoom();
     }
 }

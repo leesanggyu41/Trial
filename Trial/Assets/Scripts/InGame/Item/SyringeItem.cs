@@ -10,7 +10,7 @@ public class SyringeItem : ItemBase, ReactionObject
     // 네트워크를 통해 동기화되는 주사기 타입
     [Networked] public SyringeType MyType { get; set; }
 
-     public bool IsScanned { get; set; } = false;
+    public bool IsScanned { get; set; } = false;
 
     // 인터페이스 구현: 클릭 시 실행
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
@@ -38,8 +38,8 @@ public class SyringeItem : ItemBase, ReactionObject
         {
             if (targetData.IsAwakening)
             {
-                if(targetData.HP < targetData.MaxHP)
-                targetData.HP += 1; // 각성 상태에서 주사기 사용 시 체력 증가
+                if (targetData.HP < targetData.MaxHP)
+                    targetData.HP += 1; // 각성 상태에서 주사기 사용 시 체력 증가
                 targetData.IsAwakening = false; // 각성 상태 해제
                 pt.NextTurn(); // 다음 사람으로 턴 넘김
             }
@@ -51,6 +51,9 @@ public class SyringeItem : ItemBase, ReactionObject
                     if (targetData != null)
                     {
                         targetData.HP -= 1; // 체력 감소
+                        PlayerControll targetPlayer = targetObj.GetComponent<PlayerControll>();
+                        if (targetPlayer != null)
+                            targetPlayer.RPC_PlaySeizureAnimation();
                         Debug.Log($"서버: 독 주사기 사용됨. 타겟 체력: {targetData.HP}");
                     }
                     else

@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using System.Collections;
 
 public class IngameSettingManager : MonoBehaviour
 {
@@ -42,6 +44,8 @@ public class IngameSettingManager : MonoBehaviour
 
         ApplySettings();
     }
+
+    
 
     void FindPlayerController()
     {

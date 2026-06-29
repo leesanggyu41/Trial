@@ -144,7 +144,8 @@ public class ServerConnectionManager : MonoBehaviour
             PlayerCount = 4,
             SessionProperties = customProps,
             Scene = SceneRef.FromIndex(2),
-            SceneManager = _runner.gameObject.AddComponent<NetworkSceneManagerDefault>()
+            SceneManager = _runner.gameObject.AddComponent<NetworkSceneManagerDefault>(),
+            //DisconnectedTimeout = 10, // 연결 끊김 감지 시간
         });
 
         if (result.Ok)
@@ -181,7 +182,8 @@ public class ServerConnectionManager : MonoBehaviour
             GameMode = GameMode.Client,
             SessionName = sessionName,
             Scene = SceneRef.FromIndex(2),
-            SceneManager = _runner.gameObject.AddComponent<NetworkSceneManagerDefault>()
+            SceneManager = _runner.gameObject.AddComponent<NetworkSceneManagerDefault>(),
+            //DisconnectedTimeout = 10,
         });
 
         if (result.Ok)

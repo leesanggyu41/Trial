@@ -86,18 +86,18 @@ public class HPScreenEffect : MonoBehaviour
             }
         }
 
-        if (MaterialPropertyController.Instances.Count > 0)
-        {
-            foreach (var prop in alphaPropertyNames)
-            {
-                MaterialPropertyController.SetFloatOnAll(prop, alpha);
-                Shader.SetGlobalFloat(prop, alpha);
-            }
-        }
-        else
-        {
-            Debug.LogWarning("HPScreenEffect: MaterialPropertyController 인스턴스가 씬에 없습니다. FS_LowHP 메테리얼을 FullScreenFX 컨트롤러에 등록했는지 확인하세요.");
-        }
+        // if (MaterialPropertyController.Instances.Count > 0)
+        // {
+        //     foreach (var prop in alphaPropertyNames)
+        //     {
+        //         MaterialPropertyController.SetFloatOnAll(prop, alpha);
+        //         Shader.SetGlobalFloat(prop, alpha);
+        //     }
+        // }
+        // else
+        // {
+        //     Debug.LogWarning("HPScreenEffect: MaterialPropertyController 인스턴스가 씬에 없습니다. FS_LowHP 메테리얼을 FullScreenFX 컨트롤러에 등록했는지 확인하세요.");
+        // }
     }
 
     private void ResetScreenEffect()

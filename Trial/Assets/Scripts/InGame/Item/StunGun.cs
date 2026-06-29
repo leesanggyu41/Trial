@@ -13,7 +13,17 @@ public class StunGun : ItemBase, ReactionObject
     public void OnEvent(bool isSelfTarget, NetworkId targetId)
     {
         // 타겟에게 이동
-        BaseOnEventToTarget(() => RPC_UseStunGun(targetId), targetId);
+        BaseOnEventToTarget(() =>
+        {
+            RPC_UseStunGun(targetId);
+            RPC_PlaySound();
+        }, targetId);
+    }
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_PlaySound()
+    {
+        if (audioSource != null)
+            audioSource.PlayOneShot(stunSound);
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -26,6 +36,7 @@ public class StunGun : ItemBase, ReactionObject
 
             // 1. 플레이어의 행동을 1턴 동안 스턴 상태로 만듭니다.
             playerData.IsStunned = true;
+            playerData.gamjaun.SetActive(true); // 감전모션 활성화
 
             //Runner.Despawn(Object); // 아이템 사용 후 삭제
 

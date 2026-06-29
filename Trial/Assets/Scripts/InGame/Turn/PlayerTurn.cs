@@ -76,7 +76,8 @@ public class PlayerTurn : NetworkBehaviour
         {
             Debug.Log($"플레이어 {nextIndex}는 스턴 상태입니다. 다음 플레이어로 넘어갑니다.");
             CurrentTurnIndex = nextIndex; // 턴은 넘어가지만 행동은 불가능
-            nextplayerData.IsStunned = false; // 스턴 상태 해제
+            nextplayerData.IsStunned = false; // 스턴 상태 해제\
+            nextplayerData.gamjaun.SetActive(false); // 감전모션 비활성화
             NextTurn(); // 재귀적으로 다음 플레이어로 넘어감
         }
         else
