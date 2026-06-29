@@ -56,8 +56,8 @@ public class GameTurnManager : NetworkBehaviour
             case GameTurn.Item:
                 // 아이템 보급은 서버만 연산합니다.
                 StartCoroutine(StayItemTime());
-               // if (Runner.IsServer && It_T != null) It_T.ItemSpawner_Rpc();
-               // if (tableAnim != null) tableAnim.SetTrigger("open");
+                // if (Runner.IsServer && It_T != null) It_T.ItemSpawner_Rpc();
+                // if (tableAnim != null) tableAnim.SetTrigger("open");
                 break;
 
             case GameTurn.Player:
@@ -76,7 +76,7 @@ public class GameTurnManager : NetworkBehaviour
     {
         if (tableAnim != null) tableAnim.SetTrigger("open");
         yield return new WaitForSeconds(1.5f);
-         if (Runner.IsServer && It_T != null) It_T.ItemSpawner_Rpc();
+        if (Runner.IsServer && It_T != null) It_T.ItemSpawner_Rpc();
     }
 
     private IEnumerator WaitAndSpawnSyringe(float waitTime)
@@ -126,12 +126,27 @@ public class GameTurnManager : NetworkBehaviour
     public void RPC_WinTurn(NetworkId winnerId)
     {
         StopAllCoroutines();
-        if (Runner.TryFindObject(winnerId, out var winnerObj) && winnerObj.TryGetComponent<PlayerControll>(out var winner))
+
+        string winnerName = "???";
+        if (Runner.TryFindObject(winnerId, out var winnerObj) &&
+            winnerObj.TryGetComponent<PlayerControll>(out var winner))
         {
-            WinUIManager.Instance?.ShowWinUI(winner.NameText.text);
+            winnerName = winner.NameText.text;
         }
+
+        PlayerPrefs.SetString("WinnerName", winnerName);
+        PlayerPrefs.Save();
+
+        StartCoroutine(MoveToEndScene());
     }
 
+    private IEnumerator MoveToEndScene()
+    {
+        yield return new WaitForSeconds(0.5f); // 짧은 딜레이로 RPC 수신 보장
+        SceneManager.LoadScene("EndScene");
+    }
+
+    //RPC_QuitAll은 그대로 유지 (로비 복귀용으로만 사용)
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     public void RPC_QuitAll() => StartCoroutine(QuitCoroutine());
 

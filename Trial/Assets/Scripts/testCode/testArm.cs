@@ -11,12 +11,12 @@ public class testArm : MonoBehaviour
     {
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            armController.MoveToItem(targetItem);
+            //armController.MoveToItem(targetItem);
         }
         if (Keyboard.current.leftShiftKey.wasPressedThisFrame)
         {
             // 아이템에서 멀어지는 동작을 추가할 수 있습니다.
-            armController.MoveToItem(itemTransform); // 예시로 아이템 위치로 이동
+            //armController.MoveToItem(itemTransform); // 예시로 아이템 위치로 이동
         }
     }
 }

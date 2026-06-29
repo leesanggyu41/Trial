@@ -311,6 +311,7 @@ MonoBehaviour:
   Explanation: "1\uD68C\uB9CC \uC8FC\uC0AC\uAE30\uB97C \uC0AC\uC6A9\uD558\uBA74 \uCCB4\uB825\uC744
     1\uD68C\uBCF5\uD55C\uB2E4 "
   animator: {fileID: 7553255537194287605}
+  eatAnimationDuration: 1.5
 --- !u!114 &7000135870608572241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -342,7 +343,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemMoveAnimation
   targetPoint: {fileID: 0}
   targetEulerRotation: {x: 0, y: 0, z: 0}
-  moveDuration: 1.5
+  moveDuration: 2.12
 --- !u!1 &2515140814484260034
 GameObject:
   m_ObjectHideFlags: 0
@@ -502,7 +503,7 @@ Transform:
   - {fileID: 851111558010228381}
   - {fileID: 8904742592743903734}
   m_Father: {fileID: 7738543741609606583}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 89.83567, y: -2.0451147e-15, z: -1.692535e-15}
 --- !u!1 &6000763636370027688
 GameObject:
   m_ObjectHideFlags: 0
@@ -534,7 +535,7 @@ Transform:
   m_Children:
   - {fileID: 1170525726876209367}
   m_Father: {fileID: 5404502390408961755}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.16773397, y: 4.013275, z: -6.34223}
 --- !u!1 &8213192271185655805
 GameObject:
   m_ObjectHideFlags: 0
@@ -566,4 +567,4 @@ Transform:
   m_Children:
   - {fileID: 5404502390408961755}
   m_Father: {fileID: 1716999396901367081}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98021, y: 0, z: 0}

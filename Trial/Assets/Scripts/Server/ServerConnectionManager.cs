@@ -40,7 +40,7 @@ public class ServerConnectionManager : MonoBehaviour
     }
     void OnEnable()
     {
-    	  // 씬 매니저의 sceneLoaded에 체인을 건다.
+        // 씬 매니저의 sceneLoaded에 체인을 건다.
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -96,6 +96,21 @@ public class ServerConnectionManager : MonoBehaviour
         {
             ShowError($"오류 발생: {e.Message}");
         }
+    }
+
+    public async void ReturnToLobby()
+    {
+        // 혹시 남아있는 runner 정리
+        if (_runner != null)
+        {
+            if (_runner.IsRunning)
+                await _runner.Shutdown();
+            Destroy(_runner.gameObject);
+            _runner = null;
+        }
+
+        // 로비 서버에 재연결
+        await ConnectToServer();
     }
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {

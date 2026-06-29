@@ -41,6 +41,9 @@ public class Stimulant : ItemBase, ReactionObject
 
     public void robot()
     {
+        
+        if (!Runner.IsServer) return;
+        Debug.Log($"[robot] NowTurn: {TurnManager?.NowTurn}, TurnManager: {TurnManager}");
         GrabAndDespawn();
     }
 }

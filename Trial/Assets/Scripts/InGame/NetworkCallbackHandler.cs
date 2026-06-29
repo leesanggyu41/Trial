@@ -42,17 +42,20 @@ public class NetworkCallbackHandler : MonoBehaviour, INetworkRunnerCallbacks
     }
 
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
-    {
-        SceneManager.LoadScene("LobbyScene");
-    }
+{
+    if (PlayerPrefs.HasKey("WinnerName")) return;
+    SceneManager.LoadScene("LobbyScene");
+}
 
     public void OnDisconnectedFromServer(NetworkRunner runner, NetDisconnectReason reason)
     {
+        if (PlayerPrefs.HasKey("WinnerName")) return;
         SceneManager.LoadScene("LobbyScene");
     }
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
+        if (PlayerPrefs.HasKey("WinnerName")) return;
         SceneManager.LoadScene("LobbyScene");
     }
 

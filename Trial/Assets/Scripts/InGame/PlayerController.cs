@@ -307,6 +307,9 @@ public class PlayerControll : NetworkBehaviour
     #region [아이템 상호작용 및 하이라이트]
     public void CanPlayerTouch(InputAction.CallbackContext context)
     {
+        if (Runner == null || !Runner.IsRunning) return;
+        // 오브젝트가 유효하지 않으면 즉시 리턴
+        if (Object == null || !Object.IsValid) return;
         if (PlayerCamera == null) return;
         if (GameTurnManager.Instance == null || GameTurnManager.Instance.NowTurn != GameTurn.Player) return;
         if (!context.started || !playerTurn) return;
