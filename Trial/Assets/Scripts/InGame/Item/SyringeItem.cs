@@ -10,15 +10,17 @@ public class SyringeItem : ItemBase, ReactionObject
     // 네트워크를 통해 동기화되는 주사기 타입
     [Networked] public SyringeType MyType { get; set; }
 
-    public bool IsScanned { get; set; } = false;
+    [Networked] public PlayerRef ScannedByPlayer { get; set; } = PlayerRef.None;
+
+    public bool IsScannedByLocal => ScannedByPlayer == Runner.LocalPlayer;
 
     // 인터페이스 구현: 클릭 시 실행
-    public void OnEvent(bool isSelfTarget, NetworkId targetId)
-    {
-        OnUse();
-        RPC_UseSyringe(isSelfTarget, targetId);
-        GrabAndDespawn();
-    }
+    public void OnEvent(bool isSelfTarget, NetworkId targetId, PlayerRef usingPlayer = default)
+{
+    OnUse();
+    RPC_UseSyringe(isSelfTarget, targetId);
+    GrabAndDespawn();
+}
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_UseSyringe(bool isSelfTarget, NetworkId targetId)
@@ -51,6 +53,11 @@ public class SyringeItem : ItemBase, ReactionObject
                     if (targetData != null)
                     {
                         targetData.HP -= 1; // 체력 감소
+                        if (targetData.HP <= 0)
+                        {
+                            targetData.IsDead = true;
+                            Debug.Log($"서버: {targetData.gameObject.name} 사망!");
+                        }
                         PlayerControll targetPlayer = targetObj.GetComponent<PlayerControll>();
                         if (targetPlayer != null)
                             targetPlayer.RPC_PlaySeizureAnimation();

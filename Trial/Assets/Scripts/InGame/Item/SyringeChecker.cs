@@ -8,10 +8,9 @@ public class SyringeChecker : ItemBase, ReactionObject
 
     public PowerPhone powerPhone;
 
-    public void OnEvent(bool isSelfTarget, NetworkId targetId)
+    public void OnEvent(bool isSelfTarget, NetworkId targetId, PlayerRef usingPlayer = default)
     {
-        BaseOnEvent(() =>  RPC_UseChecker(Runner.LocalPlayer));
-       
+        BaseOnEvent(() => RPC_UseChecker(usingPlayer)); // ← Runner.LocalPlayer 대신 usingPlayer 사용
     }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -22,7 +21,7 @@ public class SyringeChecker : ItemBase, ReactionObject
         SyringeTurn st = FindFirstObjectByType<SyringeTurn>();
         if (st == null) return;
 
-        
+
 
         int toxinCount = 0;
         int nsCount = 0;
@@ -37,7 +36,7 @@ public class SyringeChecker : ItemBase, ReactionObject
         RPC_ShowResult(toxinCount, nsCount, user);
     }
 
-    
+
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
     private void RPC_ShowResult(int toxin, int ns, PlayerRef user)
     {
@@ -49,9 +48,9 @@ public class SyringeChecker : ItemBase, ReactionObject
 
         string message = $"독: {toxin}개 / 수액: {ns}개";
         if (RadioTextEffect.Instance != null)
-        RadioTextEffect.Instance.ShowText(message);
+            RadioTextEffect.Instance.ShowText(message);
         Debug.Log(message);
-        
+
     }
 
     public void robot()

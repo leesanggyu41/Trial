@@ -20,7 +20,7 @@ public class Mammer : ItemBase, ReactionObject
 
     private bool _hitComplete = false;
 
-    public void OnEvent(bool isSelfTarget, NetworkId targetId)
+    public void OnEvent(bool isSelfTarget, NetworkId targetId, PlayerRef usingPlayer = default)
     {
         _targetSyringeId = targetId;
         if (!Object.HasStateAuthority) return;

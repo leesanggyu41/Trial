@@ -72,6 +72,14 @@ public class PlayerTurn : NetworkBehaviour
 
         PlayerGameData nextplayerData = nextPlayer.GetComponent<PlayerGameData>();
 
+        if (nextplayerData != null && nextplayerData.IsDead)
+        {
+            Debug.Log($"플레이어 {nextIndex}는 사망 상태입니다. 다음 플레이어로 넘어갑니다.");
+            CurrentTurnIndex = nextIndex;
+            NextTurn(); // 재귀적으로 다음 플레이어로 넘어감
+            return;
+        }
+
         if (nextPlayer != null && nextplayerData.IsStunned == true)
         {
             Debug.Log($"플레이어 {nextIndex}는 스턴 상태입니다. 다음 플레이어로 넘어갑니다.");

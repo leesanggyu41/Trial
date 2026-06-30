@@ -18,7 +18,7 @@ public class Destroyer : ItemBase, ReactionObject
     [SerializeField] private Transform itemHolder; // 파쇄기 집게 사이 빈 공간 위치
     [SerializeField] private float delayBeforeDespawn = 0.5f; // Armature_Crach 애니메이션 중 아이템이 파괴되는 타이밍 (초)
 
-    public void OnEvent(bool isSelfTarget, NetworkId targetId)
+    public void OnEvent(bool isSelfTarget, NetworkId targetId, PlayerRef usingPlayer = default)
     {
         BaseOnEvent(() => RPC_UseDestroyer(targetId));
     }

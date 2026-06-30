@@ -18,7 +18,7 @@ public class Converter : ItemBase, ReactionObject
     }
 
     // 1. 아이템 사용 트리거 (로컬에서 실행)
-    public void OnEvent(bool isSelfTarget, NetworkId targetId)
+    public void OnEvent(bool isSelfTarget, NetworkId targetId, PlayerRef usingPlayer = default)
     {
         OnUse();
 

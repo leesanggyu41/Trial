@@ -5,5 +5,5 @@ public interface ReactionObject
 {
     bool NeedsTargeting { get; }
     TargetType DesiredTarget { get; }
-    public void OnEvent(bool isSelfTarget, NetworkId targetId);
+    void OnEvent(bool isSelf, NetworkId targetId, PlayerRef usingPlayer = default);
 }

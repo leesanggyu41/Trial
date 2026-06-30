@@ -8,7 +8,7 @@ public class Stimulant : ItemBase, ReactionObject
 
     public Animator animator;
 
-    public void OnEvent(bool myself, NetworkId targetId)
+    public void OnEvent(bool myself, NetworkId targetId, PlayerRef usingPlayer = default)
     {
         OnUse();
         

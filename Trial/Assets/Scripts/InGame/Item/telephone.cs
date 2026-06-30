@@ -12,7 +12,7 @@ public class telephone : ItemBase, ReactionObject
     public AudioClip telephoneSound;
 
 
-    public void OnEvent(bool myself, NetworkId targetId)
+    public void OnEvent(bool myself, NetworkId targetId, PlayerRef usingPlayer = default)
     {
         BaseOnEvent(() => RPC_PlaySoundAndUse(Object.InputAuthority, targetId));
     }

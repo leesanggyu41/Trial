@@ -390,10 +390,17 @@ public class PlayerControll : NetworkBehaviour
                     defaultLayer = currentObj.layer;
                     SetLayerRecursively(currentObj, OUTLINE_LAYER);
 
+                    // 여기서 선언
                     SyringeItem syringe = hitInfo.collider.GetComponentInParent<SyringeItem>();
+                    
                     Color outlineColor = Color.white;
-                    if (syringe != null && syringe.IsScanned)
+
+                    if (syringe != null
+                        && syringe.ScannedByPlayer != PlayerRef.None
+                        && syringe.ScannedByPlayer == Runner.LocalPlayer)
+                    {
                         outlineColor = syringe.MyType == SyringeType.Toxin ? Color.red : Color.green;
+                    }
 
                     if (wideOutlineSettings.Outlines != null && wideOutlineSettings.Outlines.Count > 0)
                         foreach (var outline in wideOutlineSettings.Outlines)
@@ -523,7 +530,7 @@ public class PlayerControll : NetworkBehaviour
             return;
         }
 
-        reaction.OnEvent(isSelf, targetId);
+        reaction.OnEvent(isSelf, targetId, Object.InputAuthority);
     }
 
     [Rpc(RpcSources.InputAuthority, RpcTargets.All)]

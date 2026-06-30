@@ -42,35 +42,38 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
 
     }
 
-    void OnIsDeadChanged()//이게 사망처리 맞지? - 재원
+    void OnIsDeadChanged()
     {
         GetComponent<PlayerControll>().NameText.text = "";
 
-
-        // 본인(로컬) 플레이어만 사망 UI 표시<추가됨>
         if (GetComponent<NetworkObject>().HasInputAuthority && IsDead)
         {
             var deathUI = DeathUIManager.Instance;
             if (deathUI != null)
                 deathUI.ShowDeathUI();
         }
-        if (Runner.IsServer && IsDead)
-    {
-        var allPlayers = FindObjectsByType<PlayerGameData>(FindObjectsSortMode.None).ToList();
-        var alivePlayers = allPlayers.Where(p => !p.IsDead).ToList();
 
-        // 전체 플레이어 중 1명만 살아있으면 승리
-        if (alivePlayers.Count == 1 && allPlayers.Count > 1)
+        if (Runner.IsServer && IsDead)
         {
-            PlayerControll winner = alivePlayers[0].GetComponent<PlayerControll>();
-            GameTurnManager.Instance.SetWinTurn(winner.Object.Id);
+            // 턴에서 제거
+            PlayerControll pc = GetComponent<PlayerControll>();
+            if (pc != null)
+                GameTurnManager.Instance.Pt_T.DeletePlayer(pc);
+
+            var allPlayers = FindObjectsByType<PlayerGameData>(FindObjectsSortMode.None).ToList();
+            var alivePlayers = allPlayers.Where(p => !p.IsDead).ToList();
+
+            if (alivePlayers.Count == 1 && allPlayers.Count > 1)
+            {
+                PlayerControll winner = alivePlayers[0].GetComponent<PlayerControll>();
+                GameTurnManager.Instance.SetWinTurn(winner.Object.Id);
+            }
         }
-    }
     }
 
     void Update()
     {
-        if (HP <= 0)
+        if (!IsDead && HP <= 0)
         {
             IsDead = true;
         }

@@ -9,41 +9,40 @@ public class Scanner : ItemBase, ReactionObject
 
     public Animator animator;
 
-    public void OnEvent(bool isSelfTarget, NetworkId targetId)
-    {
-        OnUse();
-        Debug.Log("[Scanner] OnEvent 호출됨");
-        RPC_UseScanner(isSelfTarget, targetId);
-    }
-    public void RPC_UseScanner(bool isSelfTarget, NetworkId targetId)
-    {
-        Debug.Log("[Scanner] RPC_UseScanner 서버에서 실행됨");
-        if (Runner.TryFindObject(targetId, out var targetObj))
-        {
-            SyringeItem syringe = targetObj.GetComponent<SyringeItem>();
-            if (syringe == null) return;
+    public void OnEvent(bool isSelfTarget, NetworkId targetId, PlayerRef usingPlayer = default)
+{
+    OnUse();
+    RPC_UseScanner(isSelfTarget, targetId, usingPlayer);
+}
 
-            syringe.IsScanned = true;
+[Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+public void RPC_UseScanner(bool isSelfTarget, NetworkId targetId, PlayerRef usingPlayer)
+{
+    if (!Runner.TryFindObject(targetId, out var targetObj)) return;
 
-            SyringeType type = syringe.MyType;
-            int result = type == SyringeType.Toxin ? 0 : 1;
+    SyringeItem syringe = targetObj.GetComponent<SyringeItem>();
+    if (syringe == null) return;
 
-            BBBScript bbbScript = GetComponent<BBBScript>();
-            bbbScript.type = result;
+    syringe.ScannedByPlayer = usingPlayer;
+    Debug.Log($"[Scanner] ScannedByPlayer 설정됨: {syringe.ScannedByPlayer}");
 
-            Debug.Log("[Scanner] RPC_PlayAnimation 실행됨");
-            RPC_PlayAnimation();
-        }
+    SyringeType type = syringe.MyType;
+    int result = type == SyringeType.Toxin ? 1 : 0;
 
-        
+    RPC_PlayAnimation(result, usingPlayer);
+}
 
-    }
-    [Rpc(RpcSources.All, RpcTargets.All)]
-    public void RPC_PlayAnimation()
-    {
-        Debug.Log("[Scanner] RPC_PlayAnimation 실행됨");
-        animator.SetTrigger("Use");
-    }
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+public void RPC_PlayAnimation(int result, PlayerRef usingPlayer)
+{
+    animator.SetTrigger("Use");
+
+    // 사용한 플레이어에게만 BBBScript 적용
+    if (Runner.LocalPlayer != usingPlayer) return;
+
+    BBBScript bbbScript = GetComponent<BBBScript>();
+    if (bbbScript != null) bbbScript.type = result;
+}
 
     public void robot()
     {

@@ -10,7 +10,7 @@ public class StunGun : ItemBase, ReactionObject
     public AudioClip stunSound; // 스턴건 사용 시 재생할 사운드
     public AudioSource audioSource; // 사운드를 재생할 AudioSource
 
-    public void OnEvent(bool isSelfTarget, NetworkId targetId)
+    public void OnEvent(bool isSelfTarget, NetworkId targetId, PlayerRef usingPlayer = default)
     {
         // 타겟에게 이동
         BaseOnEventToTarget(() =>

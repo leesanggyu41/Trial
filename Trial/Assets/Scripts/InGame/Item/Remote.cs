@@ -11,7 +11,7 @@ public class Remote : ItemBase, ReactionObject
     public AudioSource audio;
     public AudioClip remoteSound;
     
-    public void OnEvent(bool isSelfTarget, NetworkId targetId)
+    public void OnEvent(bool isSelfTarget, NetworkId targetId, PlayerRef usingPlayer = default)
     {
        BaseOnEvent(() => RPC_UseRemote());
     }
