@@ -55,8 +55,11 @@ public class Mammer : ItemBase, ReactionObject
         StartCoroutine(HammerSequence(targetPos, syringeId));
     }
 
+
     private IEnumerator HammerSequence(Vector3 targetPos, NetworkId syringeId)
     {
+        _hitComplete = false; // 시작 시 리셋
+
         var netTransform = GetComponent<NetworkTransform>();
         if (netTransform != null) netTransform.enabled = false;
 
@@ -67,7 +70,19 @@ public class Mammer : ItemBase, ReactionObject
         if (animator != null)
             animator.SetTrigger("Hit");
 
-        yield return new WaitUntil(() => _hitComplete);
+        // 타임아웃 추가 (최대 3초 대기)
+        float timeout = 1f;
+        float elapsed = 0f;
+        while (!_hitComplete && elapsed < timeout)
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        if (!_hitComplete)
+            Debug.LogWarning("[Mammer] OnHitPoint 타임아웃! 애니메이션 이벤트 확인 필요");
+
+        _hitComplete = false; // 사용 후 리셋
 
         if (netTransform != null) netTransform.enabled = true;
 
@@ -80,8 +95,7 @@ public class Mammer : ItemBase, ReactionObject
                     SyringeTurn.ins.OnSyringeUsed(syringeId, syringeScript.MyType);
 
                 Vector3 effectPos = syringeObj.transform.position;
-                var spawnedObj = Runner.Spawn(hammerEffectPrefab, effectPos, Quaternion.Euler(-90, 0, 0));
-                Debug.Log($"[이펙트] 스폰됨: {spawnedObj}");
+                Runner.Spawn(hammerEffectPrefab, effectPos, Quaternion.Euler(-90, 0, 0));
                 audio.PlayOneShot(hammerSound);
                 Runner.Despawn(syringeObj);
             }

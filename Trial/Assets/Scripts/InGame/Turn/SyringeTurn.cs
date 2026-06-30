@@ -28,12 +28,12 @@ public class SyringeTurn : NetworkBehaviour
 
     public void Awake()
     {
-        if (ins == null) ins = this;
-        else Destroy(gameObject);
+        ins = this; // 중복 체크 제거, 그냥 항상 최신으로 설정
     }
 
-    public void Start()
+    public override void Spawned()
     {
+        ins = this; // Spawned에서도 설정 (빌드 타이밍 보장)
         GTM = FindFirstObjectByType<GameTurnManager>();
         Syringe_Screen = SyringeBoxAnim.gameObject.GetComponent<Screen_MUI>();
     }
@@ -168,7 +168,7 @@ public class SyringeTurn : NetworkBehaviour
     {
         yield return null; // 한 프레임 대기
 
-        
+
         Debug.Log($"[체크] 남은 주사기: {So.Count}");
         if (So.Count == 0)
         {

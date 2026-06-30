@@ -28,11 +28,22 @@ public class HpBar : NetworkBehaviour
         Screen.SetFloat("_HP", Hpbar);
     }
     public void SetHP(int hp)
+{
+    int diff = Hpbar - hp;
+    
+    if (diff > 0)
     {
-        int damage = Hpbar - hp;
-        for (int i = 0; i < damage; i++)
+        // 데미지
+        for (int i = 0; i < diff; i++)
             Hit();
     }
+    else if (diff < 0)
+    {
+        // 힐
+        for (int i = 0; i < -diff; i++)
+            Heal();
+    }
+}
 
     [ContextMenu("내턴이야!")]
     public void IsMyTurn()
