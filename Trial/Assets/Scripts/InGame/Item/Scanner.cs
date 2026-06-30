@@ -27,7 +27,7 @@ public void RPC_UseScanner(bool isSelfTarget, NetworkId targetId, PlayerRef usin
     Debug.Log($"[Scanner] ScannedByPlayer 설정됨: {syringe.ScannedByPlayer}");
 
     SyringeType type = syringe.MyType;
-    int result = type == SyringeType.Toxin ? 1 : 0;
+    int result = type == SyringeType.Toxin ? 0 : 1;
 
     RPC_PlayAnimation(result, usingPlayer);
 }
@@ -35,13 +35,13 @@ public void RPC_UseScanner(bool isSelfTarget, NetworkId targetId, PlayerRef usin
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
 public void RPC_PlayAnimation(int result, PlayerRef usingPlayer)
 {
-    animator.SetTrigger("Use");
 
     // 사용한 플레이어에게만 BBBScript 적용
     if (Runner.LocalPlayer != usingPlayer) return;
 
     BBBScript bbbScript = GetComponent<BBBScript>();
     if (bbbScript != null) bbbScript.type = result;
+    animator.SetTrigger("Use");
 }
 
     public void robot()
