@@ -16,11 +16,20 @@ public class SyringeItem : ItemBase, ReactionObject
 
     // 인터페이스 구현: 클릭 시 실행
     public void OnEvent(bool isSelfTarget, NetworkId targetId, PlayerRef usingPlayer = default)
-{
-    OnUse();
-    RPC_UseSyringe(isSelfTarget, targetId);
-    GrabAndDespawn();
-}
+    {
+        OnUse();
+
+        // Despawn되기 전에 필요한 데이터 미리 캡처
+        SyringeType capturedType = MyType;
+        NetworkId myId = Object.Id;
+
+        BaseOnEventAfterGrab(() =>
+        {
+            // 살아있는 오브젝트(SyringeTurn)를 통해 RPC 호출
+            if (SyringeTurn.ins != null)
+                SyringeTurn.ins.RPC_ApplySyringeEffect(isSelfTarget, targetId, capturedType, myId);
+        });
+    }
 
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RPC_UseSyringe(bool isSelfTarget, NetworkId targetId)
@@ -38,6 +47,7 @@ public class SyringeItem : ItemBase, ReactionObject
         if (targetData == null) return;
         else
         {
+            targetData.RPC_ShowSyringeHit();
             if (targetData.IsAwakening)
             {
                 if (targetData.HP < targetData.MaxHP)

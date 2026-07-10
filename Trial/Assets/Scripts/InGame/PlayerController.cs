@@ -27,6 +27,7 @@ public class PlayerControll : NetworkBehaviour
 
     public Animator animator;
 
+
     [Networked] public Quaternion NetworkedHeadRotation { get; set; }
 
     public float mouseSensitivity = 1f;
@@ -173,15 +174,22 @@ public class PlayerControll : NetworkBehaviour
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     private void RPC_RequestLeave(PlayerRef leavingPlayer)
     {
-        // 사망 처리
         PlayerGameData myData = GetComponent<PlayerGameData>();
+        PlayerTurn pt = FindFirstObjectByType<PlayerTurn>();
+
+        // 1. 본인 턴이면 먼저 다음 턴으로 넘기기
+        if (playerTurn && pt != null)
+            pt.NextTurn();
+
+        // 2. 턴 목록에서 제거 (NextTurn 이후에 제거해야 함)
+        if (pt != null)
+            pt.DeletePlayer(this);
+
+        // 3. 사망 처리
         if (myData != null && !myData.IsDead)
             myData.IsDead = true;
-
-        // 서버가 플레이어 정리 (OnPlayerLeft와 동일한 흐름)
-        PlayerTurn pt = FindFirstObjectByType<PlayerTurn>();
-        if (pt != null) pt.DeletePlayer(this);
     }
+
 
     #region [카메라]
     public void OnTopViewButtonClick()
@@ -392,7 +400,10 @@ public class PlayerControll : NetworkBehaviour
 
                     // 여기서 선언
                     SyringeItem syringe = hitInfo.collider.GetComponentInParent<SyringeItem>();
-                    
+                    if (syringe != null)
+                    {
+                        Debug.Log($"[Highlight] ScannedByPlayer: {syringe.ScannedByPlayer}, LocalPlayer: {Runner.LocalPlayer}, None: {PlayerRef.None}");
+                    }
                     Color outlineColor = Color.white;
 
                     if (syringe != null
@@ -529,6 +540,8 @@ public class PlayerControll : NetworkBehaviour
             Debug.LogError("ReactionObject 컴포넌트 없음!");
             return;
         }
+        if (GameTurnManager.Instance != null && GameTurnManager.Instance.NowTurn != GameTurn.Win)
+            GameTurnManager.Instance.RPC_SetTurn(GameTurn.Animation);
 
         reaction.OnEvent(isSelf, targetId, Object.InputAuthority);
     }

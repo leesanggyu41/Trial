@@ -4,11 +4,13 @@
 using Fusion;
 using UnityEngine;
 using System.Linq;
+using System.Collections;
 
 public class PlayerGameData : NetworkBehaviour, IDamageable
 {
     public int MaxHP => 4;
-
+    private static bool _winTriggered = false;
+    public static void ResetWinFlag() => _winTriggered = false;
     [Networked] public int BonusItemCount { get; set; } = 0; // NS 자가 사격 보너스
 
     [Networked] public bool IsAwakening { get; set; } = false; // 각성 상태
@@ -22,6 +24,9 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
     public int HP { get; set; }
 
     public GameObject gamjaun; // 감전모션
+
+    [Header("주사기 표시")]
+    public GameObject syringeModel; // 처음엔 비활성화
 
     public override void Spawned()
     {
@@ -42,9 +47,27 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
 
     }
 
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    public void RPC_ShowSyringeHit()
+    {
+        if (syringeModel != null)
+        {
+            syringeModel.SetActive(true);
+            StartCoroutine(HideSyringeAfterDelay());
+        }
+    }
+
+    private IEnumerator HideSyringeAfterDelay()
+    {
+        yield return new WaitForSeconds(1f);
+        if (syringeModel != null)
+            syringeModel.SetActive(false);
+    }
+
     void OnIsDeadChanged()
     {
-        GetComponent<PlayerControll>().NameText.text = "";
+        PlayerControll pc = GetComponent<PlayerControll>();
+        string myNickname = pc.NameText.text; // 지우기 전에 먼저 백업
 
         if (GetComponent<NetworkObject>().HasInputAuthority && IsDead)
         {
@@ -55,22 +78,31 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
 
         if (Runner.IsServer && IsDead)
         {
-            // 턴에서 제거
-            PlayerControll pc = GetComponent<PlayerControll>();
-            if (pc != null)
-                GameTurnManager.Instance.Pt_T.DeletePlayer(pc);
+            PlayerTurn pt = GameTurnManager.Instance?.Pt_T;
+            if (pt != null && pc != null)
+                pt.DeletePlayer(pc);
+
+            // 죽는 즉시 닉네임 등록 (모든 클라이언트에서 실행됨, 서버 기준으로만 판정해도 되지만 등록은 다 해도 무방)
+            GameTurnManager.Instance.RegisterDeadPlayer(myNickname);
 
             var allPlayers = FindObjectsByType<PlayerGameData>(FindObjectsSortMode.None).ToList();
             var alivePlayers = allPlayers.Where(p => !p.IsDead).ToList();
 
-            if (alivePlayers.Count == 1 && allPlayers.Count > 1)
+            if (alivePlayers.Count == 1 && allPlayers.Count > 1 && !_winTriggered)
             {
+                _winTriggered = true;
+
                 PlayerControll winner = alivePlayers[0].GetComponent<PlayerControll>();
-                GameTurnManager.Instance.SetWinTurn(winner.Object.Id);
+
+                // 누적해온 리스트를 그대로 사용
+                string deadNamesJoined = string.Join(",", GameTurnManager.Instance.GetDeadPlayerNames());
+
+                GameTurnManager.Instance.SetWinTurn(winner.Object.Id, deadNamesJoined);
             }
         }
-    }
 
+        pc.NameText.text = "";
+    }
     void Update()
     {
         if (!IsDead && HP <= 0)

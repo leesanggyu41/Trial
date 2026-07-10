@@ -195,4 +195,40 @@ public class ItemBase : NetworkBehaviour
 
         Move.MoveToTarget(OwnerRef);
     }
+    public void BaseOnEventAfterGrab(System.Action rpcCall)
+    {
+        if (!Object.HasStateAuthority) return;
+        if (TurnManager == null) { Debug.LogError("TurnManager 없음!"); return; }
+        if (TurnManager.NowTurn == GameTurn.Syringe) return;
+
+        TurnManager.RPC_SetTurn(GameTurn.Animation);
+
+        if (Move == null || Move.targetPoint == null)
+        {
+            // 이동 없이 바로 로봇팔 호출, 로봇팔이 다 가져간 뒤(콜백) 효과 발동
+            ArmGrabAndDespawnWithCallback(rpcCall);
+            return;
+        }
+
+        Move.onMoveComplete = () =>
+        {
+            Move.onMoveComplete = null;
+            // 이동 끝나면 로봇팔 호출, 로봇팔이 다 가져간 뒤(콜백) 효과 발동
+            ArmGrabAndDespawnWithCallback(rpcCall);
+        };
+
+        Move.MoveToTarget(OwnerRef);
+    }
+
+    private void ArmGrabAndDespawnWithCallback(System.Action effectCall)
+    {
+        if (_armController != null)
+            _armController.GrabAndReturn(transform, Object.Id, effectCall); // 로봇팔 완료 후 효과 발동
+        else
+        {
+            effectCall?.Invoke();
+            RPC_Despawn();
+        }
+    }
+
 }

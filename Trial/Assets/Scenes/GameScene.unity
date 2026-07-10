@@ -8113,7 +8113,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemTurn
   itemPrefeb:
+  - {fileID: 8292703308648211790, guid: 5263b1f19bdc80f4f9553c9c6300e12c, type: 3}
+  - {fileID: 4052712063053005659, guid: e65b0213a2881964e8d1aedb157b73c8, type: 3}
+  - {fileID: 2062597459656177555, guid: a110ea760d87fe642aceb86bfefacbab, type: 3}
+  - {fileID: 7115254592560947801, guid: ae1d69b6a8e41cd41bd540a24ff7034c, type: 3}
+  - {fileID: 2483878213882902029, guid: 4edb850ca79067340a6bef834cc61b35, type: 3}
+  - {fileID: 6660963835079812469, guid: 11d187c0c8f09a84186a00024515516c, type: 3}
   - {fileID: 6301567081564861904, guid: 09dd94f155c7d9c4b811e46e8ffd8c01, type: 3}
+  - {fileID: 8947921422468717134, guid: 0086c5aeea2ee0b40b9a630bd616d450, type: 3}
+  - {fileID: 1643152167180185722, guid: 5403a4b83d37028488765217a86ff6b1, type: 3}
   PI:
   - spawnPoint: {fileID: 1591100168}
     sapwnitemNum: 2

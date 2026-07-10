@@ -15,9 +15,9 @@ public class EndSceneManager : MonoBehaviour
     public float fadeDuration = 1.5f;
 
     [Header("결과 UI")]
-    public GameObject resultUI;             // 닉네임 + "탈출" 문구 UI 루트
-    public TMP_Text winnerNameText;         // "홍길동"
-    public TMP_Text resultText;             // "탈출"
+    public GameObject resultUI;
+    public TMP_Text winnerNameText;
+    public TMP_Text[] deadNameTexts;           // "탈출"
 
     [Header("타이밍")]
     public float cameraAnimationDuration = 22.45f;
@@ -25,37 +25,49 @@ public class EndSceneManager : MonoBehaviour
 
     private void Start()
     {
-        string winnerName = PlayerPrefs.GetString("WinnerName", "???");
-        PlayerPrefs.DeleteKey("WinnerName"); // 사용 후 삭제
+        string winnerName = "???";
+        string deadNamesRaw = "";
+
+        if (GameResultData.Instance != null)
+        {
+            winnerName = GameResultData.Instance.WinnerName;
+            deadNamesRaw = GameResultData.Instance.DeadNamesJoined;
+        }
+
+        Debug.Log($"[EndScene] winnerName: '{winnerName}'");
 
         resultUI.SetActive(false);
         fadeCanvasGroup.alpha = 0f;
 
-        StartCoroutine(EndSequence(winnerName));
+        StartCoroutine(EndSequence(winnerName, deadNamesRaw));
     }
 
-    private IEnumerator EndSequence(string winnerName)
+    private IEnumerator EndSequence(string winnerName, string deadNamesRaw)
     {
-        // 1. 애니메이션이 자동 재생되므로 한 프레임 대기 후 길이 읽기
         yield return new WaitForSeconds(cameraAnimationDuration);
 
-        float animLength = 0f;
-        if (cameraAnimator != null)
-        {
-            AnimatorStateInfo stateInfo = cameraAnimator.GetCurrentAnimatorStateInfo(0);
-            animLength = stateInfo.length;
-            yield return new WaitForSeconds(animLength);
-        }
-
-        // 2. 암전 페이드 인
         yield return StartCoroutine(Fade(0f, 1f));
 
-        // 3. 결과 UI 표시
-        winnerNameText.text = winnerName;
-        resultText.text = "탈출";
+        winnerNameText.text = $"{winnerName}";
+
+        string[] deadNames = deadNamesRaw.Split(',', System.StringSplitOptions.RemoveEmptyEntries);
+
+        // 죽은 사람 수만큼 활성화하고 텍스트 설정
+        for (int i = 0; i < deadNameTexts.Length; i++)
+        {
+            if (i < deadNames.Length)
+            {
+                deadNameTexts[i].gameObject.SetActive(true);
+                deadNameTexts[i].text = $"{deadNames[i]}";
+            }
+            else
+            {
+                deadNameTexts[i].gameObject.SetActive(false); // 남는 슬롯은 비활성화
+            }
+        }
+
         resultUI.SetActive(true);
 
-        // 4. 5초 대기 후 메인화면
         yield return new WaitForSeconds(waitAfterResult);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -63,7 +75,7 @@ public class EndSceneManager : MonoBehaviour
         if (ServerConnectionManager.Instance != null)
             ServerConnectionManager.Instance.ReturnToLobby();
         else
-            SceneManager.LoadScene(1); // 혹시 Instance가 없을 경우 대비
+            SceneManager.LoadScene(1);
     }
 
     private IEnumerator Fade(float from, float to)

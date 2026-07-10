@@ -18,6 +18,10 @@ public class GameTurnManager : NetworkBehaviour
     public ItemTurn It_T;
     public PlayerTurn Pt_T;
 
+    private List<string> _deadPlayerNames = new List<string>();
+
+    public List<string> GetDeadPlayerNames() => _deadPlayerNames;
+
     // 💡 핵심: 턴이 바뀌면 모든 클라이언트가 자동으로 OnTurnChanged를 실행합니다. (RPC 대폭 제거 가능)
     [Networked, OnChangedRender(nameof(OnTurnChanged))]
     public GameTurn NowTurn { get; set; }
@@ -27,9 +31,17 @@ public class GameTurnManager : NetworkBehaviour
     private Coroutine _turnTimerCoroutine;
 
     private void Awake() => Instance = this;
-
     public override void Spawned()
     {
+        PlayerGameData.ResetWinFlag();
+        _deadPlayerNames.Clear();
+
+        if (GameResultData.Instance == null)
+        {
+            GameObject go = new GameObject("GameResultData");
+            go.AddComponent<GameResultData>();
+        }
+
         if (HasStateAuthority)
         {
             StartCoroutine(WaitAndChangeTurn(3f));
@@ -115,17 +127,25 @@ public class GameTurnManager : NetworkBehaviour
         if (Object.HasStateAuthority) NowTurn = nextTurn;
     }
 
-    public void SetWinTurn(NetworkId winnerId)
+    public void SetWinTurn(NetworkId winnerId, string deadNames)
     {
         if (!Runner.IsServer) return;
         NowTurn = GameTurn.Win;
-        RPC_WinTurn(winnerId);
+        RPC_WinTurn(winnerId, deadNames);
+    }
+
+    public void RegisterDeadPlayer(string nickname)
+    {
+        if (!string.IsNullOrEmpty(nickname) && !_deadPlayerNames.Contains(nickname))
+            _deadPlayerNames.Add(nickname);
     }
 
     [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-    public void RPC_WinTurn(NetworkId winnerId)
+    public void RPC_WinTurn(NetworkId winnerId, string deadNames)
     {
         StopAllCoroutines();
+
+        Debug.Log($"[RPC_WinTurn] 받은 deadNames: '{deadNames}'"); // 추가
 
         string winnerName = "???";
         if (Runner.TryFindObject(winnerId, out var winnerObj) &&
@@ -134,15 +154,21 @@ public class GameTurnManager : NetworkBehaviour
             winnerName = winner.NameText.text;
         }
 
-        PlayerPrefs.SetString("WinnerName", winnerName);
-        PlayerPrefs.Save();
+        if (GameResultData.Instance != null)
+        {
+            GameResultData.Instance.WinnerName = winnerName;
+            GameResultData.Instance.DeadNamesJoined = deadNames;
+            Debug.Log($"[RPC_WinTurn] GameResultData에 저장됨 - DeadNamesJoined: '{GameResultData.Instance.DeadNamesJoined}'"); // 추가
+        }
 
         StartCoroutine(MoveToEndScene());
     }
 
     private IEnumerator MoveToEndScene()
     {
-        yield return new WaitForSeconds(0.5f); // 짧은 딜레이로 RPC 수신 보장
+        Debug.LogWarning("[MoveToEndScene] 시작");
+        yield return new WaitForSeconds(0.5f);
+        Debug.LogWarning("[MoveToEndScene] 0.5초 대기 완료, 씬 전환 직전");
         SceneManager.LoadScene("EndScene");
     }
 

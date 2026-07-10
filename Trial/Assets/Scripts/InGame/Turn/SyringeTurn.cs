@@ -117,7 +117,8 @@ public class SyringeTurn : NetworkBehaviour
         //     NS_Text[i].text = ns.ToString();
         // }
 
-        Invoke("UpBox", 3f);
+        if (Runner.IsServer)
+            Invoke("UpBox", 3f);
     }
 
     public GameObject GetSyringe(int index)
@@ -129,11 +130,19 @@ public class SyringeTurn : NetworkBehaviour
 
     public void UpBox()
     {
-        SyringeBoxAnim.SetTrigger("Up");
-        //Toxin_Text[0].text = "";
-        //NS_Text[0].text = "";
+        Debug.Log($"[UpBox] 현재 턴: {GTM.NowTurn}");
+        if (!Runner.IsServer) return; // 서버만 턴 전환
+
+        RPC_UpBoxAnimation(); // 애니메이션은 모두에게
         Syringe_Screen.NullChick();
         GTM.GamesTurnChange();
+    }
+
+    [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+    private void RPC_UpBoxAnimation()
+    {
+        SyringeBoxAnim.SetTrigger("Up");
+        Syringe_Screen.NullChick();
     }
 
     public void OnSyringeUsed(NetworkId id, SyringeType type)
@@ -206,6 +215,75 @@ public class SyringeTurn : NetworkBehaviour
     private void RPC_PlayBoxAnimation(bool isDown)
     {
         SyringeBoxAnim.SetTrigger(isDown ? "Down" : "Up");
+    }
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_ApplySyringeEffect(bool isSelfTarget, NetworkId targetId, SyringeType type, NetworkId syringeId)
+    {
+        Debug.Log($"[RPC_ApplySyringeEffect] 호출됨 - IsServer: {Runner.IsServer}, targetId: {targetId}, type: {type}");
+
+        if (!Runner.IsServer) return;
+
+        PlayerTurn pt = FindFirstObjectByType<PlayerTurn>();
+        Debug.Log($"[RPC_ApplySyringeEffect] pt: {pt}");
+
+        PlayerGameData targetData = null;
+        NetworkObject targetObj = null;
+        if (Runner.TryFindObject(targetId, out targetObj))
+            targetData = targetObj.GetComponent<PlayerGameData>();
+
+        Debug.Log($"[RPC_ApplySyringeEffect] targetObj: {targetObj}, targetData: {targetData}");
+
+        if (targetData == null)
+        {
+            Debug.LogError("[RPC_ApplySyringeEffect] targetData가 null! 여기서 리턴됨");
+            return;
+        }
+
+        targetData.RPC_ShowSyringeHit();
+        Debug.Log($"[RPC_ApplySyringeEffect] IsAwakening: {targetData.IsAwakening}, type: {type}");
+
+        if (targetData.IsAwakening)
+        {
+            if (targetData.HP < targetData.MaxHP)
+                targetData.HP += 1;
+            targetData.IsAwakening = false;
+            pt.NextTurn();
+        }
+        else
+        {
+            if (type == SyringeType.Toxin)
+            {
+                targetData.HP -= 1;
+                if (targetData.HP <= 0)
+                {
+                    targetData.IsDead = true;
+                    Debug.Log($"서버: {targetData.gameObject.name} 사망!");
+                }
+
+                PlayerControll targetPlayer = targetObj.GetComponent<PlayerControll>();
+                if (targetPlayer != null)
+                    targetPlayer.RPC_PlaySeizureAnimation();
+
+                Debug.Log($"서버: 독 주사기 사용됨. 타겟 체력: {targetData.HP}");
+                pt.NextTurn();
+            }
+            else if (type == SyringeType.NS)
+            {
+                if (isSelfTarget)
+                {
+                    targetData.BonusItemCount += 1;
+                    Debug.Log($"서버: NS 자가 사격. 보너스 아이템 수: {targetData.BonusItemCount}");
+                }
+                else
+                {
+                    Debug.Log("서버: NS 타인 사격. 효과 없이 턴 넘어감.");
+                    pt.NextTurn();
+                }
+            }
+        }
+
+        // 주사기는 이미 Despawn 됐으니 OnSyringeUsed로 So/St 리스트 정리만
+        OnSyringeUsed(syringeId, type);
     }
 }
 

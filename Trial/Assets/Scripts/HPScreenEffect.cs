@@ -59,7 +59,7 @@ public class HPScreenEffect : MonoBehaviour
         }
 
         ApplyAlpha(alpha);
-        Debug.Log($"HPScreenEffect: HP {hp} -> Alpha {alpha:F2}");
+        //Debug.Log($"HPScreenEffect: HP {hp} -> Alpha {alpha:F2}");
     }
 
     private bool IsGameInactive()
@@ -76,7 +76,7 @@ public class HPScreenEffect : MonoBehaviour
                 if (screenMaterial.HasProperty(prop))
                 {
                     screenMaterial.SetFloat(prop, alpha);
-                    Debug.Log($"HPScreenEffect: screenMaterial.SetFloat('{prop}', {alpha:F2})");
+                    //Debug.Log($"HPScreenEffect: screenMaterial.SetFloat('{prop}', {alpha:F2})");
                 }
             }
 

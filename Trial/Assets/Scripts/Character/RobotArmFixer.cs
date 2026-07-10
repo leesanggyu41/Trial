@@ -123,4 +123,5 @@ public class RobotArmFixer : NetworkBehaviour
     
     Debug.Log($"[GrabSequence] 완료");
 }
+
 }
