@@ -15,7 +15,9 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
 
     [Networked] public bool IsAwakening { get; set; } = false; // 각성 상태
 
-    [Networked] public bool IsStunned { get; set; } = false; // 스턴 상태
+    // 스턴 상태 - 값이 바뀌면 모든 클라이언트에서 감전 이펙트(gamjaun)를 켜고 끔
+    [Networked, OnChangedRender(nameof(OnIsStunnedChanged))]
+    public bool IsStunned { get; set; } = false;
 
     [Networked, OnChangedRender(nameof(OnIsDeadChanged))]
     public bool IsDead { get; set; } = false; // 사망 상태
@@ -32,6 +34,14 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
     {
         if (Runner.IsServer)
             HP = MaxHP;
+
+        OnIsStunnedChanged(); // 접속 시점의 스턴 상태를 이펙트에 반영
+    }
+
+    void OnIsStunnedChanged()
+    {
+        if (gamjaun != null)
+            gamjaun.SetActive(IsStunned);
     }
 
     public void TakeDamage(int damage)

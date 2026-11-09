@@ -178,11 +178,10 @@ public class SyringeTurn : NetworkBehaviour
         yield return null; // 한 프레임 대기
 
 
+        // 주사기가 0개가 되었을 때의 턴 전환은 GameTurnManager.OnTurnChanged(Player)에서 처리함.
+        // 여기서도 GamesTurnChange()를 호출하면 Player→Syringe→Item 으로 두 단계가 넘어가서
+        // 주사기 리필 전에 아이템이 지급되고, 리필 후 또 지급되는(총 2번) 버그가 생김.
         Debug.Log($"[체크] 남은 주사기: {So.Count}");
-        if (So.Count == 0)
-        {
-            GTM.GamesTurnChange();
-        }
     }
 
     public void AddSyringes(int count)

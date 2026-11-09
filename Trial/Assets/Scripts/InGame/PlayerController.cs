@@ -76,6 +76,16 @@ public class PlayerControll : NetworkBehaviour
     private float CameraX;
     private float CameraY;
 
+    [Header("대상 선택 안내 문구")]
+    private TMP_Text _targetGuideText;
+    private GameObject _targetGuideCanvas; // 비활성 상태에선 Graphic.canvas가 null이므로 직접 보관
+    private int _selectFrame = -1; // 아이템을 고른 프레임 (같은 클릭으로 바로 취소되는 것 방지)
+
+    private const string GUIDE_PLAYER_TARGET =
+        "TV 화면에서 사용할 대상을 클릭하세요  (방향키 왼쪽·위·오른쪽: 상대 / 아래: 자신)\n<size=80%>아이템을 다시 클릭하면 취소됩니다</size>";
+    private const string GUIDE_SYRINGE_TARGET =
+        "아이템을 사용할 주사기를 클릭하세요\n<size=80%>아이템을 다시 클릭하면 취소됩니다</size>";
+
     public override void Spawned()
     {
         if (Object.HasInputAuthority)
@@ -98,6 +108,8 @@ public class PlayerControll : NetworkBehaviour
             animator = GetComponentInChildren<Animator>();
 
             Cursor.lockState = CursorLockMode.Locked;
+
+            CreateTargetGuideUI();
         }
 
         if (GameSceneManager.Instance != null && GameSceneManager.Instance.TVPoint.Length > tvnumder)
@@ -138,6 +150,22 @@ public class PlayerControll : NetworkBehaviour
             {
                 ConfirmUse(true);
                 RPC_tvAnimation(false);
+                return;
+            }
+
+            // 내 턴이 끝났으면 선택 상태 해제
+            if (!playerTurn || GameTurnManager.Instance == null || GameTurnManager.Instance.NowTurn != GameTurn.Player)
+            {
+                CancelTargeting();
+                return;
+            }
+
+            // 선택한 아이템을 다시 클릭하면 취소
+            if (Time.frameCount != _selectFrame
+                && Mouse.current.leftButton.wasPressedThisFrame
+                && IsPointingAtSelectedItem())
+            {
+                CancelTargeting();
                 return;
             }
 
@@ -365,6 +393,12 @@ public class PlayerControll : NetworkBehaviour
 
                 selectedSyringe = interactable;
                 currentState = PlayerState.DecidingTarget;
+                _selectFrame = Time.frameCount;
+
+                if (interactable.NeedsTargeting)
+                    SetTargetGuide(interactable.DesiredTarget == TargetType.Syringe
+                        ? GUIDE_SYRINGE_TARGET
+                        : GUIDE_PLAYER_TARGET);
 
                 GameObject selectedObj = (selectedSyringe as MonoBehaviour)?.gameObject;
                 if (selectedObj != null)
@@ -464,6 +498,93 @@ public class PlayerControll : NetworkBehaviour
         }
     }
 
+    // 지금 조준(1인칭: 화면 중앙 / 탑뷰: 마우스) 중인 오브젝트가 선택한 아이템인지
+    private bool IsPointingAtSelectedItem()
+    {
+        Ray ray = isTopView
+            ? PlayerCamera.ScreenPointToRay(Mouse.current.position.ReadValue())
+            : PlayerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+
+        if (!Physics.Raycast(ray, out RaycastHit hit, 200f)) return false;
+        return hit.collider.GetComponentInParent<ReactionObject>() == selectedSyringe;
+    }
+
+    // 대상 선택 취소: 아이템 선택 전 상태로 되돌림
+    private void CancelTargeting()
+    {
+        if (selectedHighlightedObject != null)
+        {
+            SetLayerRecursively(selectedHighlightedObject, selectedDefaultLayer);
+            selectedHighlightedObject = null;
+        }
+
+        if (my_TV != null)
+        {
+            var anim = my_TV.GetComponent<Animator>();
+            if (anim != null && anim.GetBool("open"))
+                RPC_tvAnimation(false);
+        }
+
+        selectedSyringe = null;
+        currentState = PlayerState.Idle;
+        SetTargetGuide(null);
+    }
+    #endregion
+
+    #region [대상 선택 안내 문구]
+    // 씬을 수정하지 않도록 화면용 Canvas와 문구를 코드로 생성 (로컬 플레이어 전용)
+    private void CreateTargetGuideUI()
+    {
+        if (_targetGuideText != null) return;
+
+        GameObject canvasObj = new GameObject("TargetGuideCanvas");
+        Canvas canvas = canvasObj.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 100;
+        CanvasScaler scaler = canvasObj.AddComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920, 1080);
+        scaler.matchWidthOrHeight = 0.5f;
+
+        GameObject textObj = new GameObject("TargetGuideText");
+        textObj.transform.SetParent(canvasObj.transform, false);
+        RectTransform rt = textObj.AddComponent<RectTransform>();
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);
+        rt.pivot = new Vector2(0.5f, 0f);
+        rt.anchoredPosition = new Vector2(0f, 140f);
+        rt.sizeDelta = new Vector2(1600f, 140f);
+
+        TextMeshProUGUI tmp = textObj.AddComponent<TextMeshProUGUI>();
+        // 한글이 깨지지 않도록 기존 아이템 이름 UI의 폰트를 사용
+        TMP_Text src = itemNameUI != null ? itemNameUI.GetComponentInChildren<TMP_Text>(true) : null;
+        if (src != null && src.font != null) tmp.font = src.font;
+        tmp.fontSize = 36;
+        tmp.alignment = TextAlignmentOptions.Center;
+        tmp.color = Color.white;
+        tmp.outlineWidth = 0.2f;
+        tmp.outlineColor = Color.black;
+        tmp.raycastTarget = false;
+
+        _targetGuideText = tmp;
+        _targetGuideCanvas = canvasObj;
+        canvasObj.SetActive(false);
+    }
+
+    private void SetTargetGuide(string message)
+    {
+        if (_targetGuideText == null || _targetGuideCanvas == null) return;
+
+        bool show = !string.IsNullOrEmpty(message);
+        if (show) _targetGuideText.text = message;
+        _targetGuideCanvas.SetActive(show);
+    }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        if (_targetGuideCanvas != null)
+            Destroy(_targetGuideCanvas);
+    }
+
     private void SetLayerRecursively(GameObject obj, int newLayer)
     {
         obj.layer = newLayer;
@@ -502,6 +623,8 @@ public class PlayerControll : NetworkBehaviour
     private void ConfirmUse(bool isSelf, NetworkObject targetObj = null)
     {
         if (selectedSyringe == null) return;
+
+        SetTargetGuide(null);
 
         if (selectedHighlightedObject != null)
         {

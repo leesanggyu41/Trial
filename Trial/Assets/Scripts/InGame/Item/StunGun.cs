@@ -35,8 +35,8 @@ public class StunGun : ItemBase, ReactionObject
             if (playerData == null) return;
 
             // 1. 플레이어의 행동을 1턴 동안 스턴 상태로 만듭니다.
+            // 감전 이펙트는 IsStunned의 OnChangedRender에서 모든 클라이언트에 표시됨
             playerData.IsStunned = true;
-            playerData.gamjaun.SetActive(true); // 감전모션 활성화
 
             //Runner.Despawn(Object); // 아이템 사용 후 삭제
 

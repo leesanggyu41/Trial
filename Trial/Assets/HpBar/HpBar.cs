@@ -15,8 +15,22 @@ public class HpBar : NetworkBehaviour
 
     public AudioClip TurnChangeSound;
 
+    [Header("턴 제한시간 표시 (모니터 위 작은 화면)")]
+    public TMPro.TMP_Text turnTimerText;
+    public Color timerNormalColor = new Color(0.4f, 1f, 0.4f);
+    public Color timerWarningColor = Color.red;
+    public int timerWarningSeconds = 5;
+    private int _shownSeconds = int.MinValue;
+
     public void Start()
     {
+        if (turnTimerText == null)
+        {
+            Transform t = transform.Find("TurnTimerText");
+            if (t != null) turnTimerText = t.GetComponent<TMPro.TMP_Text>();
+        }
+        SetTimer(-1);
+
         Hpbar = MaxHp;
         Screen = GetComponent<MeshRenderer>().materials[1];
         RedLight = GetComponent<MeshRenderer>().materials[4];
@@ -59,6 +73,22 @@ public class HpBar : NetworkBehaviour
         //audio.PlayOneShot(TurnChangeSound);
     }
 
+
+    // 남은 초를 표시. 음수면 숨김
+    public void SetTimer(int seconds)
+    {
+        if (turnTimerText == null || seconds == _shownSeconds) return;
+        _shownSeconds = seconds;
+
+        if (seconds < 0)
+        {
+            turnTimerText.text = "";
+            return;
+        }
+
+        turnTimerText.text = seconds.ToString();
+        turnTimerText.color = seconds <= timerWarningSeconds ? timerWarningColor : timerNormalColor;
+    }
 
     [ContextMenu("아야!")]
     public void Hit()

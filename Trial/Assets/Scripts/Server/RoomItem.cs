@@ -12,7 +12,7 @@ public class RoomItem : MonoBehaviour
     public TextMeshProUGUI roomNameText;    // 방 제목
     public TextMeshProUGUI playerCountText; // 인원 (1/4)
     public GameObject lockIcon;            // 자물쇠 이미지 오브젝트
-    
+
     private SessionInfo _session;
 
     // LobbyManager에서 데이터를 넣어주는 함수
@@ -32,42 +32,42 @@ public class RoomItem : MonoBehaviour
         {
             if (lockIcon != null) lockIcon.SetActive(false);
         }
-            if (!session.IsOpen)
-    {
-        GetComponent<CanvasGroup>().alpha = 0.5f;
-        GetComponent<Button>().interactable = false;
-    }
-    else
-    {
-        GetComponent<CanvasGroup>().alpha = 1f;
-        GetComponent<Button>().interactable = true;
-    }
+        if (!session.IsOpen)
+        {
+            GetComponent<CanvasGroup>().alpha = 0.5f;
+            GetComponent<Button>().interactable = false;
+        }
+        else
+        {
+            GetComponent<CanvasGroup>().alpha = 1f;
+            GetComponent<Button>().interactable = true;
+        }
     }
 
     // 버튼 클릭 시 호출 (Unity Button 이벤트에 연결)
     public void OnClickJoin()
-{
-    // 비밀번호 정보 추출
-    bool isPasswordProtected = false;
-    string correctPassword = "";
-
-    if (_session.Properties.TryGetValue("IsPassword", out var isPassProp))
-        isPasswordProtected = (int)isPassProp == 1;
-
-    if (isPasswordProtected && _session.Properties.TryGetValue("PwData", out var pwProp))
-        correctPassword = (string)pwProp;
-
-    // 분기 처리
-    if (isPasswordProtected)
     {
-        // 비밀번호 팝업을 띄움
-        PasswordPopupManager.Instance.OpenPasswordPanel(_session, correctPassword);
+        // 비밀번호 정보 추출
+        bool isPasswordProtected = false;
+        string correctPassword = "";
+
+        if (_session.Properties.TryGetValue("IsPassword", out var isPassProp))
+            isPasswordProtected = (int)isPassProp == 1;
+
+        if (isPasswordProtected && _session.Properties.TryGetValue("PwData", out var pwProp))
+            correctPassword = (string)pwProp;
+
+        // 분기 처리
+        if (isPasswordProtected)
+        {
+            // 비밀번호 팝업을 띄움
+            PasswordPopupManager.Instance.OpenPasswordPanel(_session, correctPassword);
+        }
+        else
+        {
+
+            // 바로 입장 (매니저 호출)
+            ServerConnectionManager.Instance.JoinSession(_session);
+        }
     }
-    else
-    {
-        
-        // 바로 입장 (매니저 호출)
-        ServerConnectionManager.Instance.JoinSession(_session);
-    }
-}
 }
