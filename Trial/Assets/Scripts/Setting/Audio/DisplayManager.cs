@@ -1,6 +1,9 @@
+// DisplayManager는 해상도와 화면 모드를 실제로 적용하고, 해상도 드롭다운/화면 모드 선택기를 연결하는 클래스입니다.
+// 씬이 바뀌어도 살아 있는 이 인스턴스에 코드로 연결하므로, 로비에 다시 돌아와도 설정이 정상 동작합니다.
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using Michsky.UI.Dark;
 
 public class DisplayManager : MonoBehaviour
 {
@@ -9,144 +12,198 @@ public class DisplayManager : MonoBehaviour
     public TMP_Dropdown resDropdown;
     private List<Resolution> filteredResolutions; // 필터링된 실제 해상도 데이터
 
-    
-
     void Awake()
     {
-        if (Instance == null) { Instance = this; DontDestroyOnLoad(gameObject); }
-        else { Destroy(gameObject); }
+        if (Instance != null && Instance != this)
+        {
+            // 로비로 돌아왔을 때 생기는 복사본: 아무것도 건드리지 않고 삭제
+            Destroy(gameObject);
+            return;
+        }
 
-        InitResolutionDropdown();
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        BuildResolutionList();
     }
 
     void Start()
     {
-        SetWindowMode(SettingManager.Instance.currentSettings.isFullScreen);
+        // 게임 시작 시 저장된 화면 모드와 해상도를 실제로 적용
+        ApplySavedDisplay();
     }
 
-    public void InitResolutionDropdown()
+    #region [해상도 목록]
+    private void BuildResolutionList()
     {
-        // 1. 시스템에서 지원하는 모든 해상도 가져오기
-        Resolution[] allResolutions = Screen.resolutions;
-        
-        resDropdown.ClearOptions();
         filteredResolutions = new List<Resolution>();
-        
-        List<string> options = new List<string>();
-        HashSet<string> checkDuplicates = new HashSet<string>(); // 중복 문자열 체크용
-
-        int currentResIndex = 0;
-
-        // 2. 루프를 돌며 중복 제거 및 문자열 생성
-        for (int i = 0; i < allResolutions.Length; i++)
+        var seen = new HashSet<string>();
+        foreach (var r in Screen.resolutions)
         {
-            // 주사율 반올림 (예: 143.99 -> 144)
-            int refreshRate = Mathf.RoundToInt((float)allResolutions[i].refreshRateRatio.value);
-            
-            // 드롭다운에 표시될 텍스트 형식
-            string optionText = allResolutions[i].width + " x " + allResolutions[i].height + " @ " + refreshRate + "Hz";
+            if (seen.Add(ToLabel(r)))
+                filteredResolutions.Add(r);
+        }
+    }
 
-            // 중복되지 않은 해상도만 리스트에 추가
-            if (checkDuplicates.Add(optionText))
+    private static int Hz(Resolution r) => Mathf.RoundToInt((float)r.refreshRateRatio.value);
+    private static string ToLabel(Resolution r) => r.width + " x " + r.height + " @ " + Hz(r) + "Hz";
+
+    private List<string> BuildOptions()
+    {
+        var options = new List<string>();
+        foreach (var r in filteredResolutions) options.Add(ToLabel(r));
+        return options;
+    }
+
+    // 저장된 해상도(가로/세로/주사율)에 해당하는 목록 순번. 없으면 현재 모니터 해상도
+    private int FindSavedIndex()
+    {
+        var s = Settings;
+        if (s != null && s.resolutionWidth > 0)
+        {
+            int best = -1;
+            for (int i = 0; i < filteredResolutions.Count; i++)
             {
-                filteredResolutions.Add(allResolutions[i]);
-                options.Add(optionText);
+                var r = filteredResolutions[i];
+                if (r.width != s.resolutionWidth || r.height != s.resolutionHeight) continue;
+                if (Hz(r) == s.refreshRate) return i;
+                best = i; // 같은 크기, 다른 주사율이면 후보로
+            }
+            if (best >= 0) return best;
+        }
+        return FindCurrentIndex();
+    }
 
-                // 현재 모니터 설정과 일치하는 항목 기억
-                if (allResolutions[i].width == Screen.currentResolution.width &&
-                    allResolutions[i].height == Screen.currentResolution.height &&
-                    Mathf.Abs((float)allResolutions[i].refreshRateRatio.value - (float)Screen.currentResolution.refreshRateRatio.value) < 0.1f)
-                {
-                    currentResIndex = filteredResolutions.Count - 1;
-                }
+    private int FindCurrentIndex()
+    {
+        var cur = Screen.currentResolution;
+        int fallback = filteredResolutions.Count - 1;
+        for (int i = 0; i < filteredResolutions.Count; i++)
+        {
+            var r = filteredResolutions[i];
+            if (r.width == cur.width && r.height == cur.height)
+            {
+                if (Mathf.Abs((float)(r.refreshRateRatio.value - cur.refreshRateRatio.value)) < 0.1f) return i;
+                fallback = i;
             }
         }
+        return Mathf.Max(0, fallback);
+    }
+    #endregion
 
-        // 3. 드롭다운 적용
-        resDropdown.AddOptions(options);
-        resDropdown.value = currentResIndex;
-        resDropdown.RefreshShownValue();
+    private static GameSettings Settings =>
+        SettingManager.Instance != null ? SettingManager.Instance.currentSettings : null;
+
+    #region [UI 연결]
+    /// <summary>
+    /// 해상도 드롭다운을 이 매니저에 연결 (로비/인게임 공통).
+    /// 인스펙터에 연결된 예전 이벤트는 끄고(사라진 오브젝트를 가리킬 수 있음) 코드로 다시 연결합니다.
+    /// </summary>
+    public void BindDropdown(TMP_Dropdown dropdown)
+    {
+        if (dropdown == null) return;
+        if (filteredResolutions == null || filteredResolutions.Count == 0) BuildResolutionList();
+
+        DisablePersistent(dropdown.onValueChanged);
+        dropdown.onValueChanged.RemoveAllListeners();
+
+        dropdown.ClearOptions();
+        dropdown.AddOptions(BuildOptions());
+        dropdown.SetValueWithoutNotify(FindSavedIndex()); // 값만 바꾸고 이벤트는 발생시키지 않음
+        dropdown.RefreshShownValue();
+
+        dropdown.onValueChanged.AddListener(SetResolution);
     }
 
-    // 드롭다운 OnValueChanged에 연결할 함수
+    /// <summary>화면 모드 선택기(전체화면/테두리 없는 창/창모드)를 이 매니저에 연결</summary>
+    public void BindWindowModeSelector(HorizontalSelector selector)
+    {
+        if (selector == null) return;
+
+        DisablePersistent(selector.onValueChanged);
+        selector.onValueChanged.RemoveAllListeners();
+
+        var s = Settings;
+        if (s != null)
+        {
+            selector.index = Mathf.Clamp(s.isFullScreen, 0, Mathf.Max(0, selector.itemList.Count - 1));
+            try { selector.UpdateUI(); } catch { /* 선택기가 아직 초기화 전이면 다음에 열 때 반영 */ }
+        }
+
+        selector.onValueChanged.AddListener(SetWindowMode);
+    }
+
+    private static void DisablePersistent(UnityEngine.Events.UnityEventBase ev)
+    {
+        for (int i = 0; i < ev.GetPersistentEventCount(); i++)
+            ev.SetPersistentListenerState(i, UnityEngine.Events.UnityEventCallState.Off);
+    }
+    #endregion
+
+    #region [적용]
+    // 드롭다운에서 해상도를 골랐을 때
     public void SetResolution(int index)
     {
-        if (index < 0 || index >= filteredResolutions.Count) return;
+        if (filteredResolutions == null || index < 0 || index >= filteredResolutions.Count) return;
 
         Resolution res = filteredResolutions[index];
-        
-        // 실제 해상도 변경
-        Screen.SetResolution(res.width, res.height, Screen.fullScreenMode);
+        Screen.SetResolution(res.width, res.height, Screen.fullScreenMode, res.refreshRateRatio);
 
-        // SettingManager 데이터 동기화
-        if (SettingManager.Instance != null)
+        var s = Settings;
+        if (s != null)
         {
-            SettingManager.Instance.currentSettings.resolutionIndex = index;
+            s.resolutionIndex = index;
+            s.resolutionWidth = res.width;
+            s.resolutionHeight = res.height;
+            s.refreshRate = Hz(res);
+            SettingManager.Instance.MarkDirty(); // 자동 저장
         }
+        Debug.Log($"해상도 변경: {ToLabel(res)}");
     }
 
     public void SetWindowMode(int index)
     {
-        // 에셋에서 넘겨주는 index: 0(전체화면), 1(전체창), 2(창모드)라고 가정
-        FullScreenMode mode;
+        Screen.fullScreenMode = ToMode(index);
 
+        var s = Settings;
+        if (s != null)
+        {
+            s.isFullScreen = index;
+            SettingManager.Instance.MarkDirty(); // 자동 저장
+        }
+        Debug.Log($"화면 모드 변경: {Screen.fullScreenMode} (Index: {index})");
+    }
+
+    // 에셋 선택기 index: 0(전체화면), 1(테두리 없는 창), 2(창모드)
+    private static FullScreenMode ToMode(int index)
+    {
         switch (index)
         {
-            case 0:
-                mode = FullScreenMode.ExclusiveFullScreen; // 순수 전체화면
-                break;
-            case 1:
-                mode = FullScreenMode.FullScreenWindow;    // 테두리 없는 창
-                break;
-            case 2:
-                mode = FullScreenMode.Windowed;            // 일반 창모드
-                break;
-            default:
-                mode = FullScreenMode.FullScreenWindow;
-                break;
+            case 0: return FullScreenMode.ExclusiveFullScreen;
+            case 1: return FullScreenMode.FullScreenWindow;
+            case 2: return FullScreenMode.Windowed;
+            default: return FullScreenMode.FullScreenWindow;
         }
+    }
 
-        Screen.fullScreenMode = mode;
+    // 저장된 화면 모드 + 해상도를 한 번에 적용 (게임 시작 시)
+    public void ApplySavedDisplay()
+    {
+        var s = Settings;
+        if (s == null || filteredResolutions == null || filteredResolutions.Count == 0) return;
 
-        // 설정값 저장
-        if (SettingManager.Instance != null)
+        int index = FindSavedIndex();
+        Resolution res = filteredResolutions[index];
+        Screen.SetResolution(res.width, res.height, ToMode(s.isFullScreen), res.refreshRateRatio);
+
+        // 처음 실행이라 저장값이 없으면 지금 해상도를 기록해 둠
+        if (s.resolutionWidth <= 0)
         {
-            SettingManager.Instance.currentSettings.isFullScreen = index;
+            s.resolutionIndex = index;
+            s.resolutionWidth = res.width;
+            s.resolutionHeight = res.height;
+            s.refreshRate = Hz(res);
         }
-        
-        Debug.Log($"화면 모드 변경: {mode} (Index: {index})");
+        Debug.Log($"저장된 화면 설정 적용: {ToLabel(res)}, {ToMode(s.isFullScreen)}");
     }
-
-    public void SetupDropdown(TMP_Dropdown targetDropdown)
-{
-    if (targetDropdown == null) return;
-
-    // 기존 옵션 삭제
-    targetDropdown.ClearOptions();
-
-    // 1. 이미 Awake에서 세팅된 filteredResolutions가 없다면 새로 만들어줍니다.
-    if (filteredResolutions == null || filteredResolutions.Count == 0)
-    {
-        InitResolutionDropdown(); // 내부 리스트 빌드용
-    }
-
-    // 2. 텍스트 옵션 목록 생성
-    List<string> options = new List<string>();
-    for (int i = 0; i < filteredResolutions.Count; i++)
-    {
-        int refreshRate = Mathf.RoundToInt((float)filteredResolutions[i].refreshRateRatio.value);
-        string optionText = filteredResolutions[i].width + " x " + filteredResolutions[i].height + " @ " + refreshRate + "Hz";
-        options.Add(optionText);
-    }
-
-    // 3. 대상 드롭다운에 적용
-    targetDropdown.AddOptions(options);
-
-    // 4. 현재 저장된 설정값 인덱스로 드롭다운 선택 변경
-    if (SettingManager.Instance != null)
-    {
-        targetDropdown.value = SettingManager.Instance.currentSettings.resolutionIndex;
-    }
-    targetDropdown.RefreshShownValue();
-}
+    #endregion
 }

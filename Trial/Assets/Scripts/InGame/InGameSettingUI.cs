@@ -27,13 +27,8 @@ public class InGameSettingUI : MonoBehaviour
 
     private void OnEnable()
     {
-        // 설정창이 열릴 때 현재 설정값을 UI에 반영
+        // 설정창이 열릴 때 저장된 값을 UI에 반영 (값 설정으로 이벤트가 발생해 설정이 덮어써지지 않도록 이벤트 없이 반영)
         ApplySettingsToUI();
-        if (DisplayManager.Instance != null && resolutionDropdown != null)
-        {
-            DisplayManager.Instance.SetupDropdown(resolutionDropdown);
-        }
-
     }
 
     void Update()
@@ -52,11 +47,14 @@ public class InGameSettingUI : MonoBehaviour
 
         if (isOpen)
         {
+            ApplySettingsToUI(); // 열 때마다 최신 값으로
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
         else
         {
+            SettingManager.Instance?.SaveAll(); // 닫을 때 저장
+
             // 탑뷰나 스펙테이터면 커서 유지
             bool isTopView = PlayerControll.Local != null && PlayerControll.Local.isTopView;
             bool isSpectating = SpectatorManager.Instance != null && SpectatorManager.Instance.IsSpectating;
@@ -67,58 +65,40 @@ public class InGameSettingUI : MonoBehaviour
                 Cursor.visible = false;
             }
         }
-        
+
     }
 
     void ApplySettingsToUI()
     {
-        if (SettingManager.Instance == null) return;
-        var currentSettings = SettingManager.Instance.currentSettings;
-        if (currentSettings == null) return;
+        var sm = SettingManager.Instance;
+        if (sm == null || sm.currentSettings == null) return;
+        var s = sm.currentSettings;
 
-        if (masterVolumeSlider != null) masterVolumeSlider.value = currentSettings.masterVolume;
-        if (musicVolumeSlider != null) musicVolumeSlider.value = currentSettings.musicVolume;
-        if (sfxVolumeSlider != null) sfxVolumeSlider.value = currentSettings.sfxVolume;
-        if (mouseSensitivitySlider != null) mouseSensitivitySlider.value = currentSettings.mouseSensitivity;
-        if (resolutionDropdown != null) resolutionDropdown.value = currentSettings.resolutionIndex;
-        if (gammaSlider != null) gammaSlider.value = currentSettings.gamma;
-        if (motionBlurSlider != null) motionBlurSlider.value = currentSettings.motionBlur;
-        if (fullScreenmode != null) fullScreenmode.index = currentSettings.isFullScreen;
+        SettingManager.BindSlider(masterVolumeSlider, s.masterVolume, sm.UpdateMasterVolume);
+        SettingManager.BindSlider(musicVolumeSlider, s.musicVolume, sm.UpdateMusicVolume);
+        SettingManager.BindSlider(sfxVolumeSlider, s.sfxVolume, sm.UpdateSFXVolume);
+        SettingManager.BindSlider(mouseSensitivitySlider, s.mouseSensitivity, sm.UpdateSensitivity);
+        SettingManager.BindSlider(gammaSlider, s.gamma, sm.UpdateGamma);
+        SettingManager.BindSlider(motionBlurSlider, s.motionBlur, sm.UpdateMotionBlur);
+
+        // 해상도 목록을 먼저 채운 뒤 저장된 해상도를 선택 (예전에는 목록보다 값을 먼저 넣어 해상도가 초기화됐음)
+        if (DisplayManager.Instance != null)
+        {
+            DisplayManager.Instance.BindDropdown(resolutionDropdown);
+            DisplayManager.Instance.BindWindowModeSelector(fullScreenmode);
+        }
     }
 
-    // 인게임 UI 슬라이더에 연결할 함수들
+    // 인게임 UI 슬라이더에 연결할 함수들 (인스펙터 호환용으로 유지)
     public void OnMasterVolumeChanged(float value) => SettingManager.Instance.UpdateMasterVolume(value);
     public void OnMusicVolumeChanged(float value) => SettingManager.Instance.UpdateMusicVolume(value);
     public void OnSFXVolumeChanged(float value) => SettingManager.Instance.UpdateSFXVolume(value);
     public void OnSensitivityChanged(float value) => SettingManager.Instance.UpdateSensitivity(value);
     public void OnGammaChanged(float value) => SettingManager.Instance.UpdateGamma(value);
     public void OnMotionBlurChanged(float value) => SettingManager.Instance.UpdateMotionBlur(value);
-    public void OnResolutionChanged(int index)
-    {
-        // 1. 데이터 저장 (기존 코드)
-        SettingManager.Instance.UpdateResolution(index);
+    public void OnResolutionChanged(int index) => SettingManager.Instance.UpdateResolution(index);
+    public void OnFullScreenChanged(int value) => SettingManager.Instance.UpdateFullScreen(value);
 
-        // 2. [추가] 인스펙터 연결 대신 싱글톤으로 직접 화면 변경 호출!
-        if (DisplayManager.Instance != null)
-        {
-            DisplayManager.Instance.SetResolution(index);
-        }
-        else
-        {
-            Debug.LogError("VideoManager(DisplayManager) 인스턴스를 찾을 수 없습니다!");
-        }
-    }
-    public void OnFullScreenChanged(int value)
-    {
-        // 1. 데이터 저장 (기존 코드)
-        SettingManager.Instance.UpdateFullScreen(value);
-
-        // 2. [추가] 인스펙터 연결 대신 싱글톤으로 직접 화면 모드 변경 호출!
-        if (DisplayManager.Instance != null)
-        {
-            DisplayManager.Instance.SetWindowMode(value);
-        }
-    }
     public void OnSaveButton()
     {
 
