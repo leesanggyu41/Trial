@@ -18,7 +18,8 @@ public class TV_Script : MonoBehaviour
 
     public void TVScreenOn(bool isOn)
     {
-        tv_S.PointRotate(-1);
+        // 결과 화면(EndScene)처럼 TVScreenManager가 없는 씬에서도 에러 없이 동작하도록
+        if (tv_S != null) tv_S.PointRotate(-1);
         float v = isOn == false ? 1f : 0f;
         if(tvScreen == null) return;
          foreach (var mat in tvScreen.materials)
@@ -45,6 +46,6 @@ public class TV_Script : MonoBehaviour
 
     public void PointRotate(Collider hitCollider)
     {
-       tv_S.PointRotate(GetClickedIndex(hitCollider));
+       if (tv_S != null) tv_S.PointRotate(GetClickedIndex(hitCollider));
     }
 }

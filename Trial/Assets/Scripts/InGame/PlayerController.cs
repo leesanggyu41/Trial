@@ -46,6 +46,28 @@ public class PlayerControll : NetworkBehaviour
     [Header("플레이어 턴")]
     [Networked] public bool playerTurn { get; set; }
 
+    [Header("봇")]
+    [Networked] public NetworkBool IsBot { get; set; } // 봇 대전의 AI 캐릭터인지
+
+    /// <summary>
+    /// 아이템 소유자 판별에 쓰는 '좌석 키'.
+    /// 사람은 접속 번호(InputAuthority), 봇은 접속 번호가 없으므로 좌석 번호로 만든 가상 PlayerRef를 사용.
+    /// (ItemBase.SetItemTarget이 OwnerRef.PlayerId - 1 을 좌석 번호로 쓰므로 PlayerId = 좌석 + 1)
+    /// </summary>
+    public PlayerRef OwnerKey
+    {
+        get
+        {
+            if (IsBot)
+            {
+                var po = GetComponent<PlayerObject>();
+                int seat = po != null ? po.PlayerIndex : 0;
+                return PlayerRef.FromIndex(seat + 1);
+            }
+            return Object.InputAuthority;
+        }
+    }
+
     [Header("아이템 위치")]
     public List<Transform> mySlot = new List<Transform>();
     private List<GameObject> heldItems = new List<GameObject>();
@@ -711,7 +733,8 @@ public class PlayerControll : NetworkBehaviour
 
     private IEnumerator RetryInitializeTargetMap()
     {
-        int expectedCount = Runner.ActivePlayers.Count() - 1;
+        int expectedCount = Runner.ActivePlayers.Count() - 1
+            + (MatchSettings.IsBotMatch ? MatchSettings.BotCount : 0); // 봇도 대상에 포함
         int retryCount = 0;
         int maxRetries = 10;
 
@@ -722,7 +745,7 @@ public class PlayerControll : NetworkBehaviour
                 .Where(p => p != this && p.Object != null && p.Object.IsValid)
                 .ToList();
 
-            if (otherPlayers.Count >= expectedCount)
+            if (otherPlayers.Count >= expectedCount && otherPlayers.Count > 0)
             {
                 Vector3 myForward = transform.forward; myForward.y = 0; myForward.Normalize();
 

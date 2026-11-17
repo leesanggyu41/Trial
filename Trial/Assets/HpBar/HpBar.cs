@@ -22,6 +22,9 @@ public class HpBar : NetworkBehaviour
     public int timerWarningSeconds = 5;
     private int _shownSeconds = int.MinValue;
 
+    [Header("각성 표시 (모니터 위 작은 화면 왼쪽 '+1')")]
+    public TMPro.TMP_Text awakeningText;
+
     public void Start()
     {
         if (turnTimerText == null)
@@ -30,6 +33,14 @@ public class HpBar : NetworkBehaviour
             if (t != null) turnTimerText = t.GetComponent<TMPro.TMP_Text>();
         }
         SetTimer(-1);
+
+        if (awakeningText == null)
+        {
+            Transform a = transform.Find("AwakeningText");
+            if (a != null) awakeningText = a.GetComponent<TMPro.TMP_Text>();
+        }
+        // PlayerGameData가 먼저 각성 상태를 알려줬을 수 있으므로 그 값을 유지
+        if (awakeningText != null && !_awakeningSet) awakeningText.gameObject.SetActive(false);
 
         Hpbar = MaxHp;
         Screen = GetComponent<MeshRenderer>().materials[1];
@@ -88,6 +99,20 @@ public class HpBar : NetworkBehaviour
 
         turnTimerText.text = seconds.ToString();
         turnTimerText.color = seconds <= timerWarningSeconds ? timerWarningColor : timerNormalColor;
+    }
+
+    private bool _awakeningSet = false;
+
+    // 각성 상태면 '+1' 표시 (다음 주사기를 맞으면 체력 1 회복)
+    public void SetAwakening(bool isAwakening)
+    {
+        if (awakeningText == null)
+        {
+            Transform a = transform.Find("AwakeningText");
+            if (a != null) awakeningText = a.GetComponent<TMPro.TMP_Text>();
+        }
+        _awakeningSet = true;
+        if (awakeningText != null) awakeningText.gameObject.SetActive(isAwakening);
     }
 
     [ContextMenu("아야!")]

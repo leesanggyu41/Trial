@@ -30,7 +30,9 @@ public class Destroyer : ItemBase, ReactionObject
 
         if (Runner.TryFindObject(targetId, out var targetObj))
         {
-            PlayerRef targetPlayer = targetObj.InputAuthority;
+            // 봇은 InputAuthority가 없으므로 좌석 키(OwnerKey)로 아이템 소유자를 찾음
+            var targetPc = targetObj.GetComponent<PlayerControll>();
+            PlayerRef targetPlayer = targetPc != null ? targetPc.OwnerKey : targetObj.InputAuthority;
 
             // 해당 플레이어의 아이템 목록 찾기 (자기 자신인 파쇄기는 제외)
             var items = FindObjectsByType<ItemBase>(FindObjectsSortMode.None)

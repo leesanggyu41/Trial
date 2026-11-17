@@ -25,6 +25,12 @@ public class HPUIManager : MonoBehaviour, IHPUIHandler
         }
     }
 
+    public void RefreshAwakening(int playerIndex, bool isAwakening)
+    {
+        if (playerIndex < 0 || playerIndex >= hpBars.Length || hpBars[playerIndex] == null) return;
+        hpBars[playerIndex].SetAwakening(isAwakening);
+    }
+
     public void RefreshTurn(int currentTurnIndex)
     {
         for (int i = 0; i < hpBars.Length; i++)

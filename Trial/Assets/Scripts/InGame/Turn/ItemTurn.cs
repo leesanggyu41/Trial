@@ -57,7 +57,7 @@ public class ItemTurn : NetworkBehaviour
 
                 if(ibase != null)
                 {
-                    ibase.OwnerRef = pc.Object.InputAuthority; // 아이템의 소유자 설정
+                    ibase.OwnerRef = pc.OwnerKey; // 아이템의 소유자 설정 (봇은 좌석 기반 가상 키)
                 }
 
                 if (pc != null)

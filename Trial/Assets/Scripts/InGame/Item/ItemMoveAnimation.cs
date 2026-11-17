@@ -37,7 +37,7 @@ public class ItemMoveAnimation : NetworkBehaviour
 
         // 아이템 소유 플레이어 찾기
         var ownerPlayer = FindObjectsByType<PlayerControll>(FindObjectsSortMode.None)
-            .FirstOrDefault(p => p.Object.InputAuthority == ownerRef);
+            .FirstOrDefault(p => p.Object != null && p.OwnerKey == ownerRef);
 
         if (ownerPlayer != null)
         {

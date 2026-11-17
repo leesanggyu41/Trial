@@ -13,7 +13,9 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
     public static void ResetWinFlag() => _winTriggered = false;
     [Networked] public int BonusItemCount { get; set; } = 0; // NS 자가 사격 보너스
 
-    [Networked] public bool IsAwakening { get; set; } = false; // 각성 상태
+    // 각성 상태 - 값이 바뀌면 모든 클라이언트의 HP 모니터에 '+1' 표시를 켜고 끔
+    [Networked, OnChangedRender(nameof(OnIsAwakeningChanged))]
+    public bool IsAwakening { get; set; } = false;
 
     // 스턴 상태 - 값이 바뀌면 모든 클라이언트에서 감전 이펙트(gamjaun)를 켜고 끔
     [Networked, OnChangedRender(nameof(OnIsStunnedChanged))]
@@ -36,6 +38,14 @@ public class PlayerGameData : NetworkBehaviour, IDamageable
             HP = MaxHP;
 
         OnIsStunnedChanged(); // 접속 시점의 스턴 상태를 이펙트에 반영
+        OnIsAwakeningChanged(); // 접속 시점의 각성 상태를 HP 모니터에 반영
+    }
+
+    void OnIsAwakeningChanged()
+    {
+        var po = GetComponent<PlayerObject>();
+        if (po == null || HPUIManager.Instance == null) return;
+        HPUIManager.Instance.RefreshAwakening(po.PlayerIndex, IsAwakening);
     }
 
     void OnIsStunnedChanged()

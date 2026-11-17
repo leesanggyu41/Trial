@@ -36,8 +36,46 @@ public class GameSceneManager : NetworkBehaviour
             {
                 SpawnPlayer(player);
             }
+
+            // 봇 대전: 남은 자리에 AI 생성
+            if (MatchSettings.IsBotMatch)
+            {
+                for (int i = 0; i < MatchSettings.BotCount; i++)
+                    SpawnBot(Runner.ActivePlayers.Count() + i);
+
+                StartCoroutine(DelayedRPC()); // 모두 생성됐으니 대상 맵 초기화
+            }
         }
 
+    }
+
+    // 봇 캐릭터 생성 (조종하는 플레이어가 없으므로 InputAuthority = None)
+    public void SpawnBot(int index)
+    {
+        Transform spawnPoint = SpawnPoint[index % SpawnPoint.Length];
+
+        NetworkObject botObj = Runner.Spawn
+        (
+            PlayerPrefab,
+            spawnPoint.position,
+            spawnPoint.rotation,
+            PlayerRef.None,
+            onBeforeSpawned: (r, obj) =>
+            {
+                obj.GetComponent<PlayerObject>().PlayerIndex = index;
+                var pc = obj.GetComponent<PlayerControll>();
+                pc.tvnumder = index % TVPoint.Length;
+                pc.IsBot = true;
+
+                var data = obj.GetComponent<PlayerData>();
+                if (data != null) data.Nickname = MatchSettings.BotNickname;
+            }
+        );
+
+        botObj.name = $"Bot_{index}";
+        botObj.gameObject.AddComponent<BotController>(); // AI 두뇌 (서버 전용)
+        GameTurnManager.Instance.Pt_T.RegisterPlayer(botObj.GetComponent<PlayerControll>());
+        Debug.Log($"[봇 대전] AI 생성: {index}번 자리");
     }
     // 플레이어가 게임에 참여할 때 네트워크 객체를 생성하고, 플레이어의 인덱스를 할당하여 동기화합니다.
     public void SpawnPlayer(PlayerRef player)

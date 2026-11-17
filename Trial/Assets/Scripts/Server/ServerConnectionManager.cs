@@ -65,6 +65,7 @@ public class ServerConnectionManager : MonoBehaviour
     // 서버에 연결하여 로비에 입장하는 함수입니다. 네트워크 상태를 확인하고, Runner를 생성하여 로비에 접속을 시도합니다. 접속 성공 여부에 따라 UI를 업데이트하고, 실패 시 오류 메시지를 표시합니다.
     public async Task ConnectToServer()
     {
+        MatchSettings.Mode = MatchMode.Multi; // 로비로 돌아오면 기본값(멀티)으로
         if (retryButton != null) retryButton.SetActive(false);
         if (errorWindow != null) errorWindow.SetActive(false);
         UpdateStatus("Loading...");
@@ -122,9 +123,44 @@ public class ServerConnectionManager : MonoBehaviour
             waitpanal.SetActive(false);
         }
     }
+    // 봇 대전 시작: 방 목록에 올리지 않고(GameMode.Single) 대기실 없이 바로 게임 씬으로 이동
+    public async Task StartBotMatch()
+    {
+        if (waitpanal != null) waitpanal.SetActive(true);
+        if (NicknameManager.Instance != null)
+            NicknameManager.Instance.SaveNickname();
+
+        if (_runner != null && _runner.IsRunning)
+            await _runner.Shutdown();
+
+        MatchSettings.Mode = MatchMode.Bot;
+        CreateRunner("BotMatchRunner");
+
+        var result = await _runner.StartGame(new StartGameArgs()
+        {
+            GameMode = GameMode.Single,
+            SessionName = $"BotMatch_{Random.Range(1000, 9999)}",
+            PlayerCount = 1 + MatchSettings.BotCount,
+            Scene = SceneRef.FromIndex(3), // GameScene
+            SceneManager = _runner.gameObject.AddComponent<NetworkSceneManagerDefault>(),
+        });
+
+        if (result.Ok)
+            Debug.Log("봇 대전 시작");
+        else
+        {
+            MatchSettings.Mode = MatchMode.Multi;
+            if (waitpanal != null) waitpanal.SetActive(false);
+            Debug.LogError($"봇 대전 시작 실패: {result.ShutdownReason}");
+            Destroy(_runner.gameObject);
+            _runner = null;
+        }
+    }
+
     // 방 생성
     public async Task CreateRoom(string roomName, Dictionary<string, SessionProperty> customProps)
     {
+        MatchSettings.Mode = MatchMode.Multi;
         waitpanal.SetActive(true);
         if (NicknameManager.Instance != null)
             NicknameManager.Instance.SaveNickname();
@@ -161,6 +197,7 @@ public class ServerConnectionManager : MonoBehaviour
     // 방 참가
     public async void JoinSession(SessionInfo session)
     {
+        MatchSettings.Mode = MatchMode.Multi;
         if (NicknameManager.Instance != null)
             NicknameManager.Instance.SaveNickname();
         waitpanal.SetActive(true);
