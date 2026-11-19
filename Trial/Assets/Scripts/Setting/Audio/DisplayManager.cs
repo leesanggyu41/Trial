@@ -104,7 +104,7 @@ public class DisplayManager : MonoBehaviour
         if (filteredResolutions == null || filteredResolutions.Count == 0) BuildResolutionList();
 
         DisablePersistent(dropdown.onValueChanged);
-        dropdown.onValueChanged.RemoveAllListeners();
+        dropdown.onValueChanged.RemoveListener(SetResolution); // 우리 리스너만 제거 (UI 에셋이 붙인 리스너는 유지)
 
         dropdown.ClearOptions();
         dropdown.AddOptions(BuildOptions());
@@ -120,7 +120,7 @@ public class DisplayManager : MonoBehaviour
         if (selector == null) return;
 
         DisablePersistent(selector.onValueChanged);
-        selector.onValueChanged.RemoveAllListeners();
+        selector.onValueChanged.RemoveListener(SetWindowMode); // 우리 리스너만 제거 (UI 에셋이 붙인 리스너는 유지)
 
         var s = Settings;
         if (s != null)

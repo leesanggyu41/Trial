@@ -131,9 +131,22 @@ public class SettingManager : MonoBehaviour
         if (slider == null) return;
         for (int i = 0; i < slider.onValueChanged.GetPersistentEventCount(); i++)
             slider.onValueChanged.SetPersistentListenerState(i, UnityEventCallState.Off);
-        slider.onValueChanged.RemoveAllListeners();
-        slider.SetValueWithoutNotify(value);
+
+        // RemoveAllListeners를 쓰면 Dark UI SliderManager가 붙인 '숫자 텍스트 갱신' 리스너까지 지워지므로
+        // 우리 리스너만 빼고 다시 붙임 (여러 번 연결돼도 중복되지 않음)
+        slider.onValueChanged.RemoveListener(onChanged);
         slider.onValueChanged.AddListener(onChanged);
+
+        slider.SetValueWithoutNotify(value);
+
+        // 이벤트 없이 값을 바꿨으므로 슬라이더 옆 숫자 텍스트는 직접 갱신.
+        // 꺼져 있는 슬라이더는 SliderManager가 아직 초기화 전이라 건너뜀 (처음 켜질 때 스스로 현재 값으로 갱신함)
+        var sliderManager = slider.GetComponent<SliderManager>();
+        if (sliderManager != null && slider.gameObject.activeInHierarchy)
+        {
+            try { sliderManager.UpdateUI(); }
+            catch (System.NullReferenceException) { /* 초기화 전 */ }
+        }
     }
 
     // --- [UI에서 호출할 public 함수들] ---
