@@ -44,13 +44,20 @@ public class LobbyManager : MonoBehaviour, INetworkRunnerCallbacks
 
     private void Update()
     {
-        page.text = $"{currentPage + 1}/{Mathf.Max(1, allSessions.Count)}";
+        // 전체 페이지 수 = 방 개수 / 페이지당 개수 (예전에는 방 개수를 그대로 표시했음)
+        int totalPages = Mathf.Max(1, Mathf.CeilToInt(allSessions.Count / (float)itemsPerPage));
+        if (page != null) page.text = $"{currentPage + 1}/{totalPages}";
     }
     // 방 목록이 업데이트될 때마다 호출되는 콜백 메서드입니다. 받은 방 목록에서 유효한 방만 필터링하여 저장하고, UI를 새로고침합니다.
     public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
     {
-        if (sessionList.Count == 0 && allSessions.Count > 0) return;
-        allSessions = sessionList.Where(s => s.IsVisible).ToList();
+        // (예전에는 빈 목록을 무시해서, 마지막 방이 사라져도 이미 없는 방이 계속 표시됐음)
+        allSessions = sessionList.Where(s => s.IsValid && s.IsVisible).ToList();
+
+        // 방이 줄어 현재 페이지가 비면 마지막 페이지로
+        int maxPage = Mathf.Max(0, (allSessions.Count - 1) / itemsPerPage);
+        if (currentPage > maxPage) currentPage = maxPage;
+
         RefreshPage();
     }
 

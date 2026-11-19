@@ -85,7 +85,10 @@ public class ServerConnectionManager : MonoBehaviour
 
             if (result.Ok)
             {
-                UpdateStatus("로비 접속 성공!");
+                // 지역이 다르면 서로의 방이 보이지 않으므로 접속 지역을 표시 (PhotonAppSettings의 FixedRegion으로 고정)
+                string region = _runner.LobbyInfo.IsValid ? _runner.LobbyInfo.Region : "?";
+                Debug.Log($"로비 접속 성공 - Region: {region}");
+                UpdateStatus($"로비 접속 성공! ({region})");
                 SceneManager.LoadScene(1);
             }
             else
@@ -184,7 +187,7 @@ public class ServerConnectionManager : MonoBehaviour
         });
 
         if (result.Ok)
-            Debug.Log("방 생성 성공");
+            Debug.Log($"방 생성 성공 - Region: {_runner.SessionInfo.Region}, 공개: {_runner.SessionInfo.IsVisible}");
         else
         {
             waitpanal.SetActive(false);
